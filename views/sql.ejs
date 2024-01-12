@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/stylenoir.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title></title>
+
+</head>
+<body style="background-image:url('../../images/bg-black.jpg')">	
+	<div id="alldiv" class="" style="width: calc(100% - 0px);">
+		<div id="text" class="">
+			<input id="sql" type="text" style="width: 79%;height: 6%;font-size: 100%;background-color: #FFFFF0;" value="SELECT id FROM Flowers LIMIT 10"></input>
+			<button onclick="doExec()" style='font-family: "Italiana", regular; font-size: 24px; color: #202020; width: 20%;height: 5%;background-color: #FFFFF0;'>Execute</button><p> 
+			<textarea rows="40" id="data" style='font-family: "Italiana", regular; font-size: 24px; color: #202020; width: 100%; height:75%;font-size: 100%;background-color: #FFFFF0;' data-role="none"></textarea><p>
+			<div style="text-align: right;">    <button onclick="document.getElementById('data').value='';" style='font-family: "Italiana", regular; font-size: 24px; color: #202020; width: 20%;height: 5%;font-size: 100%;background-color: #FFFFF0;'>Clear</button>
+		        <button onclick="document.location='/app/lesfleurs'" style='font-family: "Italiana", regular; font-size: 24px; color: #202020; width: 20%;height: 5%;font-size: 100%;background-color: #FFFFF0;'>Home</button><p> 
+                        </div>
+                            
+                        </div>
+	</div>
+	<script>
+		function doExec() { 
+		let sql= document.getElementById("sql").value;
+    		postJSON(sql);
+  		}
+  		function postJSON(sql) {
+                        if (window.XMLHttpRequest) {
+                                try {
+                                        req = new XMLHttpRequest();
+                                } catch (e) {
+                                        req = false;
+                                }
+                                // branch for IE/Windows ActiveX version
+                        } else {
+                                if (window.ActiveXObject) {
+                                        try {
+                                                req = new ActiveXObject("Msxml2.XMLHTTP");
+                                        } catch (e) {
+                                                try {
+                                                        req = new ActiveXObject("Microsoft.XMLHTTP");
+                                                } catch (e) {
+                                                        req = false;
+                                                }
+                                        }
+                                }
+                        }
+                        if (req) {
+				
+                                req.onreadystatechange = function() {
+					if (req.readyState == 4) {
+						document.getElementById("data").value= req.responseText;
+					}
+				}
+                                req.open("GET", "sql?cmd="+sql, true);
+                                req.setRequestHeader("Content-type", "application/json"); 
+								req.send();                      
+					            //req.send(json);
+                        } else {
+                                alert("req== false");
+                        }
+                }
+				function sqlSent() {
+                }
+  </script>
+
+</body>
+</html>

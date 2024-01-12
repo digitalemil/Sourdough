@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='../stylesheets/stylenoir.css' />
+</head>
+
+<body style="color:<%= text_color %>;">
+  <script>
+    function signingWithKey() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "/signinwithkey", true);
+      xhttp.setRequestHeader('x-api-key', '<%= code %>');
+      xhttp.setRequestHeader('Content-type', 'application/text');
+      xhttp.onreadystatechange = function () {
+        document.location.href = "/app/home"
+      };
+      xhttp.send(document.getElementById("key").value);
+    }
+  </script>
+
+  <div id="content"
+    style="color:<%= text_color %>; border:1px solid black; width: 80%; height: 72%; text-align: center; position: absolute; top: 10%; left: 10%; background-color: <%= contentbackgroundcolor %>;">
+
+    <a href="/app/lesfleurs" style="color:<%= text_color %>;text-align:center"></a>
+    <h2 style="text-align:center">
+      <%= welcome %>
+    </h2>
+    <h2 style="color:<%= text_color %>;text-align:center">Code:</h2><br>
+    <div style="color:<%= text_color %>;text-align:center">
+      <input focus style="color:<%= text_color %>;background-color: rgb(205, 201, 201); text-align: center; width: 20%;"
+        type="password" id="key" name="key" value='<%= code %>'></input>
+    </div>
+    </br>
+    <p></p>
+    <a style="color:<%= text_color %>;" onclick="signingWithKey()">
+      <h2 style="color:<%= text_color %>; text-align:center">Sign In With Key</h2>
+    </a>
+      <p>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>lesfleurs</title>
+	<link rel='stylesheet' href='../stylesheets/stylenoir.css' />
+
+</head>
+
+<body id="body" style="background-color: black;">
+
+
+	<div id="container" style="scale: 0.85; position: absolute; top:0px; left: 160px;"
+		onmousedown="createFleur(); showLesFleurs(-1)">
+		<div id="lafleur" frameBorder="0" style="width: 1024px; height: 1024px;"></div>
+	</div>
+	<div id="lesfleurs" style="text-align: center; height:640px; position: absolute; top: 0px; left: 240px;">
+		<img id="r0" hidden width="64px" src="../images/star.svg"></img>
+		<img id="r1" hidden width="64px" src="../images/star.svg"></img>
+		<img id="r2" hidden width="64px" src="../images/star.svg"></img>
+		<img id="r3" hidden width="64px" src="../images/star.svg"></img>
+		<img id="r4" hidden width="64px" src="../images/star.svg"></img>
+	</div>
+
+	<div id="menu" class="sidenav">
+		<div style="position: absolute; top: 64px;">
+			<div onclick="withcolor= true; createFleur()">New</div>
+			<p></p>
+			<a id="random" href="/app/first">First</a>
+			<a id="random" href="/app/last">Last</a>
+			<a id="random" href="/app/random">Random</a>
+			<p></p>
+			<div>
+				Stars:
+				<p></p>
+				<button class="button" style="width: 128px; background-color: #FFFFF0;" onclick="showLesFleurs(1)">1</button>
+				<p></p>
+				<button class="button" style="width: 128px; background-color: #FFFFF0;" onclick="showLesFleurs(2)">2</button>
+				<p></p>
+				<button class="button" style="width: 128px; background-color: #FFFFF0;" onclick="showLesFleurs(3)">3</button>
+				<p></p>
+				<button class="button" style="width: 128px; background-color: #FFFFF0;" onclick="showLesFleurs(4)">4</button>
+				<p></p>
+				<button class="button" style="width: 128px; background-color: #FFFFF0;" onclick="showLesFleurs(5)">5</button>
+				<p></p>
+			</div>
+			<div onclick="download()">Download SVG</div>
+			<a id="SQL" href="/app/sql.html">SQL</a>
+			<a id="docs" href="/app/docsvg" target="_blank">Documentation</a>
+			<p></p>
+			<a id="logout" href="../logout">Logout</a>
+		</div>
+	</div>
+	</div>
+
+</body>
+<script>
+	let module= new Object();
+</script>
+<script src="creator.js"></script>
+<script>
+	let svg = "";
+		withcolor= false;
+	let hiddenmenu= false;
+
+	document.getElementById("body").addEventListener("keydown", review);
+
+	function download() {
+		const blob = new Blob([svg.toString()]);
+  		const element = document.createElement("a");
+  		element.download = "lafleur.svg";
+  		element.href = window.URL.createObjectURL(blob);
+  		element.click();
+  		element.remove();
+	}
+
+	function review(event) {
+		let key = event.keyCode;
+		if (key >= 48 && key < 54)
+			showLesFleurs(key - 48)
+		if(key== 77) {
+			let m= document.getElementById("menu");
+			if(hiddenmenu) {
+				m.style.display="block";
+			}
+			else {
+				m.style.display="none";
+			}
+			hiddenmenu= !hiddenmenu;
+		}
+
+	};
+
+	function displaylesfleurs(r) {
+		if (r > 4.9)
+			r = 5;
+		for (let i = 0; i < 5; i++) {
+			let e = document.getElementById("r" + i);
+			if (i < Math.floor(r)) {
+				e.style = "height; 64px; width: 64px;";
+				e.removeAttribute("hidden");
+			}
+			else
+				e.setAttribute("hidden", true);
+			let p = r - Math.floor(r);
+			if (p > 0 && i == Math.floor(r)) {
+				e.style = "height; 64px; width: " + (64.0 * p) + "px;";
+				e.removeAttribute("hidden");
+			}
+		}
+	}
+	function showLesFleurs(n) {
+		displaylesfleurs(n);
+		if (n < 0)
+			return;
+		svg = svg.replace("</desc>", ' stars=' + n + "</desc>");
+		thisrating = n;
+		setTimeout(post, 200)
+	};
+
+	function post() {
+		var xhttp = new XMLHttpRequest();
+		if (flowerid == 0) {
+			xhttp.open("POST", "/app/rose", true);
+			xhttp.setRequestHeader('Content-type', 'application/xml');
+			xhttp.onreadystatechange = function () {
+				if (xhttp.readyState == XMLHttpRequest.DONE) {
+					flowerid = xhttp.responseText;
+				}
+			}
+			xhttp.send(svg);
+		}
+		else {
+			xhttp.open("POST", "/app/rating", true);
+			xhttp.setRequestHeader('Content-type', 'application/json');
+			xhttp.onreadystatechange = function () {
+				if (xhttp.readyState == XMLHttpRequest.DONE) {
+					displaylesfleurs(parseFloat(xhttp.responseText));
+				}
+			}
+			xhttp.send(JSON.stringify({ rating: thisrating, flowerid: flowerid }));
+		}
+	}
+	function createFleur() {
+		showLesFleurs(-1);
+		flowerid= 0;
+		document.getElementById("lafleur").innerHTML = createSVG();
+	};
+
+
+	function showExisting(xml, r, f) {
+		flowerid = f;
+		document.getElementById('lafleur').innerHTML = xml;
+		rating = r;
+		displaylesfleurs(rating)
+	};
+	
+	let flowerid = 0;
+	let rating = 0;
+	let thisrating = null;
+	<%- action %>
+
+</script>
+
+</html>
