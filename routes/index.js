@@ -1,22 +1,22 @@
 let express = require("express");
 let router = express.Router();
 const { XMLParser, XMLBuilder, XMLValidator } = require("fast-xml-parser");
-const { rate, persist, executeSQL } = require("../private/persistence.js");
+const { rate, persist, executeSQL, authenticateUser, getXML } = require("../private/persistence.js");
 const fs = require('fs');
 let url = require('url');
 
 router.all("/signinwithkey", async function (req, res, next) {
-  if (process.env.CODE == "" || process.env.CODE == undefined) {
+  if (process.env.CODE == "" || ! (process.env.CODE != undefined)) {
     res.status(401).send("unauthorized");
     return;
   }
   if (req.header('x-api-key') == process.env.CODE) {
-    if (req.body.replace(/\s/g, '') == process.env.CODE) {
+    let user= req.body.split("/")[0].trim();
+    let password= req.body.split("/")[1].trim();
+    if (await authenticateUser(user, password)) {
       req.session.authorizedByKey = true;
-      req.session.passport = { "user": { "email": { "value": process.env.DEFAULT_USER } } };
+      req.session.passport = { "user": { "name": { "value": user } } };
       res.redirect('/app/home');
-      console.log("SIGNEDIN");
-
       return;
     }
   }
@@ -25,7 +25,7 @@ router.all("/signinwithkey", async function (req, res, next) {
 
 router.get(['/app/sql.html'], function (req, res, next) {
   let start = new Date();
-  res.render('sql', { table: process.env.TABLE, farourl: process.env.FAROURL, farokey: process.env.FAROKEY });
+  res.render('sql', { table: process.env.MAINTABLE, farourl: process.env.FAROURL, farokey: process.env.FAROKEY });
 });
 
 router.get(['/app/sql'], async function (req, res, next) {
@@ -57,8 +57,8 @@ router.get("/", function (req, res, next) {
     .observe(new Date() - start);
 });
 
-function renderHome(req, res, next, home, action, flowerid) {
-  res.render(home, { code: process.env.CODE, flowerid: flowerid, action: action, contentbackgroundcolor: process.env.CONTENTBACKGROUNDCOLOR, text_color: process.env.TEXT_COLOR, title: process.env.TITLE });
+function renderHome(req, res, next, home, action, id) {
+  res.render(home, { code: process.env.CODE, id: id, action: action, contentbackgroundcolor: process.env.CONTENTBACKGROUNDCOLOR, text_color: process.env.TEXT_COLOR, title: process.env.TITLE });
 };
 
 router.get("/app/home", function (req, res, next) {
@@ -72,13 +72,13 @@ router.get("/app/home", function (req, res, next) {
 
 router.get("/app/random", async function (req, res, next) {
   let start = new Date();
-  let r = await getFlowerXML(0);
+  let r = await getXML(0);
 
   if (r == undefined || r.xml == undefined) {
     renderHome(req, res, next, "home", "");
   }
   else {
-    renderHome(req, res, next, "home", "showExisting(`" + r.xml + "`, " + r.rating + ", '" + r.flowerid + "');");
+    renderHome(req, res, next, "home", "showExisting(`" + r.xml + "`, " + r.rating + ", '" + r.id + "');");
 
   }
   global.httpRequestDurationMilliseconds
@@ -88,13 +88,13 @@ router.get("/app/random", async function (req, res, next) {
 
 router.get("/app/last", async function (req, res, next) {
   let start = new Date();
-  let r = await getFlowerXML(1);
+  let r = await getXML(1);
 
   if (r == undefined || r.xml == undefined) {
     renderHome(req, res, next, "home", "");
   }
   else {
-    renderHome(req, res, next, "home", "showExisting(`" + r.xml + "`, " + r.rating + ", '" + r.flowerid + "');");
+    renderHome(req, res, next, "home", "showExisting(`" + r.xml + "`, " + r.rating + ", '" + r.id + "');");
   }
   global.httpRequestDurationMilliseconds
     .labels(req.route.path, res.statusCode, req.method)
@@ -103,12 +103,12 @@ router.get("/app/last", async function (req, res, next) {
 
 router.get("/app/first", async function (req, res, next) {
   let start = new Date();
-  let r = await getFlowerXML(2);
+  let r = await getXML(2);
   if (r == undefined || r.xml == undefined) {
     renderHome(req, res, next, "home", "");
   }
   else {
-    renderHome(req, res, next, "home", "showExisting(`" + r.xml + "`, " + r.rating + ", '" + r.flowerid + "');");
+    renderHome(req, res, next, "home", "showExisting(`" + r.xml + "`, " + r.rating + ", '" + r.id + "');");
   }
   global.httpRequestDurationMilliseconds
     .labels(req.route.path, res.statusCode, req.method)
@@ -120,7 +120,7 @@ router.post("/app/rating", async function (req, res, next) {
 
   global.logger.log("info", "Persisting rating: " + req.body.rating);
 
-  let newrating = await rateFlower(req.body.flowerid, req.body.rating, req.session.passport.user.email.value);
+  let newrating = await rate(req.body.id, req.body.rating, req.session.passport.user.name.value);
 
   res.send(newrating);
   global.httpRequestDurationMilliseconds
@@ -216,7 +216,7 @@ router.post("/app/rose", async function (req, res, next) {
 
 async function ingest(req, res, next, replay) {
   let start = new Date();
-  global.logger.log("info", "Ingesting flower.");
+  global.logger.log("info", "Ingesting item."+req.body);
   res.statusCode = 200;
   const options = {
     ignoreAttributes: false,
@@ -224,7 +224,7 @@ async function ingest(req, res, next, replay) {
   };
   const parser = new XMLParser(options);
   let jobj = parser.parse(req.body);
-  let ret = await persist(jobj, req.body, req.session.passport.user.email.value);
+  let ret = await persist(jobj, req.body, req.session.passport.user.name.value);
   res.send(ret)
 };
 

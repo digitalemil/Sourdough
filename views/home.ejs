@@ -120,12 +120,12 @@
 
 	function post() {
 		var xhttp = new XMLHttpRequest();
-		if (flowerid == 0) {
+		if (id == 0) {
 			xhttp.open("POST", "/app/rose", true);
 			xhttp.setRequestHeader('Content-type', 'application/xml');
 			xhttp.onreadystatechange = function () {
 				if (xhttp.readyState == XMLHttpRequest.DONE) {
-					flowerid = xhttp.responseText;
+					id = xhttp.responseText;
 				}
 			}
 			xhttp.send(svg);
@@ -138,24 +138,25 @@
 					displaylesfleurs(parseFloat(xhttp.responseText));
 				}
 			}
-			xhttp.send(JSON.stringify({ rating: thisrating, flowerid: flowerid }));
+			xhttp.send(JSON.stringify({ rating: thisrating, id: id }));
 		}
 	}
 	function createFleur() {
 		showLesFleurs(-1);
-		flowerid= 0;
-		document.getElementById("lafleur").innerHTML = createSVG();
+		id= 0;
+		svg= createSVG();
+		document.getElementById("lafleur").innerHTML = svg;
 	};
 
 
 	function showExisting(xml, r, f) {
-		flowerid = f;
+		id = f;
 		document.getElementById('lafleur').innerHTML = xml;
 		rating = r;
 		displaylesfleurs(rating)
 	};
 	
-	let flowerid = 0;
+	let id = 0;
 	let rating = 0;
 	let thisrating = null;
 	<%- action %>

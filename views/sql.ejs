@@ -9,7 +9,7 @@
 <body style="background-image:url('../../images/bg-black.jpg')">	
 	<div id="alldiv" class="" style="width: calc(100% - 0px);">
 		<div id="text" class="">
-			<input id="sql" type="text" style="width: 79%;height: 6%;font-size: 100%;background-color: #FFFFF0;" value="SELECT id FROM Flowers LIMIT 10"></input>
+			<input id="sql" type="text" style="width: 79%;height: 6%;font-size: 100%;background-color: #FFFFF0;" value="SELECT id FROM <%= table %> LIMIT 10"></input>
 			<button onclick="doExec()" style='font-family: "Italiana", regular; font-size: 24px; color: #202020; width: 20%;height: 5%;background-color: #FFFFF0;'>Execute</button><p> 
 			<textarea rows="40" id="data" style='font-family: "Italiana", regular; font-size: 24px; color: #202020; width: 100%; height:75%;font-size: 100%;background-color: #FFFFF0;' data-role="none"></textarea><p>
 			<div style="text-align: right;">    <button onclick="document.getElementById('data').value='';" style='font-family: "Italiana", regular; font-size: 24px; color: #202020; width: 20%;height: 5%;font-size: 100%;background-color: #FFFFF0;'>Clear</button>

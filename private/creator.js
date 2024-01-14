@@ -1,6 +1,10 @@
 
 function getName() {
-
+    var minm = 10000000000; 
+    var maxm = 99999999999; 
+    let n = Math.floor(Math 
+    .random() * (maxm - minm + 1)) + minm; 
+    return "Ticket"+n;
 }
 
 function getOrigin() {
@@ -18,7 +22,7 @@ function getOrigin() {
 
 function createSVG() {
     let name= getName();
-    let desc= "name=''"+getName()+"'' origin=''"+getOrigin();
+    let desc= "name=\""+getName()+"\" origin=\""+getOrigin()+"\"";
     let ret = `<svg style="background-color: #FFFFF0" width="1024" height="1024"  xmlns="http://www.w3.org/2000/svg">
     <desc>`+ desc + `</desc>`+"\n"
 
@@ -38,7 +42,7 @@ function createSVG() {
       fill: black;
     }
     </style>
-    <text x="16" y="64" class="big">Ticket</text>
+    <text x="16" y="64" class="big">`+getName()+`</text>
     `
 
     ret+= "</svg>";

@@ -2,11 +2,56 @@ const { forEach } = require("async");
 const pg = require("pg");
 const prom_client = require("prom-client");
 
-const connectionString = process.env.DATABASE_CONNECTIONSTRING;
+String.prototype.hashCode = function() {
+    var hash = 0,
+      i, chr;
+    if (this.length === 0) return hash;
+    for (i = 0; i < this.length; i++) {
+      chr = this.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
+
+const connectionString = process.env.DATABASE_CONNECTIONSTRING.toLowerCase();
 const cp = new pg.Pool({
     connectionString,
     max: 8
 })
+
+async function authenticateUser(user, password) {
+    let pw= null;
+    try {
+        con = await cp.connect();
+        let result= await executeQuery(con, "Select password_hash from UserDetails where name='"+user+"';");
+        pw= result.rows[0].password_hash;
+    }
+    catch (err) {
+        if((! (err!= undefined)) || JSON.stringify(err)=== "{}") {
+            global.logger.log("info", "Can't authenticate user: "+user);
+            return false;     
+        }
+        global.logger.log("error", err);
+        if (undefined != con && con != null) {
+            try {
+                con.release();
+            }
+            catch (ex2) {
+                global.logger.log("error", ex2);
+            }
+        }
+        return false;
+    }
+    let ret= pw && (pw == password.hashCode());
+    if(ret) {
+        global.logger.log("info", "User: " + user + " authenticated.");
+    }
+    else {
+        global.logger.log("error", "User: " + user + " NOT authenticated.");
+    }
+    return ret;
+}
 
 async function executeTxWithRetry(tx, ...args) {
     const maxRetries = 5;
@@ -42,11 +87,11 @@ async function executeTxWithRetry(tx, ...args) {
 
 
 
-async function rateWithRetry(id, rating, email) {
-    return await executeTxWithRetry(rate, flowerid, rating, email);
+async function rateWithRetry(id, rating, username) {
+    return await executeTxWithRetry(rate, id, rating, username);
 }
 
-async function rate(id, rating, email) {
+async function rate(id, rating, username) {
     let con = null;
     let start = Date.now();
     let newrating = 0;
@@ -57,7 +102,12 @@ async function rate(id, rating, email) {
         global.logger.log("info", "Beginning Transaction at: " + start + "/" + new Date());
         await executeQuery(con, "BEGIN TRANSACTION;");
 
-        let ratingq = "INSERT INTO RATINGS (createdon, stars, "+process.env.MAINTABLE+"id) Values (";
+        let userrows = await executeQuery(con, "Select id from UserDetails where name='"+username+"';");
+        let userid= userrows.rows[0].id;
+
+        global.logger.log("info", "Persisting stars for UserID: "+userid);
+
+        let ratingq = "INSERT INTO STARS (createdby, createdon, stars, "+process.env.MAINTABLE+"id) Values (";
         ratingq += "'" + userid + "', "
         ratingq += "'" + new Date().toISOString() + "', ";
         ratingq += rating + ", '"
@@ -104,10 +154,10 @@ async function rate(id, rating, email) {
 }
 
 async function getXML(qn, id) {
-    queries = ["select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join flowers f on r.flowerid=f.id order by RANDOM() limit 1;",
-        "select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join flowers f on r.flowerid=f.id order by f.createdon desc limit 1; ",
-        "select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join flowers f on r.flowerid=f.id order by f.createdon asc limit 1; ",
-        "select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join flowers f on r.flowerid=f.id where f.id='" + id + "';"];
+    queries = ["select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by RANDOM() limit 1;",
+        "select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by f.createdon desc limit 1; ",
+        "select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by f.createdon asc limit 1; ",
+        "select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.id='" + id + "';"];
 
     let ret = new Object();
     let con = null;
@@ -216,12 +266,12 @@ async function executeQuery(con, query) {
 }
 
 
-async function persistWithRetry(jobj, xml, email) {
-    return await executeTxWithRetry(persist, jobj, xml, email);
+async function persistWithRetry(jobj, xml, username) {
+    return await executeTxWithRetry(persist, jobj, xml, username);
 }
 
-async function persist(jobj, xml, email) {
-    global.logger.log("info", "Persisting item.");
+async function persist(jobj, xml, username) {
+    global.logger.log("info", "Persistence persist method.");
     let con = null;
     let start = Date.now();
     let ret = {};
@@ -231,39 +281,41 @@ async function persist(jobj, xml, email) {
       
         global.logger.log("info", "Beginning Transaction at: " + start + "/" + new Date());
         await executeQuery(con, "BEGIN TRANSACTION;");
-       
+      
+        let userrows = await executeQuery(con, "Select id from UserDetails where name='"+username+"';");
+        let userid= userrows.rows[0].id;
+
+        global.logger.log("info", "Persisting item for UserID: "+userid);
+
         let desc = jobj.svg.desc.split(" ")
         let ri = 0;
-
         let data = {
             name: (desc[0].split("=")[1]).replaceAll("'", ""),
             origin: desc[1].split("=")[1].replaceAll("'", ""),
-            stars: parseInt(desc[5].split("=")[1]),
+            stars: parseInt(desc[2].split("=")[1]),
         }
 
-        let user = await executeQuery(con, "Select id from users where email='" + email + "'");
-        let userid = user.rows[0].id;
-        let flower = "INSERT INTO Flowers (createdby, createdon, xml, json, transformation, blossomtransformation, origin) Values (";
-        flower += "'" + userid + "', "
-        flower += "'" + new Date().toISOString() + "', ";
-        flower += "'" + xml + "', ";
-        flower += "'" + JSON.stringify(data) + "', ";
-        flower += "'" + data.origin + "'";
-        flower += ") RETURNING ID;";
-        let flowerrows = await executeQuery(con, flower);
-        let flowerid = flowerrows.rows[0].id;
-        global.logger.log("info", "ID: " + flowerid);
+        let item = "INSERT INTO "+process.env.MAINTABLE+" (createdby, createdon, xml, json, origin) Values (";
+        item += "'" + userid + "', "
+        item += "'" + new Date().toISOString() + "', ";
+        item += "'" + xml + "', ";
+        item += "'" + JSON.stringify(data) + "', ";
+        item += "'" + data.origin + "'";
+        item += ") RETURNING ID;";
+        let itemrows = await executeQuery(con, item);
+        let itemid = itemrows.rows[0].id;
+        global.logger.log("info", "Item created. ID: " + itemid);
 
         if (data.stars >= 1 && data.stars <= 5) {
-            let rating = "INSERT INTO Stars (createdby, createdon, stars, flowerid) Values (";
+            let rating = "INSERT INTO Stars (createdby, createdon, stars, "+process.env.MAINTABLE+"id) Values (";
             rating += "'" + userid + "', "
             rating += "'" + new Date().toISOString() + "', ";
             rating += data.stars + ", '"
-            rating += flowerid + "');"
+            rating += itemid + "');"
 
             await executeQuery(con, rating);
         }
-        ret = flowerid;
+        ret = itemid;
     }
     catch (err) {
         global.logger.log("error", err);
@@ -304,3 +356,5 @@ async function persist(jobj, xml, email) {
 exports.persist = persistWithRetry;
 exports.rate = rateWithRetry;
 exports.executeSQL= executeSQL;
+exports.authenticateUser= authenticateUser;
+exports.getXML= getXML;
