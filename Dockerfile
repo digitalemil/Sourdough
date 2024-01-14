@@ -1,11 +1,13 @@
-FROM node:hydrogen-alpine3.18
+
+FROM node:hydrogen
+
+WORKDIR /opt/app
 
 
-RUN sudo mkdir -p /etc/apt/keyrings/
-RUN wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
-RUN echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee /etc/apt/sources.list.d/grafana.list
-RUN sudo apt-get update
-RUN sudo apt-get install grafana-agent
+RUN curl -LJO https://github.com/grafana/agent/releases/download/v0.39.0-rc.0/grafana-agent-linux-amd64.zip
+RUN unzip grafana-agent-linux-amd64.zip 
+RUN chmod +x grafana-agent-linux-amd64.zip 
+
 
 WORKDIR /opt/app
 
