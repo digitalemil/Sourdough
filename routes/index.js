@@ -58,7 +58,7 @@ router.get("/", function (req, res, next) {
 });
 
 function renderHome(req, res, next, home, action, id) {
-  res.render(home, { code: process.env.CODE, id: id, action: action, contentbackgroundcolor: process.env.CONTENTBACKGROUNDCOLOR, text_color: process.env.TEXT_COLOR, title: process.env.TITLE });
+  res.render(home, { stars: process.env.STARSTEXT, code: process.env.CODE, id: id, action: action, contentbackgroundcolor: process.env.CONTENTBACKGROUNDCOLOR, text_color: process.env.TEXT_COLOR, title: process.env.TITLE });
 };
 
 router.get("/app/home", function (req, res, next) {
