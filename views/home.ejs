@@ -15,7 +15,7 @@
 		<div id="lafleur" frameBorder="0" style="width: 1024px; height: 1024px;"></div>
 	</div>
 	<div id="lesfleurs" style='color: #FFFFF0;font-family: "Italiana", regular; font-size: 64px;text-align: left; height:640px; position: absolute; top: 0px; left: 240px;'>
-		<%= stars %>
+		<div id="stars" style="display: inline-block;"><%= stars %> none.</div>
 		<img id="r0" hidden width="64px" src="../images/star.svg"></img>
 		<img id="r1" hidden width="64px" src="../images/star.svg"></img>
 		<img id="r2" hidden width="64px" src="../images/star.svg"></img>
@@ -93,6 +93,12 @@
 	};
 
 	function displaylesfleurs(r) {
+		if(r>0) {
+			document.getElementById("stars").innerHTML="<%= stars %>";
+		}
+		else {
+			document.getElementById("stars").innerHTML="<%= stars %> none";
+		}
 		if (r > 4.9)
 			r = 5;
 		for (let i = 0; i < 5; i++) {

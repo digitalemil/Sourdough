@@ -3,11 +3,11 @@
 	
 	use ${MAINTABLE}db;
 
-	drop view if exists ${MAINTABLE}WithStars;
-	drop view if exists StarsFor${MAINTABLE};
+	drop view if exists ${MAINTABLE}With${SECONDTABLE};
+	drop view if exists ${SECONDTABLE}For${MAINTABLE};
 	drop view if exists Local${MAINTABLE};
 
-	drop table if exists Stars;
+	drop table if exists ${SECONDTABLE};
 	
 	drop table if exists UserDetails Cascade;
 	Create Table if not exists UserDetails  (
@@ -41,18 +41,18 @@
 		family f2 (xml)
 	);
 	
-	create table if not exists Stars (
+	create table if not exists ${SECONDTABLE} (
 		id UUID NOT NULL DEFAULT gen_random_uuid(),
 		createdby UUID NOT NULL REFERENCES UserDetails (id),
 		${MAINTABLE}id UUID NOT NULL REFERENCES ${MAINTABLE} (id) ON DELETE no ACTION,
 		createdon TIMESTAMP,
-		Stars int NOT NULL,
+		${STARS} int NOT NULL,
 		 CONSTRAINT "primary" PRIMARY KEY (id)
 	);
 	
 	
-	create view StarsFor${MAINTABLE} as select ${MAINTABLE}id, count(id) as n, AVG(Stars) as a from Stars group by ${MAINTABLE}id; 
-	create view ${MAINTABLE}WithStars as select * from ${MAINTABLE} f right join StarsFor${MAINTABLE} r on r.${MAINTABLE}id=f.id;
+	create view ${SECONDTABLE}For${MAINTABLE} as select ${MAINTABLE}id, count(id) as n, AVG(${STARS}) as a from ${SECONDTABLE} group by ${MAINTABLE}id; 
+	create view ${MAINTABLE}With${SECONDTABLE} as select * from ${MAINTABLE} f right join ${SECONDTABLE}For${MAINTABLE} r on r.${MAINTABLE}id=f.id;
 	
 	-- cockroach demo --log-dir ~/tmp/lesfleurs/cockroachdb-logs  --nodes 9 --no-example-database --insecure --demo-locality=region=gcp-europe-west4,az=gcp-europe-west4a:region=gcp-europe-west4,az=gcp-europe-west4b:region=gcp-europe-west4,az=gcp-europe-west4c:region=azure-singapore,az=azure-singapore1:region=azure-singapore,az=azure-singapore2:region=azure-singapore,az=azure-singapore3:region=onprem-us,az=onprem-us-rack1:region=onprem-us,az=onprem-us-rack2:region=onprem-us,az=onprem-us-rack3
 

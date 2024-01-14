@@ -3,11 +3,11 @@
 	
 	use Ticketsdb;
 
-	drop view if exists TicketsWithStars;
-	drop view if exists StarsForTickets;
+	drop view if exists TicketsWithPriorities;
+	drop view if exists PrioritiesForTickets;
 	drop view if exists LocalTickets;
 
-	drop table if exists Stars;
+	drop table if exists Priorities;
 	
 	drop table if exists UserDetails Cascade;
 	Create Table if not exists UserDetails  (
@@ -41,18 +41,18 @@
 		family f2 (xml)
 	);
 	
-	create table if not exists Stars (
+	create table if not exists Priorities (
 		id UUID NOT NULL DEFAULT gen_random_uuid(),
 		createdby UUID NOT NULL REFERENCES UserDetails (id),
 		Ticketsid UUID NOT NULL REFERENCES Tickets (id) ON DELETE no ACTION,
 		createdon TIMESTAMP,
-		Stars int NOT NULL,
+		Priority int NOT NULL,
 		 CONSTRAINT "primary" PRIMARY KEY (id)
 	);
 	
 	
-	create view StarsForTickets as select Ticketsid, count(id) as n, AVG(Stars) as a from Stars group by Ticketsid; 
-	create view TicketsWithStars as select * from Tickets f right join StarsForTickets r on r.Ticketsid=f.id;
+	create view PrioritiesForTickets as select Ticketsid, count(id) as n, AVG(Priority) as a from Priorities group by Ticketsid; 
+	create view TicketsWithPriorities as select * from Tickets f right join PrioritiesForTickets r on r.Ticketsid=f.id;
 	
 	-- cockroach demo --log-dir ~/tmp/lesfleurs/cockroachdb-logs  --nodes 9 --no-example-database --insecure --demo-locality=region=gcp-europe-west4,az=gcp-europe-west4a:region=gcp-europe-west4,az=gcp-europe-west4b:region=gcp-europe-west4,az=gcp-europe-west4c:region=azure-singapore,az=azure-singapore1:region=azure-singapore,az=azure-singapore2:region=azure-singapore,az=azure-singapore3:region=onprem-us,az=onprem-us-rack1:region=onprem-us,az=onprem-us-rack2:region=onprem-us,az=onprem-us-rack3
 

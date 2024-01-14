@@ -105,18 +105,18 @@ async function rate(id, rating, username) {
         let userrows = await executeQuery(con, "Select id from UserDetails where name='"+username+"';");
         let userid= userrows.rows[0].id;
 
-        global.logger.log("info", "Persisting stars for UserID: "+userid);
+        global.logger.log("info", "Persisting "+process.env.SECONDTABLE+" for UserID: "+userid);
 
-        let ratingq = "INSERT INTO STARS (createdby, createdon, stars, "+process.env.MAINTABLE+"id) Values (";
+        let ratingq = "INSERT INTO "+process.env.SECONDTABLE+" (createdby, createdon, "+process.env.STARS+", "+process.env.MAINTABLE+"id) Values (";
         ratingq += "'" + userid + "', "
         ratingq += "'" + new Date().toISOString() + "', ";
         ratingq += rating + ", '"
         ratingq += id + "');"
 
         await executeQuery(con, ratingq);
-        let nr = await executeQuery(con, "Select a from StarsFor"+process.env.MAINTABLE+" where "+process.env.MAINTABLE+"id='" + id + "';");
+        let nr = await executeQuery(con, "Select a from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" where "+process.env.MAINTABLE+"id='" + id + "';");
         newrating = nr.rows[0].a;
-        global.logger.log("info", "New average rating for " + id + " :" + newrating);
+        global.logger.log("info", "New average for " + id + " :" + newrating);
     }
     catch (err) {
         global.logger.log("error", err);
@@ -145,7 +145,7 @@ async function rate(id, rating, username) {
         executeQuery(con, "COMMIT;");
         con.release();
         global.sqlCommits.inc();
-        global.logger.log("info", "Rating persisted. Transaction commited. Duration: " + (Date.now() - start) + " ms.");
+        global.logger.log("info", process.env.SECONDTABLE+" Persisted. Transaction commited. Duration: " + (Date.now() - start) + " ms.");
     }
     else {
         global.logger.error("error", "No database connection!");
@@ -154,10 +154,10 @@ async function rate(id, rating, username) {
 }
 
 async function getXML(qn, id) {
-    queries = ["select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by RANDOM() limit 1;",
-        "select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by f.createdon desc limit 1; ",
-        "select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by f.createdon asc limit 1; ",
-        "select f.xml as xml, r.a as rating, f.id as id from StarsFor"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.id='" + id + "';"];
+    queries = ["select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by RANDOM() limit 1;",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by f.createdon desc limit 1; ",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by f.createdon asc limit 1; ",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.id='" + id + "';"];
 
     let ret = new Object();
     let con = null;
@@ -307,7 +307,7 @@ async function persist(jobj, xml, username) {
         global.logger.log("info", "Item created. ID: " + itemid);
 
         if (data.stars >= 1 && data.stars <= 5) {
-            let rating = "INSERT INTO Stars (createdby, createdon, stars, "+process.env.MAINTABLE+"id) Values (";
+            let rating = "INSERT INTO "+process.env.SECONDTABLE+" (createdby, createdon, "+process.env.STARS+", "+process.env.MAINTABLE+"id) Values (";
             rating += "'" + userid + "', "
             rating += "'" + new Date().toISOString() + "', ";
             rating += data.stars + ", '"
