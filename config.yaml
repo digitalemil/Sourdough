@@ -42,3 +42,31 @@ metrics:
           basic_auth:
             username: ${METRICSUSER}
             password: ${METRICSPASSWORD}
+traces:
+  configs:
+  - name: default
+    remote_write:
+      - endpoint: ${TRACESENDPOINT}
+        basic_auth:
+          username: ${TRACESUSER}
+          password: ${TRACESPASSWORD}
+    service_graphs:
+        enabled: true
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+          http:
+              cors:
+                allowed_origins:
+                  - '*'
+                max_age: 7200
+    tail_sampling:
+      policies:
+        - type: string_attribute
+          string_attribute:
+            key: http.target
+            values:
+              - ^\/(?:_status\/.*|healthcheck)$
+            enabled_regex_matching: true
+            invert_match: true

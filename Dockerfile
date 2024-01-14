@@ -7,15 +7,6 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com 
 RUN sudo apt-get update
 RUN sudo apt-get install grafana-agent
 
-ENV LOGFOLDER=/tmp/logs
-ENV ENV=PROD
-ENV TITLE="Les Fleurs"
-ENV WELCOME="Welcome to Les Fleurs"
-ENV FLAVOR=lesfleurs
-ENV ABOUT="Les Fleurs"
-ENV TEXT_COLOR="#323232"
-ENV CONTENTBACKGROUNDCOLOR="rgba(225, 166, 173, 0.2);"
-
 WORKDIR /opt/app
 
 COPY bin /opt/app/bin
@@ -26,11 +17,13 @@ COPY views /opt/app/views
 COPY app.js /opt/app
 COPY package.json /opt/app
 COPY o11y.js /opt/app
+COPY tracing.js /opt/app
 COPY start.sh /opt/app
+
+COPY config.yaml /opt/app
 
 RUN chmod +x /opt/app/start.sh
 
 RUN cd /opt/app; npm install
 
-#ENTRYPOINT /opt/app/start.sh
-ENTRYPOINT node ./bin/www
+ENTRYPOINT /opt/app/start.sh

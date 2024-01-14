@@ -58,7 +58,8 @@ router.get("/", function (req, res, next) {
 });
 
 function renderHome(req, res, next, home, action, id) {
-  res.render(home, { stars: process.env.STARS, code: process.env.CODE, id: id, action: action, contentbackgroundcolor: process.env.CONTENTBACKGROUNDCOLOR, text_color: process.env.TEXT_COLOR, title: process.env.TITLE });
+  res.render(home, { email: req.session.passport.user.name.value, farourl: process.env.FAROURL, farokey: process.env.FAROKEY,
+    stars: process.env.STARS, code: process.env.CODE, id: id, action: action, contentbackgroundcolor: process.env.CONTENTBACKGROUNDCOLOR, text_color: process.env.TEXT_COLOR, title: process.env.TITLE });
 };
 
 router.get("/app/home", function (req, res, next) {
