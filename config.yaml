@@ -5,16 +5,15 @@ logs:
             password: ${LOGSPASSWORD}
             username: ${LOGSUSER}
           url: ${LOGSURL}
-      name: lesfleurs
+      name: default
       positions:
         filename: /tmp/positions.yaml
       scrape_configs:
-        - job_name: lesfleurs/appserver
+        - job_name: appserver
           static_configs:
           - labels: 
               __path__: ${LOGFOLDER}/*.log
-              app: lesfleurs
-              component: appserver
+              app: appserver
             targets:
               - localhost
       target_config:
@@ -29,14 +28,13 @@ metrics:
         - job_name: local_scrape
           static_configs:
             - targets: ['127.0.0.1:12345']
-        - job_name: lesfleurs
+        - job_name: appserver
           scrape_interval: 15s
           metrics_path: /_status/vars
           static_configs:
             - targets: ['127.0.0.1:${PORT}']
             - labels:
-                app: lesfleurs
-                component: appserver
+                app: appserver
       remote_write:
         - url: ${METRICSURL}
           basic_auth:
@@ -44,29 +42,33 @@ metrics:
             password: ${METRICSPASSWORD}
 traces:
   configs:
-  - name: default
-    remote_write:
-      - endpoint: ${TRACESENDPOINT}
-        basic_auth:
-          username: ${TRACESUSER}
-          password: ${TRACESPASSWORD}
-    service_graphs:
+    - name: default
+      automatic_logging:
+        backend: logs_instance
+        logs_instance_name: default
+        roots: true
+      service_graphs:
         enabled: true
-    receivers:
-      otlp:
-        protocols:
-          grpc:
-          http:
+      remote_write:
+        - endpoint: ${TRACESENDPOINT}
+          basic_auth:
+            username: ${TRACESUSER}
+            password: ${TRACESPASSWORD}
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+            http:
               cors:
                 allowed_origins:
                   - '*'
                 max_age: 7200
-    tail_sampling:
-      policies:
-        - type: string_attribute
-          string_attribute:
-            key: http.target
-            values:
-              - ^\/(?:_status\/.*|healthcheck)$
-            enabled_regex_matching: true
-            invert_match: true
+      tail_sampling:
+        policies:
+         - type: string_attribute
+           string_attribute:
+             key: http.target
+             values:
+               - ^\/(?:_status\/.*|healthcheck)$
+             enabled_regex_matching: true
+             invert_match: true
