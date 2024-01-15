@@ -22,6 +22,7 @@ const cp = new pg.Pool({
 
 async function authenticateUser(user, password) {
     let pw= null;
+    let con= null;
     try {
         con = await cp.connect();
         let result= await executeQuery(con, "Select password_hash from UserDetails where name='"+user+"';");
