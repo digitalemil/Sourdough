@@ -291,8 +291,6 @@ async function persist(jobj, xml, username) {
         global.logger.log("info", "Persisting item for UserID: "+userid);
 
         let desc = jobj.svg.desc.split(" ")
-        console.log(desc[0])
-        console.log((desc[0].split("=")[1]).replaceAll("'", ""))
         let ri = 0;
         let data = {
             name: (desc[0].split("=")[1]).replaceAll("'", ""),
