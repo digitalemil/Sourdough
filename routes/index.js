@@ -6,13 +6,18 @@ const fs = require('fs');
 let url = require('url');
 
 router.all("/signinwithkey", async function (req, res, next) {
+  console.log("Code: " + process.env.CODE);
+
   if (process.env.CODE == "" || ! (process.env.CODE != undefined)) {
     res.status(401).send("unauthorized");
     return;
   }
+  console.log("x-api " + req.header('x-api-key'));
+  
   if (req.header('x-api-key') == process.env.CODE) {
     let user= req.body.split("/")[0].trim();
     let password= req.body.split("/")[1].trim();
+    console.log("user; "+user+" pw: "+password)
     if (await authenticateUser(user, password)) {
       req.session.authorizedByKey = true;
       req.session.passport = { "user": { "name": { "value": user } } };
