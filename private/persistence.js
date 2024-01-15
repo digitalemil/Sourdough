@@ -153,11 +153,12 @@ async function rate(id, rating, username) {
     return newrating;
 }
 
-async function getXML(qn, id) {
+async function getXML(qn, id, name) {
     queries = ["select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by RANDOM() limit 1;",
         "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by f.createdon desc limit 1; ",
         "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id order by f.createdon asc limit 1; ",
-        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.id='" + id + "';"];
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.id='" + id + "';",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.name='\"" + name + "\"' limit 1;"];
 
     let ret = new Object();
     let con = null;
@@ -282,17 +283,20 @@ async function persist(jobj, xml, username) {
         global.logger.log("info", "Beginning Transaction at: " + start + "/" + new Date());
         await executeQuery(con, "BEGIN TRANSACTION;");
       
-        let userrows = await executeQuery(con, "Select id from UserDetails where name='"+username+"';");
+        let userrows = await executeQuery(con, "Select id, location from UserDetails where name='"+username+"';");
         let userid= userrows.rows[0].id;
+        let origin= userrows.rows[0].origin;
 
         global.logger.log("info", "Persisting item for UserID: "+userid);
 
         let desc = jobj.svg.desc.split(" ")
+        console.log(desc[0])
+        console.log((desc[0].split("=")[1]).replaceAll("'", ""))
         let ri = 0;
         let data = {
             name: (desc[0].split("=")[1]).replaceAll("'", ""),
-            origin: desc[1].split("=")[1].replaceAll("'", ""),
-            stars: parseInt(desc[2].split("=")[1]),
+            origin: origin,
+            stars: parseInt(desc[1].split("=")[1]),
         }
 
         let item = "INSERT INTO "+process.env.MAINTABLE+" (createdby, createdon, xml, json, origin) Values (";

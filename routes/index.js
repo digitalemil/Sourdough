@@ -87,6 +87,23 @@ router.get("/app/random", async function (req, res, next) {
     .observe(new Date() - start);
 });
 
+router.get("/app/search", async function (req, res, next) {
+  let start = new Date();
+  let name= decodeURIComponent(req.query.name);
+  let r = await getXML(4, null, name);
+
+  if (r == undefined || r.xml == undefined) {
+    renderHome(req, res, next, "home", "");
+  }
+  else {
+    renderHome(req, res, next, "home", "showExisting(`" + r.xml + "`, " + r.rating + ", '" + r.id + "');");
+
+  }
+  global.httpRequestDurationMilliseconds
+    .labels(req.route.path, res.statusCode, req.method)
+    .observe(new Date() - start);
+});
+
 router.get("/app/last", async function (req, res, next) {
   let start = new Date();
   let r = await getXML(1);

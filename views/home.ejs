@@ -76,6 +76,10 @@
 			<a id="random" href="/app/first">First</a>
 			<a id="random" href="/app/last">Last</a>
 			<a id="random" href="/app/random">Random</a>
+			<input style='border: 0; width: 80%; background-color: #FFFFF0;font-family: "Italiana", regular; font-size: 24px;text-align: center;' id="search" value=""></input>
+			<p></p>
+			<button class="button" style="width: 80%; height: 30px; text-align: center; background-color: #FFFFF0;" onclick="search()">Search</button>
+		
 			<p></p>
 			<div>
 				Stars:
@@ -111,6 +115,11 @@
 	let hiddenmenu= false;
 
 	document.getElementById("body").addEventListener("keydown", review);
+
+	function search() {
+		let name= document.getElementById("search").value;
+		document.location="/app/search?name="+encodeURIComponent(name);
+	}
 
 	function download() {
 		const blob = new Blob([svg.toString()]);
@@ -168,12 +177,23 @@
 			return;
 		svg = svg.replace("</desc>", ' stars=' + n + "</desc>");
 		thisrating = n;
-		setTimeout(post, 200)
+		if(id== 0)
+			setTimeout(persist, 200)
+		else 
+			setTimeout(rate, 200);
 	};
 
-	function post() {
+	function persist() {
+		post(false);
+	};
+
+	function rate() {
+		post(true);
+	};
+
+	function post(rating) {
 		var xhttp = new XMLHttpRequest();
-		if (id == 0) {
+		if (!rating) {
 			xhttp.open("POST", "/app/rose", true);
 			xhttp.setRequestHeader('Content-type', 'application/xml');
 			xhttp.onreadystatechange = function () {
@@ -198,6 +218,8 @@
 		showLesFleurs(-1);
 		id= 0;
 		svg= createSVG();
+		reting= 0;
+		showLesFleurs(0);
 		document.getElementById("lafleur").innerHTML = svg;
 	};
 

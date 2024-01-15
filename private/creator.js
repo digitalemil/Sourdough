@@ -4,26 +4,16 @@ function getName() {
     var maxm = 99999999999; 
     let n = Math.floor(Math 
     .random() * (maxm - minm + 1)) + minm; 
-    return "Ticket #"+n;
-}
-
-function getOrigin() {
-    let origin="EMEA";
-    if(Math.random()< 0.66) {
-        if(Math.random()< 0.33) {
-            origin="AMERICAS";
-        }
-        else {
-            origin="APAC";
-        }
-    }
-    return origin;
+    let name= "#"+n; 
+    document.getElementById("search").value= name;
+    return name;
 }
 
 function isLetter(c) {
     return c.toLowerCase() != c.toUpperCase();
 }
 function createSVG() {
+    let name= getName();
     let cs= 1024;
     let s= Math.floor(Math.random()* (TREASUREISLAND.length -cs));
     let done= false;
@@ -52,12 +42,11 @@ function createSVG() {
         }
     }
   
-    let content= TREASUREISLAND.substring(s-1,e+1);
+    let content= TREASUREISLAND.substring(s-1,e+1).replaceAll("'", "’");
 
     let splits= content.match(/.{1,1024}/g);
  
-    let name= getName();
-    let desc= "name=\""+getName()+"\" origin=\""+getOrigin()+"\"";
+    let desc= "name=\""+name+"\"";
     let ret = `<svg style="background-color: #FFFFF0" width="1024" height="1024"  xmlns="http://www.w3.org/2000/svg">
     <desc>`+ desc + `</desc>`+"\n"
 
@@ -79,7 +68,7 @@ function createSVG() {
       fill: black;
     }
     </style>
-    <text x="16" y="64" class="big">`+getName()+`</text>
+    <text x="16" y="64" class="big">Ticket `+name+`</text>
     `
     for(let i= 0; i< splits.length; i++) {
         ret+=  '<text x="48" y="'+ ((i*32)+128)+'" class="heavy">'+splits[i]+'</text>';
