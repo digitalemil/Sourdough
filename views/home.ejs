@@ -193,7 +193,7 @@
 	function post(rating) {
 		var xhttp = new XMLHttpRequest();
 		if (!rating) {
-			xhttp.open("POST", "/app/rose", true);
+			xhttp.open("POST", "/app/item", true);
 			xhttp.setRequestHeader('Content-type', 'application/xml');
 			xhttp.onreadystatechange = function () {
 				if (xhttp.readyState == XMLHttpRequest.DONE) {

@@ -179,7 +179,7 @@ router.get("/app/docsvg", function (req, res, next) {
 
 router.get("/app/er", function (req, res, next) {
   let start = new Date();
-  res.render("lesfleurs-er", { title: process.env.TITLE });
+  res.render("er", { title: process.env.TITLE });
   global.httpRequestDurationMilliseconds
     .labels(req.route.path, res.statusCode, req.method)
     .observe(new Date() - start);
@@ -204,12 +204,12 @@ router.get("/app/er.png", function (req, res, next) {
 router.get("/app/ddl", function (req, res, next) {
   let start = new Date();
 
-  fs.readFile("./private/lesfleurs-ddl.sql", "utf8", function (err, data) {
+  fs.readFile("./private/ddl.sql", "utf8", function (err, data) {
     if (err) {
       global.logger.log("error", "Can't find docs file.");
     }
 
-    res.render("lesfleurs-ddl", { ddl: data });
+    res.render("ddl", { ddl: data });
 
     global.httpRequestDurationMilliseconds
       .labels(req.route.path, res.statusCode, req.method)
@@ -225,7 +225,7 @@ router.get("/nouser", function (req, res, next) {
     .observe(new Date() - start);
 });
 
-router.post("/app/rose", async function (req, res, next) {
+router.post("/app/item", async function (req, res, next) {
   let start = new Date();
 
   await ingest(req, res, next, false);
