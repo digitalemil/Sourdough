@@ -5,7 +5,11 @@ function getName() {
     let n = Math.floor(Math 
     .random() * (maxm - minm + 1)) + minm; 
     let name= "#"+n; 
-    document.getElementById("search").value= name;
+    try {
+     document.getElementById("search").value= name;
+    }
+    catch(err) {
+    }
     return name;
 }
 
@@ -77,6 +81,10 @@ function createSVG() {
     ret+= "</svg>";
     return ret;
 }
+
+//module.exports = createSVG;
+exports.createSVG= createSVG;
+
 
 let TREASUREISLAND= `
 TREASURE ISLAND 
@@ -8844,4 +8852,3 @@ was written in 1881 by
 ROBERT Louis STEVENSON. 
 `
 
-module.exports = createSVG;

@@ -2,8 +2,43 @@ let express = require("express");
 let router = express.Router();
 const { XMLParser, XMLBuilder, XMLValidator } = require("fast-xml-parser");
 const { rate, persist, executeSQL, authenticateUser, getXML } = require("../private/persistence.js");
+const { createSVG } = require("../private/creator.js");
+
 const fs = require('fs');
 let url = require('url');
+
+
+router.post("/create", async function (req, res, next) {
+  if (process.env.CODE == "" || ! (process.env.CODE != undefined)) {
+    res.status(401).send("unauthorized");
+    return;
+  }
+  
+  if (req.header('x-api-key') == process.env.CODE) {
+    let user= req.body.split("/")[0].trim();
+    let password= req.body.split("/")[1].trim();
+    if (await authenticateUser(user, password)) {
+        let svg= createSVG();
+        svg= svg.replaceAll("</desc>", " stars=0</desc>");
+        const options = {
+          ignoreAttributes: false,
+          attributeNamePrefix: ""
+        };
+        const parser = new XMLParser(options);
+        let jobj = parser.parse(svg);
+        let ret= "503"
+        try {
+          ret = await persist(jobj, svg, user);
+        }
+        catch(err) {
+        } 
+        res.send(ret);
+    }
+    else {
+      res.status(401).send("unauthorized");
+    }
+  }
+});
 
 router.all("/signinwithkey", async function (req, res, next) {
   
