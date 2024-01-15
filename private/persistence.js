@@ -286,7 +286,7 @@ async function persist(jobj, xml, username) {
       
         let userrows = await executeQuery(con, "Select id, location from UserDetails where name='"+username+"';");
         let userid= userrows.rows[0].id;
-        let origin= userrows.rows[0].origin;
+        let origin= userrows.rows[0].location;
 
         global.logger.log("info", "Persisting item for UserID: "+userid);
 
