@@ -14,7 +14,7 @@ String.prototype.hashCode = function() {
     return hash;
 }
 
-const connectionString = process.env.DATABASE_CONNECTIONSTRING.toLowerCase();
+const connectionString = process.env.DATABASE_CONNECTIONSTRING;
 const cp = new pg.Pool({
     connectionString,
     max: 8
