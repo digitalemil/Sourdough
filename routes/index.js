@@ -9,8 +9,13 @@ let url = require('url');
 
 
 router.post("/create", async function (req, res, next) {
+  let start = new Date();
+
   if (process.env.CODE == "" || ! (process.env.CODE != undefined)) {
     res.status(401).send("unauthorized");
+    global.httpRequestDurationMilliseconds
+    .labels(req.route.path, res.statusCode, req.method)
+    .observe(new Date() - start);
     return;
   }
   
@@ -38,12 +43,20 @@ router.post("/create", async function (req, res, next) {
       res.status(401).send("unauthorized");
     }
   }
+  global.httpRequestDurationMilliseconds
+  .labels(req.route.path, res.statusCode, req.method)
+  .observe(new Date() - start);
+
 });
 
 router.all("/signinwithkey", async function (req, res, next) {
-  
+  let start = new Date();
+
   if (process.env.CODE == "" || ! (process.env.CODE != undefined)) {
     res.status(401).send("unauthorized");
+    global.httpRequestDurationMilliseconds
+    .labels(req.route.path, res.statusCode, req.method)
+    .observe(new Date() - start);
     return;
   }
   
@@ -54,15 +67,26 @@ router.all("/signinwithkey", async function (req, res, next) {
       req.session.authorizedByKey = true;
       req.session.passport = { "user": { "name": { "value": user } } };
       res.redirect('/app/home');
+      global.httpRequestDurationMilliseconds
+      .labels(req.route.path, res.statusCode, req.method)
+      .observe(new Date() - start);
+  
       return;
     }
   }
   res.status(401).send("unauthorized");
+  global.httpRequestDurationMilliseconds
+  .labels(req.route.path, res.statusCode, req.method)
+  .observe(new Date() - start);
+
 });
 
 router.get(['/app/sql.html'], function (req, res, next) {
   let start = new Date();
   res.render('sql', { table: process.env.MAINTABLE, farourl: process.env.FAROURL, farokey: process.env.FAROKEY });
+  global.httpRequestDurationMilliseconds
+    .labels(req.route.path, res.statusCode, req.method)
+    .observe(new Date() - start);
 });
 
 router.get(['/app/sql'], async function (req, res, next) {
@@ -84,8 +108,12 @@ router.get(['/app/sql'], async function (req, res, next) {
     global.logger.log("error", 'Error executing sql: ' + sql, ex);
   }
   res.end();
+  global.httpRequestDurationMilliseconds
+  .labels(req.route.path, res.statusCode, req.method)
+  .observe(new Date() - start);
   return;
 });
+
 router.get("/", function (req, res, next) {
   let start = new Date();
   res.render("index", { code: process.env.CODE,img: "true" == process.env.BLACK ? "images/rosenoir.png" : "images/rose.png", contentbackgroundcolor: "true" == process.env.BLACK ? "#808080" : process.env.CONTENTBACKGROUNDCOLOR, text_color: process.env.TEXT_COLOR, title: process.env.TITLE, welcome: process.env.WELCOME });
@@ -201,7 +229,7 @@ router.get("/app/creator.js", function (req, res, next) {
 router.get("/app/docsvg", function (req, res, next) {
   let start = new Date();
 
-  fs.readFile("private/lafleur.svg", "utf8", function (err, data) {
+  fs.readFile("private/"+process.env.MAINTABLE+".svg", "utf8", function (err, data) {
     if (err) {
       global.logger.log("error", "Can't find docs file.");
     }
@@ -224,7 +252,7 @@ router.get("/app/er", function (req, res, next) {
 router.get("/app/er.png", function (req, res, next) {
   let start = new Date();
 
-  fs.readFile("private/FlowersDB.png", function (err, data) {
+  fs.readFile("private/"+process.env.MAINTABLE+".png", function (err, data) {
     if (err) {
       global.logger.log("error", "Can't find docs file.");
     }
