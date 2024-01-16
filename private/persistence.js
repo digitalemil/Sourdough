@@ -14,11 +14,23 @@ String.prototype.hashCode = function() {
     return hash;
 }
 
+let connectionsInUse= 0;
 const connectionString = process.env.DATABASE_CONNECTIONSTRING;
 const cp = new pg.Pool({
     connectionString,
     max: 8
 })
+
+cp.on('acquire', (client) => {
+    connectionsInUse++;
+    global.sqlConnections.set(connectionsInUse);
+    global.logger.log("info", "Connection acquired. In use: "+connectionsInUse);
+});
+cp.on('release', (err, client) => {
+    connectionsInUse--;
+    global.sqlConnections.set(connectionsInUse);
+    global.logger.log("info", "Connection released. In use: "+connectionsInUse);
+});
 
 async function authenticateUser(user, password) {
     let pw= null;
@@ -31,7 +43,6 @@ async function authenticateUser(user, password) {
     catch (err) {
         if((! (err!= undefined)) || JSON.stringify(err)=== "{}") {
             global.logger.log("info", "Can't authenticate user: "+user);
-            return false;     
         }
         global.logger.log("error", err);
         if (undefined != con && con != null) {
@@ -44,6 +55,7 @@ async function authenticateUser(user, password) {
         }
         return false;
     }
+    con.release();
     let ret= pw && (pw == password.hashCode());
     if(ret) {
         global.logger.log("info", "User: " + user + " authenticated.");

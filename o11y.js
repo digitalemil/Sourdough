@@ -40,7 +40,7 @@ wlogger.log("info", "Environment= " + process.env.ENV)
 
 
 const prom_client = require('prom-client');
-const defaultLabels = { component: 'appserver', app: 'lesfleurs' };
+const defaultLabels = { component: 'appserver', app: process.env.MAINTABLE };
 const register = prom_client.register;
 register.setDefaultLabels(defaultLabels);
 
@@ -138,7 +138,11 @@ global.sqlRollbacks= new prom_client.Counter(
   }
 );
 
-
+global.sqlConnections= new prom_client.Gauge({
+  name: 'sql_connections',
+  help: 'connecttions from pool in use',
+  labelNames: ['connections']
+})
 
 global.sqlIsUp= new prom_client.Gauge({
   name: 'sql_isup',
