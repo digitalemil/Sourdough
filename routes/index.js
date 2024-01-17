@@ -27,6 +27,7 @@ router.get("/random/withkey", async function (req, res, next) {
     res.render("error",{message: "No item found.", error:"No item found.", title: process.env.TITLE});
   }
   else {
+    res.setHeader("image", "svg+xml");
     res.send(r);
   }
   global.httpRequestDurationMilliseconds
