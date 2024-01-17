@@ -81,6 +81,25 @@
 	GRANT SELECT on LocalTickets to Dude;
 	GRANT SELECT on LocalTickets to Fleur;
 		
+	drop view if exists TicketsWithPrioritiesGrafana;
+	drop view if exists PrioritiesForTicketsGrafana;
+	drop view if exists TicketsGrafana;
+	drop view if exists PrioritiesGrafana;
+	
+	create view TicketsGrafana as
+		select id, name, origin from Tickets;
+	create view PrioritiesGrafana as
+		select id, Ticketsid, priority from Priorities;
+	create view PrioritiesForTicketsGrafana as select Ticketsid, count(id) as n, AVG(priority) as a from Priorities group by Ticketsid; 
+	create view TicketsWithPrioritiesGrafana as select * from TicketsGrafana f right join PrioritiesForTickets r on r.Ticketsid=f.id;
+
+	CREATE USER  if not exists grafana LOGIN PASSWORD '${GRAFANAPASSWORD}';
+	GRANT SELECT on TicketsGrafana to Grafana; 
+	GRANT SELECT on PrioritiesGrafana to Grafana;
+	GRANT SELECT on PrioritiesForTicketsGrafana to Grafana;
+	GRANT SELECT on PrioritiesForTicketsGrafana to Grafana;
+	GRANT SELECT on TicketsWithPrioritiesGrafana to Grafana;
+	
 -- explain analyze select id from Tickets where crdb_region='gcp-europe-west4';
 -- select id,origin from Tickets;
 -- explain analyze select origin from Tickets where id='';

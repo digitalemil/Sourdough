@@ -8,6 +8,32 @@ const fs = require('fs');
 let url = require('url');
 
 
+router.get("/random/withkey", async function (req, res, next) {
+  let start = new Date();
+
+  let code= req.query.code;
+  
+  if (process.env.CODE == "" || ! (process.env.CODE != undefined) || code != process.env.CODE) {
+    res.render("error",{message: "Invalid Code.", error:"Invalid Code.", title: process.env.TITLE});
+    global.httpRequestDurationMilliseconds
+    .labels(req.route.path, res.statusCode, req.method)
+    .observe(new Date() - start);
+    return;
+  }
+ 
+  let r = await getXML(0);
+
+  if (r == undefined || r.xml == undefined) {
+    res.render("error",{message: "No item found.", error:"No item found.", title: process.env.TITLE});
+  }
+  else {
+    res.send(r);
+  }
+  global.httpRequestDurationMilliseconds
+    .labels(req.route.path, res.statusCode, req.method)
+    .observe(new Date() - start);
+});
+
 router.post("/create", async function (req, res, next) {
   let start = new Date();
 

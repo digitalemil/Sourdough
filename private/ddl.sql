@@ -77,9 +77,31 @@
 	create view Local${MAINTABLE} as 
 		select f.* from ${MAINTABLE} f Join UserDetails db On (f.origin=db.location) where db.name= current_user; 
 	
+		
 	GRANT SELECT on Local${MAINTABLE} to Joe;
 	GRANT SELECT on Local${MAINTABLE} to Dude;
 	GRANT SELECT on Local${MAINTABLE} to Fleur;
+		 
+	
+	drop view if exists ${MAINTABLE}With${SECONDTABLE}Grafana;
+	drop view if exists ${SECONDTABLE}For${MAINTABLE}Grafana;
+	drop view if exists ${MAINTABLE}Grafana;
+	drop view if exists ${SECONDTABLE}Grafana;
+	
+	create view ${MAINTABLE}Grafana as
+		select id, name, origin from ${MAINTABLE};
+	create view ${SECONDTABLE}Grafana as
+		select id, ${MAINTABLE}id, ${STARS} from ${SECONDTABLE};
+	create view ${SECONDTABLE}For${MAINTABLE}Grafana as select ${MAINTABLE}id, count(id) as n, AVG(${STARS}) as a from ${SECONDTABLE} group by ${MAINTABLE}id; 
+	create view ${MAINTABLE}With${SECONDTABLE}Grafana as select * from ${MAINTABLE}Grafana f right join ${SECONDTABLE}For${MAINTABLE} r on r.${MAINTABLE}id=f.id;
+
+	CREATE USER  if not exists grafana LOGIN PASSWORD '${GRAFANAPASSWORD}';
+	GRANT SELECT on ${MAINTABLE}Grafana to Grafana; 
+	GRANT SELECT on ${SECONDTABLE}Grafana to Grafana;
+	GRANT SELECT on ${SECONDTABLE}For${MAINTABLE}Grafana to Grafana;
+	GRANT SELECT on ${SECONDTABLE}For${MAINTABLE}Grafana to Grafana;
+	GRANT SELECT on ${MAINTABLE}With${SECONDTABLE}Grafana to Grafana;
+	
 		
 -- explain analyze select id from ${MAINTABLE} where crdb_region='gcp-europe-west4';
 -- select id,origin from ${MAINTABLE};
