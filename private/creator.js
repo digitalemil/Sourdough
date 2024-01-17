@@ -4,7 +4,7 @@ function getName() {
     var maxm = 99999999999; 
     let n = Math.floor(Math 
     .random() * (maxm - minm + 1)) + minm; 
-    let name= "#"+n; 
+    let name= "T"+n; 
     try {
      document.getElementById("search").value= name;
     }
