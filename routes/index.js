@@ -28,7 +28,7 @@ router.get("/random/withkey", async function (req, res, next) {
   }
   else {
     res.setHeader("image", "svg+xml");
-    res.send(r);
+    res.send(r.xml.replaceAll("'", "\""));
   }
   global.httpRequestDurationMilliseconds
     .labels(req.route.path, res.statusCode, req.method)
