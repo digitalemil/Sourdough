@@ -155,6 +155,13 @@ router.get("/app/random", async function (req, res, next) {
 router.get("/app/search", async function (req, res, next) {
   let start = new Date();
   let name= decodeURIComponent(req.query.name);
+  if(name.startsWith('#')) {
+    name= req.query.name;
+  }
+  if(name.startsWith('"')) {
+    name= name.replaceAll('"', '');
+  }
+  
   let r = await getXML(4, null, name);
 
   if (r == undefined || r.xml == undefined) {

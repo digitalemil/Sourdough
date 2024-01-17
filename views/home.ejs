@@ -122,7 +122,7 @@
 	function download() {
 		const blob = new Blob([svg.toString()]);
   		const element = document.createElement("a");
-  		element.download = "lafleur.svg";
+  		element.download = "items.svg";
   		element.href = window.URL.createObjectURL(blob);
   		element.click();
   		element.remove();
