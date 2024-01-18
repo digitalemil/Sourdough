@@ -166,7 +166,7 @@ async function rate(id, rating, username) {
     return newrating;
 }
 
-async function getXML(qn, id, name) {
+async function getXML(qn, id, name, itemname) {
 
     let ret = new Object();
     let con = null;
@@ -186,11 +186,13 @@ async function getXML(qn, id, name) {
         "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='"+origin+"' order by f.createdon desc limit 1; ",
         "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='"+origin+"' order by f.createdon asc limit 1; ",
         "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='"+origin+"' AND f.id='" + id + "';",
-        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='"+origin+"' AND f.name='\"" + name + "\"' limit 1;"];
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='"+origin+"' AND f.name='\"" + itemname + "\"' limit 1;"];
 
         let q = queries[qn];
         let result = await executeQuery(con, q);
         ret.xml = result.rows[0].xml;
+
+        ret.xml= ret.xml.replace("</style>", '</style><text x="800" y="64" class="big">'+origin+'</text>');
         ret.rating = result.rows[0].rating;
         ret.id = result.rows[0].id;
     }

@@ -150,7 +150,7 @@ router.get("/", function (req, res, next) {
 });
 
 function renderHome(req, res, next, home, action, id) {
-  res.render(home, { email: req.session.passport.user.name.value, farourl: process.env.FAROURL, farokey: process.env.FAROKEY,
+  res.render(home, { user: req.session.passport.user.name.value, farourl: process.env.FAROURL, farokey: process.env.FAROKEY,
     stars: process.env.STARS, code: process.env.CODE, id: id, action: action, contentbackgroundcolor: process.env.CONTENTBACKGROUNDCOLOR, text_color: process.env.TEXT_COLOR, title: process.env.TITLE });
 };
 
@@ -165,7 +165,8 @@ router.get("/app/home", function (req, res, next) {
 
 router.get("/app/random", async function (req, res, next) {
   let start = new Date();
-  let r = await getXML(0);
+  let user= req.query.user;
+  let r = await getXML(0, null, req.session.passport.user.name.value);
 
   if (r == undefined || r.xml == undefined) {
     renderHome(req, res, next, "home", "");
@@ -181,12 +182,12 @@ router.get("/app/random", async function (req, res, next) {
 
 router.get("/app/search", async function (req, res, next) {
   let start = new Date();
-  let name= req.query.name;
-  if(name.startsWith('"')) {
-    name= name.replace(/"/g, "");
+  let itemname= req.query.name;
+  if(itemname.startsWith('"')) {
+    itemname= itemname.replace(/"/g, "");
   }
    
-  let r = await getXML(4, null, name);
+  let r = await getXML(4, null, req.session.passport.user.name.value, itemname);
 
   if (r == undefined || r.xml == undefined) {
     renderHome(req, res, next, "home", "");
@@ -202,7 +203,9 @@ router.get("/app/search", async function (req, res, next) {
 
 router.get("/app/last", async function (req, res, next) {
   let start = new Date();
-  let r = await getXML(1);
+  let user= req.query.user;
+  let r = await getXML(1, null, req.session.passport.user.name.value);
+
 
   if (r == undefined || r.xml == undefined) {
     renderHome(req, res, next, "home", "");
@@ -217,7 +220,9 @@ router.get("/app/last", async function (req, res, next) {
 
 router.get("/app/first", async function (req, res, next) {
   let start = new Date();
-  let r = await getXML(2);
+  let user= req.query.user;
+  let r = await getXML(2, null, req.session.passport.user.name.value);
+
   if (r == undefined || r.xml == undefined) {
     renderHome(req, res, next, "home", "");
   }
