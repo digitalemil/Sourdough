@@ -173,7 +173,7 @@ async function getXML(qn, id, name) {
     try {
         con = await cp.connect();
 
-        let userlocation= await executeQuery("SELECT location from UserDetails where name='"+name+"'");
+        let userlocation= await executeQuery(con, "SELECT location from UserDetails where name='"+name+"'");
         let origin= userlocation.rows[0].location;
 
         queries = ["select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin="+origin+" by RANDOM() limit 1;",
