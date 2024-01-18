@@ -12,8 +12,8 @@
 	drop table if exists UserDetails Cascade;
 	Create Table if not exists UserDetails  (
 		id UUID NOT NULL DEFAULT gen_random_uuid(),
-		name STRING NOT NULL,
-		email STRING NOT NULL,
+		name STRING NOT NULL UNIQUE,
+		email STRING NOT NULL UNIQUE,
 		password_hash STRING NOT NULL,
 		location STRING NOT NULL,
 		CONSTRAINT "primary" PRIMARY KEY (id)

@@ -32,7 +32,7 @@ const loggermw = expressWinston.logger({
   ignoreRoute: function (req, res) { return false; } // optional: allows to skip some log messages based on request and/or response
 })
 global.logger = wlogger;
-wlogger.log("info", "Starting "+process.env.MAINTABLE+" on port: "+process.env.PORT);
+wlogger.log("info", "Starting "+process.env.MAINTABLE+" on port: "+(process.env.PORT || 3000));
 app.use(loggermw);
 
 
@@ -40,7 +40,8 @@ wlogger.log("info", "Environment= " + process.env.ENV)
 
 
 const prom_client = require('prom-client');
-const defaultLabels = { component: 'appserver', app: process.env.MAINTABLE };
+let dbtype= process.env.DBTYPE || "serverless";
+const defaultLabels = { component: 'appserver', app: process.env.MAINTABLE, dbtype: dbtype };
 const register = prom_client.register;
 register.setDefaultLabels(defaultLabels);
 
