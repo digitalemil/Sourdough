@@ -8,7 +8,7 @@ const fs = require('fs');
 let url = require('url');
 
 
-router.get("/random/withkey", async function (req, res, next) {
+router.get(["/random/withkey", "/random/withcode"], async function (req, res, next) {
   let start = new Date();
 
   let code= req.query.code;
@@ -24,14 +24,14 @@ router.get("/random/withkey", async function (req, res, next) {
   let r = await getXML(0);
 
   if (r == undefined || r.xml == undefined) {
-    res.render("error",{message: "No item found.", error:"No item found.", title: process.env.TITLE});
+    res.render("error",{route: req.path, message: "No item found.", error:"No item found.", title: process.env.TITLE});
   }
   else {
     res.setHeader("image", "svg+xml");
     res.send(r.xml.replaceAll("'", "\""));
   }
   global.httpRequestDurationMilliseconds
-    .labels(req.route.path, res.statusCode, req.method)
+    .labels(req.route.path[0], res.statusCode, req.method)
     .observe(new Date() - start);
 });
 

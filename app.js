@@ -117,7 +117,8 @@ app.use(function (err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   // render the error page
   res.status(err.status || 500);
-  res.render('error', { title: process.env.TITLE, message: err.message, error: err, route: req.url  });
+  route= req.path | req.url | 'unknown';
+  res.render('error', { title: process.env.TITLE, message: err.message, error: err, route: route });
   global.httpRequestDurationMilliseconds
     .labels(req.url, res.statusCode, req.method)
     .observe(new Date() - start);

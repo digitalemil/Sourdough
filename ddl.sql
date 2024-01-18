@@ -12,8 +12,8 @@
 	drop table if exists UserDetails Cascade;
 	Create Table if not exists UserDetails  (
 		id UUID NOT NULL DEFAULT gen_random_uuid(),
-		name STRING NOT NULL,
-		email STRING NOT NULL,
+		name STRING NOT NULL UNIQUE,
+		email STRING NOT NULL UNIQUE,
 		password_hash STRING NOT NULL,
 		location STRING NOT NULL,
 		CONSTRAINT "primary" PRIMARY KEY (id)
@@ -77,10 +77,12 @@
 	create view LocalTickets as 
 		select f.* from Tickets f Join UserDetails db On (f.origin=db.location) where db.name= current_user; 
 	
+		
 	GRANT SELECT on LocalTickets to Joe;
 	GRANT SELECT on LocalTickets to Dude;
 	GRANT SELECT on LocalTickets to Fleur;
-		
+		 
+	
 	drop view if exists TicketsWithPrioritiesGrafana;
 	drop view if exists PrioritiesForTicketsGrafana;
 	drop view if exists TicketsGrafana;
@@ -89,17 +91,18 @@
 	create view TicketsGrafana as
 		select id, name, origin from Tickets;
 	create view PrioritiesGrafana as
-		select id, Ticketsid, priority from Priorities;
-	create view PrioritiesForTicketsGrafana as select Ticketsid, count(id) as n, AVG(priority) as a from Priorities group by Ticketsid; 
+		select id, Ticketsid, Priority from Priorities;
+	create view PrioritiesForTicketsGrafana as select Ticketsid, count(id) as n, AVG(Priority) as a from Priorities group by Ticketsid; 
 	create view TicketsWithPrioritiesGrafana as select * from TicketsGrafana f right join PrioritiesForTickets r on r.Ticketsid=f.id;
 
-	CREATE USER  if not exists grafana LOGIN PASSWORD '${GRAFANAPASSWORD}';
+	CREATE USER  if not exists grafana LOGIN PASSWORD '';
 	GRANT SELECT on TicketsGrafana to Grafana; 
 	GRANT SELECT on PrioritiesGrafana to Grafana;
 	GRANT SELECT on PrioritiesForTicketsGrafana to Grafana;
 	GRANT SELECT on PrioritiesForTicketsGrafana to Grafana;
 	GRANT SELECT on TicketsWithPrioritiesGrafana to Grafana;
 	
+		
 -- explain analyze select id from Tickets where crdb_region='gcp-europe-west4';
 -- select id,origin from Tickets;
 -- explain analyze select origin from Tickets where id='';

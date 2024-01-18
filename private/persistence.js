@@ -172,15 +172,21 @@ async function getXML(qn, id, name) {
     let con = null;
     try {
         con = await cp.connect();
-
-        let userlocation= await executeQuery(con, "SELECT location from UserDetails where name='"+name+"'");
+        let userlocation= null;
+        if(name == undefined) {
+            userlocation= await executeQuery(con, "SELECT location from UserDetails order by RANDOM() limit 1;");      
+        }
+        else {
+            userlocation= await executeQuery(con, "SELECT location from UserDetails where name='"+name+"'");
+        }
         let origin= userlocation.rows[0].location;
 
-        queries = ["select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin="+origin+" by RANDOM() limit 1;",
-        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin="+origin+" order by f.createdon desc limit 1; ",
-        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin="+origin+" order by f.createdon asc limit 1; ",
-        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin="+origin+" AND f.id='" + id + "';",
-        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin="+origin+" AND f.name='\"" + name + "\"' limit 1;"];
+
+        queries = ["select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='\""+origin+"\"' order by RANDOM() limit 1;",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='\""+origin+"\"' order by f.createdon desc limit 1; ",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='\""+origin+"\"' order by f.createdon asc limit 1; ",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='\""+origin+"\"' AND f.id='" + id + "';",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='\""+origin+"\"' AND f.name='\"" + name + "\"' limit 1;"];
 
         let q = queries[qn];
         let result = await executeQuery(con, q);
