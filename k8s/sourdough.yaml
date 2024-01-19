@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${MAINTABLE}
+  name: sourdough
 spec:
   replicas: 1
   selector:
@@ -10,7 +10,7 @@ spec:
       component: appserver  
   template:
     metadata:
-      name: ${MAINTABLE}
+      name: sourdough
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/path: '_status/vars'
@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: ${MAINTABLE}
-        image: digitalemil/${MAINTABLE}:${MAINTABLE}-vlatest
+        image:  digitalemil/sourdough:sourdough-vlatest  
         imagePullPolicy: Always
         env:
         - name: MAINTABLE
@@ -48,6 +48,10 @@ spec:
           value: '${TRACESENDPOINT}' 
         - name: TRACESUSER
           value: '${TRACESUSER}' 
+        - name: FAROURL
+          value: https://faro-collector-prod-eu-west-2.grafana.net/collect
+        - name: FAROKEY
+          value: b315683f2e4bcbf36da9fded99f56af3
         - name: TITLE
           value: "$TITLE"
         - name: WELCOME
@@ -73,9 +77,12 @@ spec:
         - name: DBTYPE
           value: "$DBTYPE"
         - name: CODE
-          value: "$CODE"
-       - name: DEFAULT_USER
+          value: $CODE
+        - name: DEFAULT_USER
           value: "$DEFAULT_USER" 
+        - name: LOGO
+          value: "$LOGO" 
+
         ports:
         - containerPort: 3000
         volumeMounts:
@@ -102,7 +109,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ${MAINTABLE}
+  name: sourdough
 spec:
   selector:
     app: ${MAINTABLE}

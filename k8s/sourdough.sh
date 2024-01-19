@@ -17,9 +17,9 @@ export DATABASE_CONNECTIONSTRING='postgresql://root@cockroachdb-public.:26257/ti
 
 kubectl create ns $NAMESPACE
 
-kubectl -n $NAMESPACE create configmap sslkey --from-file ../multicluster/certs/myk8s/client.root.key
-kubectl -n $NAMESPACE create configmap sslcert --from-file ../multicluster/certs/myk8s/client.root.crt
-kubectl -n $NAMESPACE create configmap sslrootcert --from-file ../multicluster/certs/myk8s/ca.crt
+kubectl -n $NAMESPACE create configmap sslkey --from-file ../../multicluster/certs/client.root.key
+kubectl -n $NAMESPACE create configmap sslcert --from-file ../../multicluster/certs/client.root.crt
+kubectl -n $NAMESPACE create configmap sslrootcert --from-file ../../multicluster/certs/ca.crt
 
 envsubst < sourdough.yaml | kubectl apply -n $NAMESPACE -f -
 

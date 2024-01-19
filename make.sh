@@ -10,7 +10,6 @@ echo Building Version: $VERSION
 echo $VERSION > VERSION.txt
 
 podman build -f Dockerfile --platform=${PLATFORM} -t $podmanHUB_USER/$podmanHUB_REPO:sourdough-v${VERSION} .
-exit
 
 podman push $podmanHUB_USER/$podmanHUB_REPO:sourdough-v${VERSION}
 
