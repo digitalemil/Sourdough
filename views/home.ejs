@@ -7,7 +7,7 @@
 
 </head>
 
-<body id="body" style="background-color: black;">
+<body id="body" style="">
 
 <script>
 	(function () {
@@ -52,14 +52,15 @@
 	  // Append the Web-SDK script script tag to the HTML page
 	  document.head.appendChild(webSdkScript);
 	})();
+
 	</script>
 	
 
-	<div id="container" style="scale: 0.85; position: absolute; top:0px; left: 160px;"
+	<div id="container" style="scale: 0.85; position: absolute; top:0px; left: 160px; color:<%= text_color %>; background-color: <%= contentbackgroundcolor %>;"
 		onmousedown="createFleur(); showLesFleurs(-1)">
 		<div id="lafleur" frameBorder="0" style="width: 1024px; height: 1024px;"></div>
 	</div>
-	<div id="lesfleurs" style='color: #FFFFF0;font-family: "Italiana", regular; font-size: 64px;text-align: left; height:640px; position: absolute; top: 0px; left: 240px;'>
+	<div id="lesfleurs" style='color: <%= text_color %>;font-family: "Italiana", regular; font-size: 64px;text-align: left; height:640px; position: absolute; top: 0px; left: 240px;'>
 		<div id="stars" style="display: inline-block;"><%= stars %> none.</div>
 		<img id="r0" hidden width="64px" src="../images/star.svg"></img>
 		<img id="r1" hidden width="64px" src="../images/star.svg"></img>
@@ -68,29 +69,29 @@
 		<img id="r4" hidden width="64px" src="../images/star.svg"></img>
 	</div>
 
-	<div id="menu" class="sidenav">
+	<div id="menu" class="sidenav" style="color:<%= text_color %>;">
 		<div style="position: absolute; top: 64px;">
 			<div onclick="withcolor= true; createFleur()">New</div>
 			<p></p>
 			<a id="random" href="/app/first">First</a>
 			<a id="random" href="/app/last">Last</a>
 			<a id="random" href="/app/random">Random</a>
-			<input style='border: 0; width: 80%; background-color: #FFFFF0;font-family: "Italiana", regular; font-size: 24px;text-align: center;' id="search" value=""></input>
+			<input style='border: 0; width: 80%; background-color: <%= text_color %>;font-family: "Italiana", regular; font-size: 24px;text-align: center;' id="search" value=""></input>
 			<p></p>
-			<button class="button" style="width: 80%; height: 30px; text-align: center; background-color: #FFFFF0;" onclick="search()">Search</button>
+			<button class="button" style="width: 80%; height: 30px; text-align: center; background-color: <%= text_color %>;" onclick="search()">Search</button>
 		
 			<p></p>
 			<div>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: #FFFFF0;" onclick="showLesFleurs(1)">1</button>
+				<button class="button" style="width: 128px; background-color: <%= text_color %>;" onclick="showLesFleurs(1)">1</button>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: #FFFFF0;" onclick="showLesFleurs(2)">2</button>
+				<button class="button" style="width: 128px; background-color: <%= text_color %>;" onclick="showLesFleurs(2)">2</button>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: #FFFFF0;" onclick="showLesFleurs(3)">3</button>
+				<button class="button" style="width: 128px; background-color: <%= text_color %>;" onclick="showLesFleurs(3)">3</button>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: #FFFFF0;" onclick="showLesFleurs(4)">4</button>
+				<button class="button" style="width: 128px; background-color: <%= text_color %>;" onclick="showLesFleurs(4)">4</button>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: #FFFFF0;" onclick="showLesFleurs(5)">5</button>
+				<button class="button" style="width: 128px; background-color: <%= text_color %>;" onclick="showLesFleurs(5)">5</button>
 				<p></p>
 			</div>
 			<div onclick="download()">Download SVG</div>

@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${MAINTABLE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${MAINTABLE}
+      component: appserver  
+  template:
+    metadata:
+      name: ${MAINTABLE}
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '_status/vars'
+        prometheus.io/port: '3000'       
+      labels:
+        app: ${MAINTABLE}
+        component: appserver  
+    spec:
+      containers:
+      - name: ${MAINTABLE}
+        image: digitalemil/${MAINTABLE}:${MAINTABLE}-vlatest
+        imagePullPolicy: Always
+        env:
+        - name: MAINTABLE
+          value: "$MAINTABLE"
+        - name: SECONDTABLE
+          value: "${SECONDTABLE}"
+        - name: STARS
+          value: "${STARS}"
+        - name:  METRICSURL
+          value: "${METRICSURL}"
+        - name:  METRICSUSER
+          value: '${METRICSUSER}' 
+        - name: METRICSPASSWORD
+          value: '${METRICSPASSWORD}'
+        - name: LOGSPASSWORD
+          value: '${LOGSPASSWORD}' 
+        - name: LOGSURL
+          value: '${LOGSURL}' 
+        - name: TRACESPASSWORD
+          value: '${TRACESPASSWORD}'
+        - name: LOGSUSER
+          value: '${LOGSUSER}' 
+        - name: TRACESENDPOINT
+          value: '${TRACESENDPOINT}' 
+        - name: TRACESUSER
+          value: '${TRACESUSER}' 
+        - name: TITLE
+          value: "$TITLE"
+        - name: WELCOME
+          value: "$WELCOME"
+        - name: FLAVOR
+          value: "$LEFLEURS"
+        - name: ABOUT
+          value: "$ABOUT"
+        - name: TEXT_COLOR
+          value: "$TEXTCOLOR"
+        - name: CONTENTBACKGROUNDCOLOR
+          value: "$CONTENTBACKGROUNDCOLOR"
+        - name: BLACK
+          value: "$BLACK"
+        - name: LOGFOLDER
+          value: "$LOGFOLDER" 
+        - name: ENV
+          value: "$ENV"
+        - name: PORT
+          value: "$PORT"
+        - name: DATABASE_CONNECTIONSTRING
+          value: "$DATABASE_CONNECTIONSTRING"
+        - name: DBTYPE
+          value: "$DBTYPE"
+        - name: CODE
+          value: "$CODE"
+       - name: DEFAULT_USER
+          value: "$DEFAULT_USER" 
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+            - name: sslrootcert
+              mountPath: /tmp/cert1
+            - name: sslcert
+              mountPath: /tmp/cert2
+            - name: sslkey
+              mountPath: /tmp/cert3
+      volumes:
+        - name: sslrootcert
+          configMap:
+            defaultMode: 420
+            name: sslrootcert
+        - name: sslcert
+          configMap:
+            defaultMode: 420
+            name: sslcert
+        - name: sslkey
+          configMap:
+            defaultMode: 420
+            name: sslkey 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${MAINTABLE}
+spec:
+  selector:
+    app: ${MAINTABLE}
+    component: appserver 
+  ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: 3000
+  sessionAffinity: None
+  type: ClusterIP

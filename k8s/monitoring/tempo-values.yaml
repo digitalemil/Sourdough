@@ -1,0 +1,82 @@
+
+minio:
+  enabled: false
+  replicas: 1
+  drivesPerNode: 2
+  rootUser: tempo
+  rootPassword: tempotempo
+
+storage:
+  trace:
+    backend: s3
+    s3:
+      bucket: tempo  
+      access_key: tempo
+      endpoint: minio-hl.minio.svc.cluster.local:9000
+      secret_key: tempotempo
+      insecure: true
+
+receivers:
+  jaeger:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:14250
+      thrift_binary:
+        endpoint: 0.0.0.0:6832
+      thrift_compact:
+        endpoint: 0.0.0.0:6831
+      thrift_http:
+        endpoint: 0.0.0.0:14268
+  opencensus:
+  otlp:
+    protocols:
+    grpc:
+      endpoint: "0.0.0.0:4317"
+    http:
+      endpoint: "0.0.0.0:4318"
+ingester:
+  replicas: 3
+traces:
+  jaeger:
+    grpc:
+      # -- Enable Tempo to ingest Jaeger GRPC traces
+      enabled: false
+      # -- Jaeger GRPC receiver config
+      receiverConfig: {}
+    thriftBinary:
+      # -- Enable Tempo to ingest Jaeger Thrift Binary traces
+      enabled: false
+      # -- Jaeger Thrift Binary receiver config
+      receiverConfig: {}
+    thriftCompact:
+      # -- Enable Tempo to ingest Jaeger Thrift Compact traces
+      enabled: false
+      # -- Jaeger Thrift Compact receiver config
+      receiverConfig: {}
+    thriftHttp:
+      # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
+      enabled: false
+      # -- Jaeger Thrift HTTP receiver config
+      receiverConfig: {}
+  zipkin:
+    # -- Enable Tempo to ingest Zipkin traces
+    enabled: false
+    # -- Zipkin receiver config
+    receiverConfig: {}
+  otlp:
+    http:
+      # -- Enable Tempo to ingest Open Telemetry HTTP traces
+      enabled: true
+      # -- HTTP receiver advanced config
+      receiverConfig: {}
+    grpc:
+      # -- Enable Tempo to ingest Open Telemetry GRPC traces
+      enabled: true
+      # -- GRPC receiver advanced config
+      receiverConfig: {}
+  opencensus:
+    # -- Enable Tempo to ingest Open Census traces
+    enabled: false
+    # -- Open Census receiver config
+    receiverConfig: {}
+

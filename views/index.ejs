@@ -8,7 +8,7 @@
   <link rel='stylesheet' href='../stylesheets/stylenoir.css' />
 </head>
 
-<body style="color:<%= text_color %>;" onkeypress="handle(event)">
+<body style="color:<%= text_color %>; background-color: <%= contentbackgroundcolor %>;" onkeypress="handle(event)">
   <script>
     function signingWithKey() {
       var xhttp = new XMLHttpRequest();
@@ -29,30 +29,35 @@
     }
   </script>
 
-    <div id="content"
+<div id="content"
     style="color:<%= text_color %>; border:1px solid black; width: 80%; height: 72%; text-align: center; position: absolute; top: 10%; left: 10%; background-color: <%= contentbackgroundcolor %>;">
+    <img style="clear:right" width="128px" src="<%= logo %>"></img>
+
+    <p></p>
 
     <a href="/app/lesfleurs" style="color:<%= text_color %>;text-align:center"></a>
+    
     <h2 style="text-align:center">
       <%= welcome %>
     </h2>
-    <h2 style="color:<%= text_color %>;text-align:center">User:</h2><br>
-    <div style="color:<%= text_color %>;text-align:center">
-      <input focus style="color:<%= text_color %>;background-color: rgb(205, 201, 201); text-align: center; width: 20%;"
-        id="user" name="user" value=''></input>
-    </div>
-   
-    <h2 style="color:<%= text_color %>;text-align:center">Password:</h2><br>
-    <div style="color:<%= text_color %>;text-align:center">
-      <input focus style="color:<%= text_color %>;background-color: rgb(205, 201, 201); text-align: center; width: 20%;"
-        type="password" id="key" name="key" value=''></input>
-    </div>
-    </br>
+  <table style="width: 80%; text-align: center;;">
+<tr style="text-align: center;">
+  <td width="10%">User</td><td><input focus style="color:<%= text_color %>;background-color: rgb(205, 201, 201); text-align: center; width: 90%;"
+    id="user" name="user" value=''></input></td>
+</tr>
+<tr>
+  <td width="10%">Password</td><td><input focus style="color:<%= text_color %>;background-color: rgb(205, 201, 201); text-align: center; width: 90%;"
+    type="password" id="key" name="key" value=''></input></td>
+</tr>
+  </table>    
+  </br>
     <p></p>
     <a style="color:<%= text_color %>;" onclick="signingWithKey()">
       <h2 style="color:<%= text_color %>; text-align:center">Sign In</h2>
     </a>
+
       <p>
+ 
   </div>
 </body>
 
