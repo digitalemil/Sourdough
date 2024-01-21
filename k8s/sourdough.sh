@@ -13,7 +13,7 @@ if [[ -z "${MAINTABLE}" ]]; then
   exit -1
 fi
 
-export DATABASE_CONNECTIONSTRING='postgresql://root@cockroachdb-public.:26257/ticketsdb?sslmode=verify-full&sslrootcert=/tmp/cert1/ca.crt&sslcert=/tmp/cert2/client.root.crt&sslkey=/tmp/cert3/client.root.key'
+export DATABASE_CONNECTIONSTRING='postgresql://root@cockroachdb-public.gcp-europe-west4:26257/ticketsdb?sslmode=verify-full&sslrootcert=/tmp/cert1/ca.crt&sslcert=/tmp/cert2/client.root.crt&sslkey=/tmp/cert3/client.root.key'
 
 kubectl create ns $NAMESPACE
 

@@ -56,16 +56,16 @@
 	
 	-- cockroach demo --log-dir ~/tmp/lesfleurs/cockroachdb-logs  --nodes 9 --no-example-database --insecure --demo-locality=region=gcp-europe-west4,az=gcp-europe-west4a:region=gcp-europe-west4,az=gcp-europe-west4b:region=gcp-europe-west4,az=gcp-europe-west4c:region=azure-singapore,az=azure-singapore1:region=azure-singapore,az=azure-singapore2:region=azure-singapore,az=azure-singapore3:region=onprem-us,az=onprem-us-rack1:region=onprem-us,az=onprem-us-rack2:region=onprem-us,az=onprem-us-rack3
 
-	ALTER DATABASE Ticketsdb SET PRIMARY REGION='emea'; 
-	ALTER DATABASE Ticketsdb ADD REGION 'americas'; 
-	ALTER DATABASE Ticketsdb ADD REGION 'apac';
+	ALTER DATABASE Ticketsdb SET PRIMARY REGION='gcp-europe-west4'; 
+	ALTER DATABASE Ticketsdb ADD REGION 'onprem-us'; 
+	ALTER DATABASE Ticketsdb ADD REGION 'azure-singapore';
 
 	ALTER TABLE Tickets ADD Column crdb_region crdb_internal_region AS  (
 		CASE 
-			WHEN origin='EMEA' THEN 'emea'
-			WHEN origin='AMERICAS' THEN 'americas'
-			WHEN origin='APAC' THEN 'apac'
-			ELSE 'emea'
+			WHEN origin='EMEA' THEN 'gcp-europe-west4'
+			WHEN origin='AMERICAS' THEN 'onprem-us'
+			WHEN origin='APAC' THEN 'azure-singapore'
+			ELSE 'gcp-europe-west4'
 		end
 	) STORED;
 
@@ -95,7 +95,7 @@
 	create view PrioritiesForTicketsGrafana as select Ticketsid, count(id) as n, AVG(Priority) as a from Priorities group by Ticketsid; 
 	create view TicketsWithPrioritiesGrafana as select * from TicketsGrafana f right join PrioritiesForTickets r on r.Ticketsid=f.id;
 
-	CREATE USER  if not exists grafana LOGIN PASSWORD 'xxx';
+	CREATE USER  if not exists grafana LOGIN PASSWORD '';
 	GRANT SELECT on TicketsGrafana to Grafana; 
 	GRANT SELECT on PrioritiesGrafana to Grafana;
 	GRANT SELECT on PrioritiesForTicketsGrafana to Grafana;
