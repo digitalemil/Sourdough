@@ -280,9 +280,7 @@ router.post("/app/rating", async function (req, res, next) {
 router.get("/app/creator.js", function (req, res, next) {
   let start = new Date();
   let creatorfile= process.env.CREATORFILE;
-  if(! (creatorfile!= undefined))
-    creatorfile= "private/creator.js";
-  else
+  if(creatorfile.startsWith("http"))
     creatorfile= process.env.LOGFOLDER+"/creator.js";
   
   global.logger.log("info", "Creator file: "+creatorfile+"  "+process.env.CREATORFILE);
