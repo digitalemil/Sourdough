@@ -283,7 +283,8 @@ async function executeQuery(con, query) {
     global.logger.log("info", "Duration: " + (Date.now() - start) + "ms. Rows: " + res.rows.length);
     if (res.rows.length == 1) {
         let r = JSON.stringify(res.rows[0]);
-        global.logger.log("info", "Row 0: " + JSON.stringify(res.rows[0]).substring(0, Math.max(256, r.length)));
+        let len= r.length;
+        global.logger.log("info", "Row 0: " + r.substring(0, Math.min(256, len)));
     }
     global.sqlQueryDurationMilliseconds
         .labels(promlabel)

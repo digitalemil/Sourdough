@@ -36,9 +36,6 @@ wlogger.log("info", "Starting "+process.env.MAINTABLE+" on port: "+(process.env.
 app.use(loggermw);
 
 
-wlogger.log("info", "Environment= " + process.env.ENV)
-
-
 const prom_client = require('prom-client');
 let dbtype= process.env.DBTYPE || "serverless";
 const defaultLabels = { component: 'appserver', app: process.env.MAINTABLE, dbtype: dbtype };
@@ -49,7 +46,7 @@ prom_client.collectDefaultMetrics({ register });
 app.get('/_status/vars', async (_req, res) => {
   try {
     res.set('Content-Type', register.contentType);
-    res.end(await register.metrics());
+    res.end(await register.metrics());ticketsdb-cb6658fc9-r9fxs
   } catch (err) {
     res.status(500).end(err);
   }

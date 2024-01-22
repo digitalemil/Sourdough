@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: ${DATABASE}
-        image:  digitalemil/sourdough:sourdough-vlatest  
+        image:  digitalemil/sourdough:sourdough-v22
         imagePullPolicy: Always
         env:
         - name: MAINTABLE
@@ -76,6 +76,9 @@ spec:
           value: "$LOGO" 
         - name: BACKGROUNDIMAGE
           value: "$BACKGROUNDIMAGE" 
+        - name: CREATORFILE
+          value: "$CREATORFILE" 
+
 
         - name: PORT
           value: "$PORT"
