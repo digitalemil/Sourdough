@@ -44,8 +44,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.text({ type: '*/*' }));
-app.use(bodyParser.raw());
+app.use(bodyParser.text({ type: '*/*',limit: '50mb' }));
+app.use(bodyParser.raw({limit: '50mb'}));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -118,7 +118,7 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   route= req.path | req.url | 'unknown';
-  res.render('error', { title: process.env.TITLE, message: err.message, error: err, route: route });
+  res.render('error', { message: err.message, error: err, route: route , backgroundcolor: process.env.BACKGROUNDCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE});
   global.httpRequestDurationMilliseconds
     .labels(req.url, res.statusCode, req.method)
     .observe(new Date() - start);

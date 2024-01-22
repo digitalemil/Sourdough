@@ -3,11 +3,10 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>lesfleurs</title>
-	<link rel='stylesheet' href='../stylesheets/stylenoir.css' />
-
+	<link rel='stylesheet' href='../stylesheets/style.css' />
 </head>
 
-<body id="body" style="background-color: <%= contentbackgroundcolor %>;">
+<body id="body" style="background-color: <%= backgroundcolor %>; background-image:url(<%= backgroundimage %>)">
 
 <script>
 	(function () {
@@ -56,11 +55,11 @@
 	</script>
 	
 
-	<div id="container" style="scale: 0.85; position: absolute; top:0px; left: 200px;"
+	<div id="container" style="color:<%= color %>; background-color: <%= backgroundcolor %>; scale: 0.85; position: absolute; top:0px; left: 200px;"
 		onmousedown="createFleur(); showLesFleurs(-1)">
 		<div id="lafleur" frameBorder="0" style="width: 1024px; height: 1024px;"></div>
 	</div>
-	<div id="lesfleurs" style='color: <%= text_color %>;font-family: "Italiana", regular; font-size: 64px;text-align: left; height:640px; position: absolute; top: 0px; left: 280px;'>
+	<div id="lesfleurs" style='color: <%= color %>;font-family: "Italiana", regular; font-size: 64px;text-align: left; height:640px; position: absolute; top: 0px; left: 280px;'>
 		<div id="stars" style="display: inline-block;"><%= stars %> none.</div>
 		<img id="r0" hidden width="64px" src="../images/star.svg"></img>
 		<img id="r1" hidden width="64px" src="../images/star.svg"></img>
@@ -69,37 +68,37 @@
 		<img id="r4" hidden width="64px" src="../images/star.svg"></img>
 	</div>
 
-	<div id="menu" class="sidenav" style="color:<%= text_color %>; background-color: <%= contentbackgroundcolor %>;">
-		<div style="position: absolute; top: 16px;">
+	<div id="menu" class="sidenav" style="color:<%= color %>; background-color: <%= backgroundcolor %>;">
+		<div style="position: absolute; top: 16px; color: <%= color %>;">
 			<div onclick="withcolor= true; createFleur()">New</div>
 			<p></p>
-			<a id="random" href="/app/first">First</a>
-			<a id="random" href="/app/last">Last</a>
-			<a id="random" href="/app/random">Random</a>
-			<input style='border: 0; width: 80%; background-color: <%= text_color %>;font-family: "Italiana", regular; font-size: 24px;text-align: center;' id="search" value=""></input>
+			<a style="color: <%= color %>;" id="random" href="/app/first">First</a>
+			<a style="color: <%= color %>;" id="random" href="/app/last">Last</a>
+			<a style="color: <%= color %>;" id="random" href="/app/random">Random</a>
+			<input style='border: 0; width: 80%; background-color: <%= color %>;font-family: "Italiana", regular; font-size: 24px;text-align: center; color: <%=  backgroundcolor  %>;' id="search" value=""></input>
 			<p></p>
-			<button class="button" style="width: 80%; height: 30px; text-align: center; background-color: <%= text_color %>;" onclick="search()">Search</button>
+			<button class="button" style="width: 80%; height: 30px; text-align: center; background-color: <%= color %>; color: <%=  backgroundcolor  %>;" onclick="search()">Search</button>
 		
 			<p></p>
-			<div>
+			<div style="color: <%= color %>;">
 				<p></p>
-				<button class="button" style="width: 128px; background-color: <%= text_color %>;" onclick="showLesFleurs(1)">1</button>
+				<button class="button" style="width: 128px; background-color: <%= color %>; color: <%=  backgroundcolor  %>;" onclick="showLesFleurs(1)">1</button>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: <%= text_color %>;" onclick="showLesFleurs(2)">2</button>
+				<button class="button" style="width: 128px; background-color: <%= color %>; color: <%=  backgroundcolor  %>;" onclick="showLesFleurs(2)">2</button>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: <%= text_color %>;" onclick="showLesFleurs(3)">3</button>
+				<button class="button" style="width: 128px; background-color: <%= color %>; color: <%=  backgroundcolor  %>;" onclick="showLesFleurs(3)">3</button>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: <%= text_color %>;" onclick="showLesFleurs(4)">4</button>
+				<button class="button" style="width: 128px; background-color: <%= color %>; color: <%=  backgroundcolor  %>;" onclick="showLesFleurs(4)">4</button>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: <%= text_color %>;" onclick="showLesFleurs(5)">5</button>
+				<button class="button" style="width: 128px; background-color: <%= color %>; color: <%=  backgroundcolor  %>;" onclick="showLesFleurs(5)">5</button>
 				<p></p>
 			</div>
 			<div onclick="download()">Download SVG</div>
-			<a id="SQL" href="/app/sql.html">SQL</a>
-			<a id="docs" href="/app/docsvg" target="_blank">Documentation</a>
+			<a style="color: <%= color %>;" id="SQL" href="/app/sql.html">SQL</a>
+			<a style="color: <%= color %>;" id="docs" href="/app/docsvg" target="_blank">Documentation</a>
 			<p></p>
-			<div>User: <%= user %></div>
-			<a id="logout" href="../logout">Logout</a>
+			<div style="color: <%= color %>;">User: <%= user %></div>
+			<a style="color: <%= color %>;" id="logout" href="../logout">Logout</a>
 		</div>
 	</div>
 	</div>

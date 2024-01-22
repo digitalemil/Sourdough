@@ -12,7 +12,6 @@ if [[ -z "${MAINTABLE}" ]]; then
   echo Please verify necessary environment variables a set.
   exit -1
 fi
-export LABEL=$(echo "$MAINTABLE" |  tr '[:upper:]' '[:lower:]' )
 
 export DATABASE_CONNECTIONSTRING='postgresql://root@cockroachdb-public.gcp-europe-west4:26257/ticketsdb?sslmode=verify-full&sslrootcert=/tmp/cert1/ca.crt&sslcert=/tmp/cert2/client.root.crt&sslkey=/tmp/cert3/client.root.key'
 

@@ -6,25 +6,44 @@ const { createSVG } = require("../private/creator.js");
 
 const fs = require('fs');
 let url = require('url');
+let http = require('http');
+ 
+function download(url, dest, cb) {
+  var file = fs.createWriteStream(dest);
+  http.get(url, function(response) {
+    response.pipe(file);
+    file.on('finish', function() {
+      file.close(cb);
+    });
+  });
+};
+
+downloadCreator();
+
+async function downloadCreator() { 
+  if(process.env.CREATORFILE.startsWith("http")) {
+    download(process.env.CREATORFILE, process.env.LOGFOLDER+"/creator.js")
+  }
+}
 
 
 router.get(["/random/withkey", "/random/withcode"], async function (req, res, next) {
   let start = new Date();
 
-  let code= req.query.code;
-  
-  if (process.env.CODE == "" || ! (process.env.CODE != undefined) || code != process.env.CODE) {
-    res.render("error",{message: "Invalid Code.", error:"Invalid Code.", title: process.env.TITLE});
+  let code = req.query.code;
+
+  if (process.env.CODE == "" || !(process.env.CODE != undefined) || code != process.env.CODE) {
+    res.render("error", { message: "Invalid Code.", error: "Invalid Code.", backgroundcolor: process.env.BACKGROUNDCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE });
     global.httpRequestDurationMilliseconds
-    .labels(req.route.path, res.statusCode, req.method)
-    .observe(new Date() - start);
+      .labels(req.route.path, res.statusCode, req.method)
+      .observe(new Date() - start);
     return;
   }
- 
+
   let r = await getXML(0);
 
   if (r == undefined || r.xml == undefined) {
-    res.render("error",{route: req.path, message: "No item found.", error:"No item found.", title: process.env.TITLE});
+    res.render("error", { route: req.path, message: "No item found.", error: "No item found.", backgroundcolor: process.env.BACKGROUNDCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE });
   }
   else {
     res.setHeader("image", "svg+xml");
@@ -38,82 +57,86 @@ router.get(["/random/withkey", "/random/withcode"], async function (req, res, ne
 router.post("/create", async function (req, res, next) {
   let start = new Date();
 
-  if (process.env.CODE == "" || ! (process.env.CODE != undefined)) {
+  if (process.env.CODE == "" || !(process.env.CODE != undefined)) {
     res.status(401).send("unauthorized");
     global.httpRequestDurationMilliseconds
-    .labels(req.route.path, res.statusCode, req.method)
-    .observe(new Date() - start);
+      .labels(req.route.path, res.statusCode, req.method)
+      .observe(new Date() - start);
     return;
   }
-  
+
   if (req.header('x-api-key') == process.env.CODE) {
-    let user= req.body.split("/")[0].trim();
-    let password= req.body.split("/")[1].trim();
+    let user = req.body.split("/")[0].trim();
+    let password = req.body.split("/")[1].trim();
     if (await authenticateUser(user, password)) {
-        let svg= createSVG();
-        svg= svg.replaceAll("</desc>", " stars=0</desc>");
-        const options = {
-          ignoreAttributes: false,
-          attributeNamePrefix: ""
-        };
-        const parser = new XMLParser(options);
-        let jobj = parser.parse(svg);
-        let ret= "503"
-        try {
-          ret = await persist(jobj, svg, user);
-        }
-        catch(err) {
-        } 
-        res.send(ret);
+      let svg = createSVG();
+      svg = svg.replaceAll("</desc>", " stars=0</desc>");
+      const options = {
+        ignoreAttributes: false,
+        attributeNamePrefix: ""
+      };
+      const parser = new XMLParser(options);
+      let jobj = parser.parse(svg);
+      let ret = "503"
+      try {
+        ret = await persist(jobj, svg, user);
+      }
+      catch (err) {
+      }
+      res.send(ret);
     }
     else {
       res.status(401).send("unauthorized");
     }
   }
   global.httpRequestDurationMilliseconds
-  .labels(req.route.path, res.statusCode, req.method)
-  .observe(new Date() - start);
+    .labels(req.route.path, res.statusCode, req.method)
+    .observe(new Date() - start);
 
 });
 
 router.all("/signinwithkey", async function (req, res, next) {
   let start = new Date();
 
-  if (process.env.CODE == "" || ! (process.env.CODE != undefined)) {
+  if (process.env.CODE == "" || !(process.env.CODE != undefined)) {
     res.status(401).send("unauthorized");
     global.httpRequestDurationMilliseconds
-    .labels(req.route.path, res.statusCode, req.method)
-    .observe(new Date() - start);
+      .labels(req.route.path, res.statusCode, req.method)
+      .observe(new Date() - start);
     return;
   }
-  
+
   if (req.header('x-api-key') == process.env.CODE) {
-    let user= req.body.split("/")[0].trim();
-    let password= req.body.split("/")[1].trim();
+    let user = req.body.split("/")[0].trim();
+    let password = req.body.split("/")[1].trim();
     if (await authenticateUser(user, password)) {
       req.session.authorizedByKey = true;
       req.session.passport = { "user": { "name": { "value": user } } };
       res.redirect('/app/home');
       global.httpRequestDurationMilliseconds
-      .labels(req.route.path, res.statusCode, req.method)
-      .observe(new Date() - start);
-  
+        .labels(req.route.path, res.statusCode, req.method)
+        .observe(new Date() - start);
+
       return;
     }
   }
   res.status(401).send("unauthorized");
   global.httpRequestDurationMilliseconds
-  .labels(req.route.path, res.statusCode, req.method)
-  .observe(new Date() - start);
+    .labels(req.route.path, res.statusCode, req.method)
+    .observe(new Date() - start);
 
 });
 
-router.get(['/app/sql.html'], function (req, res, next) {
+router.get(['/app/sql.html'], async function (req, res, next) {
   let start = new Date();
-  res.render('sql', { table: process.env.MAINTABLE, farourl: process.env.FAROURL, farokey: process.env.FAROKEY });
+  res.render('sql', { table: process.env.MAINTABLE, farourl: process.env.FAROURL, farokey: process.env.FAROKEY, backgroundcolor: process.env.BACKGROUNDCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE });
+  
+  try {
   global.httpRequestDurationMilliseconds
-    .labels(req.route.path, res.statusCode, req.method)
+  .labels(req.route.path, res.statusCode, req.method)
     .observe(new Date() - start);
+  }
+  catch(err) {}
 });
 
 router.get(['/app/sql'], async function (req, res, next) {
@@ -135,23 +158,29 @@ router.get(['/app/sql'], async function (req, res, next) {
     global.logger.log("error", 'Error executing sql: ' + sql, ex);
   }
   res.end();
+  try {
+ 
   global.httpRequestDurationMilliseconds
-  .labels(req.route.path, res.statusCode, req.method)
-  .observe(new Date() - start);
+    .labels(req.route.path, res.statusCode, req.method) 
+    .observe(new Date() - start);
+  }
+  catch(err) {}
   return;
 });
 
 router.get("/", function (req, res, next) {
   let start = new Date();
-  res.render("index", { logo:process.env.LOGO, code: process.env.CODE,img: "true" == process.env.BLACK ? "images/rosenoir.png" : "images/rose.png", contentbackgroundcolor: "true" == process.env.BLACK ? "#808080" : process.env.CONTENTBACKGROUNDCOLOR, text_color: process.env.TEXT_COLOR, title: process.env.TITLE, welcome: process.env.WELCOME });
+  res.render("index", { logo: process.env.LOGO, code: process.env.CODE, backgroundcolor: process.env.BACKGROUNDCOLOR, color: process.env.COLOR, backgroundimage: process.env.BACKGROUNDIMAGE, title: process.env.TITLE, welcome: process.env.WELCOME });
   global.httpRequestDurationMilliseconds
     .labels(req.route.path, res.statusCode, req.method)
     .observe(new Date() - start);
 });
 
 function renderHome(req, res, next, home, action, id) {
-  res.render(home, { user: req.session.passport.user.name.value, farourl: process.env.FAROURL, farokey: process.env.FAROKEY,
-    stars: process.env.STARS, code: process.env.CODE, id: id, action: action, contentbackgroundcolor: process.env.CONTENTBACKGROUNDCOLOR, text_color: process.env.TEXT_COLOR, title: process.env.TITLE });
+  res.render(home, {
+    user: req.session.passport.user.name.value, farourl: process.env.FAROURL, farokey: process.env.FAROKEY,
+    stars: process.env.STARS, code: process.env.CODE, id: id, action: action, backgroundcolor: process.env.BACKGROUNDCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE
+  });
 };
 
 router.get("/app/home", function (req, res, next) {
@@ -165,7 +194,7 @@ router.get("/app/home", function (req, res, next) {
 
 router.get("/app/random", async function (req, res, next) {
   let start = new Date();
-  let user= req.query.user;
+  let user = req.query.user;
   let r = await getXML(0, null, req.session.passport.user.name.value);
 
   if (r == undefined || r.xml == undefined) {
@@ -182,11 +211,11 @@ router.get("/app/random", async function (req, res, next) {
 
 router.get("/app/search", async function (req, res, next) {
   let start = new Date();
-  let itemname= req.query.name;
-  if(itemname.startsWith('"')) {
-    itemname= itemname.replace(/"/g, "");
+  let itemname = req.query.name;
+  if (itemname.startsWith('"')) {
+    itemname = itemname.replace(/"/g, "");
   }
-   
+
   let r = await getXML(4, null, req.session.passport.user.name.value, itemname);
 
   if (r == undefined || r.xml == undefined) {
@@ -203,7 +232,7 @@ router.get("/app/search", async function (req, res, next) {
 
 router.get("/app/last", async function (req, res, next) {
   let start = new Date();
-  let user= req.query.user;
+  let user = req.query.user;
   let r = await getXML(1, null, req.session.passport.user.name.value);
 
 
@@ -220,7 +249,7 @@ router.get("/app/last", async function (req, res, next) {
 
 router.get("/app/first", async function (req, res, next) {
   let start = new Date();
-  let user= req.query.user;
+  let user = req.query.user;
   let r = await getXML(2, null, req.session.passport.user.name.value);
 
   if (r == undefined || r.xml == undefined) {
@@ -250,8 +279,14 @@ router.post("/app/rating", async function (req, res, next) {
 
 router.get("/app/creator.js", function (req, res, next) {
   let start = new Date();
-
-  fs.readFile("private/creator.js", "utf8", function (err, js) {
+  let creatorfile= process.env.CREATORFILE;
+  if(! (creatorfile!= undefined))
+    creatorfile= "private/creator.js";
+  else
+    creatorfile= process.env.LOGFOLDER+"/creator.js";
+  
+  global.logger.log("info", "Creator file: "+creatorfile+"  "+process.env.CREATORFILE);
+  fs.readFile(creatorfile, "utf8", function (err, js) {
     if (err) {
       global.logger.log("error", "Can't find creator file.");
     }
@@ -265,10 +300,12 @@ router.get("/app/creator.js", function (req, res, next) {
 router.get("/app/docsvg", function (req, res, next) {
   let start = new Date();
 
-  fs.readFile("private/"+process.env.MAINTABLE+".svg", "utf8", function (err, data) {
+  fs.readFile("private/sourdough-er.png", function (err, data) {
     if (err) {
       global.logger.log("error", "Can't find docs file.");
     }
+    res.setHeader('content-type', 'image/png');
+
     res.send(data);
     global.httpRequestDurationMilliseconds
       .labels(req.route.path, res.statusCode, req.method)
@@ -288,9 +325,9 @@ router.get("/app/er", function (req, res, next) {
 router.get("/app/er.png", function (req, res, next) {
   let start = new Date();
 
-  fs.readFile("private/"+process.env.MAINTABLE+".png", function (err, data) {
+  fs.readFile("private/sourdough-er.png", function (err, data) {
     if (err) {
-      global.logger.log("error", "Can't find docs file.");
+      global.logger.log("error", "Can't find Er image.");
     }
     res.setHeader('content-type', 'image/png');
     res.send(data);

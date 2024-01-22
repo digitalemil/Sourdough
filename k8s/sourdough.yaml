@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  ${LABEL}
+  name:  ${DATABASE}
 spec:
   replicas: 1
   selector:
@@ -10,7 +10,7 @@ spec:
       component: appserver  
   template:
     metadata:
-      name: ${LABEL}
+      name: ${DATABASE}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/path: '_status/vars'
@@ -20,7 +20,7 @@ spec:
         component: appserver  
     spec:
       containers:
-      - name: ${LABEL}
+      - name: ${DATABASE}
         image:  digitalemil/sourdough:sourdough-vlatest  
         imagePullPolicy: Always
         env:
@@ -30,6 +30,7 @@ spec:
           value: "${SECONDTABLE}"
         - name: STARS
           value: "${STARS}"
+
         - name:  METRICSURL
           value: "${METRICSURL}"
         - name:  METRICSUSER
@@ -52,32 +53,32 @@ spec:
           value: https://faro-collector-prod-eu-west-2.grafana.net/collect
         - name: FAROKEY
           value: b315683f2e4bcbf36da9fded99f56af3
-        - name: TITLE
-          value: "$TITLE"
-        - name: WELCOME
-          value: "$WELCOME"
-        - name: TEXT_COLOR
-          value: "$TEXTCOLOR"
-        - name: CONTENTBACKGROUNDCOLOR
-          value: "$CONTENTBACKGROUNDCOLOR"
-        - name: BLACK
-          value: "$BLACK"
-        - name: LOGFOLDER
-          value: "$LOGFOLDER" 
-        - name: ENV
-          value: "$ENV"
-        - name: PORT
-          value: "$PORT"
+
         - name: DATABASE_CONNECTIONSTRING
           value: "$DATABASE_CONNECTIONSTRING"
         - name: DBTYPE
           value: "$DBTYPE"
+        - name: LOGFOLDER
+          value: "$LOGFOLDER" 
+
+        - name: TITLE
+          value: "$TITLE"
+        - name: WELCOME
+          value: "$WELCOME"
         - name: CODE
           value: $CODE
-        - name: DEFAULT_USER
-          value: "$DEFAULT_USER" 
+
+        - name: COLOR
+          value: "$COLOR"
+        - name: BACKGROUNDCOLOR
+          value: "$BACKGROUNDCOLOR"
         - name: LOGO
           value: "$LOGO" 
+        - name: BACKGROUNDIMAGE
+          value: "$BACKGROUNDIMAGE" 
+
+        - name: PORT
+          value: "$PORT"
         ports:
         - containerPort: 3000
         volumeMounts:
@@ -104,7 +105,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name:  ${LABEL}
+  name:  ${DATABASE}
 spec:
   selector:
     app: ${MAINTABLE}

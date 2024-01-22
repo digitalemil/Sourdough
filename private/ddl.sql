@@ -1,7 +1,7 @@
 	
-	create database if not exists ${MAINTABLE}db;
+	create database if not exists ${DATABASE};
 	
-	use ${MAINTABLE}db;
+	use ${DATABASE};
 
 	drop view if exists ${MAINTABLE}With${SECONDTABLE};
 	drop view if exists ${SECONDTABLE}For${MAINTABLE};
