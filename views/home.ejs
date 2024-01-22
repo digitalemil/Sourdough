@@ -7,7 +7,7 @@
 
 </head>
 
-<body id="body" style="background-color: blue;">
+<body id="body" style="background-color: <%= contentbackgroundcolor %>;">
 
 <script>
 	(function () {
@@ -69,7 +69,7 @@
 		<img id="r4" hidden width="64px" src="../images/star.svg"></img>
 	</div>
 
-	<div id="menu" class="sidenav" style="color:<%= text_color %>;">
+	<div id="menu" class="sidenav" style="color:<%= text_color %>; background-color: <%= contentbackgroundcolor %>;">
 		<div style="position: absolute; top: 16px;">
 			<div onclick="withcolor= true; createFleur()">New</div>
 			<p></p>
