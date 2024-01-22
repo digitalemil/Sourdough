@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sourdough
+  name:  ${LABEL}
 spec:
   replicas: 1
   selector:
@@ -10,7 +10,7 @@ spec:
       component: appserver  
   template:
     metadata:
-      name: sourdough
+      name: ${LABEL}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/path: '_status/vars'
@@ -20,7 +20,7 @@ spec:
         component: appserver  
     spec:
       containers:
-      - name: ${MAINTABLE}
+      - name: ${LABEL}
         image:  digitalemil/sourdough:sourdough-vlatest  
         imagePullPolicy: Always
         env:
@@ -40,14 +40,14 @@ spec:
           value: '${LOGSPASSWORD}' 
         - name: LOGSURL
           value: '${LOGSURL}' 
-        - name: TRACESPASSWORD
-          value: '${TRACESPASSWORD}'
         - name: LOGSUSER
           value: '${LOGSUSER}' 
         - name: TRACESENDPOINT
           value: '${TRACESENDPOINT}' 
         - name: TRACESUSER
           value: '${TRACESUSER}' 
+        - name: TRACESPASSWORD
+          value: '${TRACESPASSWORD}'
         - name: FAROURL
           value: https://faro-collector-prod-eu-west-2.grafana.net/collect
         - name: FAROKEY
@@ -56,10 +56,6 @@ spec:
           value: "$TITLE"
         - name: WELCOME
           value: "$WELCOME"
-        - name: FLAVOR
-          value: "$LEFLEURS"
-        - name: ABOUT
-          value: "$ABOUT"
         - name: TEXT_COLOR
           value: "$TEXTCOLOR"
         - name: CONTENTBACKGROUNDCOLOR
@@ -82,7 +78,6 @@ spec:
           value: "$DEFAULT_USER" 
         - name: LOGO
           value: "$LOGO" 
-
         ports:
         - containerPort: 3000
         volumeMounts:
@@ -109,7 +104,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sourdough
+  name:  ${LABEL}
 spec:
   selector:
     app: ${MAINTABLE}
