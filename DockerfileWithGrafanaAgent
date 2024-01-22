@@ -3,6 +3,12 @@ FROM node:hydrogen
 
 WORKDIR /opt/app
 
+
+RUN curl -LJO https://github.com/grafana/agent/releases/download/v0.39.0-rc.0/grafana-agent-linux-amd64.zip
+RUN unzip grafana-agent-linux-amd64.zip 
+RUN chmod +x grafana-agent-linux-amd64
+
+
 WORKDIR /opt/app
 
 COPY bin /opt/app/bin
@@ -22,12 +28,4 @@ RUN chmod +x /opt/app/start.sh
 
 RUN cd /opt/app; npm install
 
-ENV OTEL_SERVICE_NAME=appserver
-ENV OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4317
-ENV OTEL_TRACES_EXPORTER=otlp
-ENV OTEL_EXPORTER_OTLP_INSECURE=true
-
-ENTRYPOINT node --require './tracing.js' ./bin/www 
-
-
-
+ENTRYPOINT /opt/app/start.sh

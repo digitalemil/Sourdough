@@ -20,17 +20,12 @@ spec:
         component: appserver  
     spec:
       containers:
-      - name: ${DATABASE}
-        image:  digitalemil/sourdough:sourdough-v23
+      - name: grafanaagent
+        image:  grafana/agent:v0.39.1
         imagePullPolicy: Always
+        command: ["/bin/grafana-agent"]
+        args: ["-config.file", "/tmp/config/config.yaml", "-config.expand-env", "-enable-features", "integrations-next"]
         env:
-        - name: MAINTABLE
-          value: "$MAINTABLE"
-        - name: SECONDTABLE
-          value: "${SECONDTABLE}"
-        - name: STARS
-          value: "${STARS}"
-
         - name:  METRICSURL
           value: "${METRICSURL}"
         - name:  METRICSUSER
@@ -49,6 +44,31 @@ spec:
           value: '${TRACESUSER}' 
         - name: TRACESPASSWORD
           value: '${TRACESPASSWORD}'
+        - name: LOGFOLDER
+          value: "$LOGFOLDER" 
+        - name: CONFIG_FILE_PATH
+          value: /tmp/config/config.yanl
+        - name: PORT
+          value: "${PORT}"
+        ports:
+        - containerPort: 12345
+        volumeMounts:
+            - name: grafanaagent
+              mountPath: /tmp/config
+            - name: logs
+              mountPath: $LOGFOLDER
+
+      - name: ${DATABASE}
+        image:  digitalemil/sourdough:sourdough-v24
+        imagePullPolicy: Always
+        env:
+        - name: MAINTABLE
+          value: "$MAINTABLE"
+        - name: SECONDTABLE
+          value: "${SECONDTABLE}"
+        - name: STARS
+          value: "${STARS}"
+
         - name: FAROURL
           value: https://faro-collector-prod-eu-west-2.grafana.net/collect
         - name: FAROKEY
@@ -79,7 +99,6 @@ spec:
         - name: CREATORFILE
           value: "$CREATORFILE" 
 
-
         - name: PORT
           value: "$PORT"
         ports:
@@ -91,7 +110,13 @@ spec:
               mountPath: /tmp/cert2
             - name: sslkey
               mountPath: /tmp/cert3
+            - name: logs
+              mountPath: $LOGFOLDER
       volumes:
+        - name: grafanaagent
+          configMap:
+            defaultMode: 420
+            name: grafanaagent
         - name: sslrootcert
           configMap:
             defaultMode: 420
@@ -104,6 +129,8 @@ spec:
           configMap:
             defaultMode: 420
             name: sslkey 
+        - name: logs
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

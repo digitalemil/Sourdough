@@ -20,6 +20,8 @@ kubectl create ns $NAMESPACE
 kubectl -n $NAMESPACE create configmap sslkey --from-file ../../multicluster/certs/client.root.key
 kubectl -n $NAMESPACE create configmap sslcert --from-file ../../multicluster/certs/client.root.crt
 kubectl -n $NAMESPACE create configmap sslrootcert --from-file ../../multicluster/certs/ca.crt
+kubectl -n $NAMESPACE create configmap grafanaagent --from-file ../config.yaml
+
 
 envsubst < sourdough.yaml | kubectl apply -n $NAMESPACE -f -
 
