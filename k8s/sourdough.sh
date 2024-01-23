@@ -25,6 +25,9 @@ kubectl -n $NAMESPACE create configmap grafanaagent --from-file ../config.yaml
 
 envsubst < sourdough.yaml | kubectl apply -n $NAMESPACE -f -
 
+kubectl create namespace monitoring
+envsubst < prom.yaml | kubectl apply -n monitoring -f -
+
 kubectl wait --for=condition=ready pod -n $NAMESPACE -l component=appserver
 
 #nohup kubectl -n $NAMESPACE port-forward deployment/lesfleurs 3000:3000 &

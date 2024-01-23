@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: k6
+  name: k6readwrite  
+spec:
+  containers:
+  - image: grafana/k6
+    imagePullPolicy: Always
+    command: ["/usr/bin/k6"]
+    args: ["run", "--vus", "4", "--duration", "10m", "/tmp/script/readwrite.js"]
+    name: k6
+    resources: {}
+    volumeMounts:
+      - name: script
+        mountPath: /tmp/script
+  volumes:
+  - name: script
+    configMap:
+      defaultMode: 420
+      name: readwrite
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: k6
+  name: k6read
+spec:
+  containers:
+  - image: grafana/k6
+    imagePullPolicy: Always
+    command: ["/usr/bin/k6"]
+    args: ["run", "--vus", "12", "--duration", "10m", "/tmp/script/read.js"]
+    name: k6
+    resources: {}
+    volumeMounts:
+      - name: script
+        mountPath: /tmp/script
+  volumes:
+  - name: script
+    configMap:
+      defaultMode: 420
+      name: read
+
+
+  
