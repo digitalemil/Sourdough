@@ -59,7 +59,7 @@ spec:
               mountPath: $LOGFOLDER
 
       - name: ${DATABASE}
-        image:  digitalemil/sourdough:sourdough-v0.27
+        image:  digitalemil/sourdough:sourdough-v0.28
         imagePullPolicy: Always
         env:
         - name: MAINTABLE
