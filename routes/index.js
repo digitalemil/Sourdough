@@ -129,7 +129,7 @@ router.all("/signinwithkey", async function (req, res, next) {
 
 router.get(['/app/sql.html'], async function (req, res, next) {
   let start = new Date();
-  res.render('sql', { table: process.env.MAINTABLE, farourl: process.env.FAROURL, farokey: process.env.FAROKEY, backgroundcolor: process.env.BACKGROUNDCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE });
+  res.render('sql', { table: process.env.MAINTABLE, farourl: process.env.FAROURL, farokey: process.env.FAROKEY, backgroundcolor: process.env.BACKGROUNDCOLOR, inputcolor: process.env.INPUTCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE });
   
   try {
   global.httpRequestDurationMilliseconds
