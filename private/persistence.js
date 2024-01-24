@@ -18,7 +18,8 @@ let connectionsInUse= 0;
 const connectionString = process.env.DATABASE_CONNECTIONSTRING;
 const cp = new pg.Pool({
     connectionString,
-    max: 8
+    max: 8,
+    statement_timeout: 8000
 })
 
 cp.on('acquire', (client) => {

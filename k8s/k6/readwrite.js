@@ -36,6 +36,7 @@ export default function main() {
   }
   let res = http.post(url, user+'/rose', {
     headers: { 'Content-Type': 'application/text', 'x-api-key':'rose' }, 
+    timeout: '8s'
   });
   
 }

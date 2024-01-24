@@ -34,6 +34,10 @@ export default function main() {
       user= "joe";
     }
   }
-  let res = http.get(url);
+  const params = {
+      timeout: '8s'
+  };
+  
+  let res = http.get(url, params);
   
 }
