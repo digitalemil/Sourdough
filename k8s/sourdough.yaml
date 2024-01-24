@@ -59,7 +59,7 @@ spec:
               mountPath: $LOGFOLDER
 
       - name: ${DATABASE}
-        image:  digitalemil/sourdough:sourdough-v24
+        image:  digitalemil/sourdough:sourdough-v25
         imagePullPolicy: Always
         env:
         - name: MAINTABLE
@@ -92,6 +92,8 @@ spec:
           value: "$COLOR"
         - name: BACKGROUNDCOLOR
           value: "$BACKGROUNDCOLOR"
+        - name: INPUTCOLOR
+          value: "$INPUTCOLOR"
         - name: LOGO
           value: "$LOGO" 
         - name: BACKGROUNDIMAGE

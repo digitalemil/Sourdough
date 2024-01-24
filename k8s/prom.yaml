@@ -36,11 +36,6 @@ data:
         - source_labels: [__meta_kubernetes_pod_name]
           action: replace
           target_label: kubernetes_pod_name
-    remote_write:
-      - url: ${METRICSURL}
-        basic_auth:
-          username: ${METRICSUSER}
-          password: ${METRICSPASSWORD}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

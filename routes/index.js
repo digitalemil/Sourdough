@@ -33,7 +33,7 @@ router.get(["/random/withkey", "/random/withcode"], async function (req, res, ne
   let code = req.query.code;
 
   if (process.env.CODE == "" || !(process.env.CODE != undefined) || code != process.env.CODE) {
-    res.render("error", { message: "Invalid Code.", error: "Invalid Code.", backgroundcolor: process.env.BACKGROUNDCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE });
+    res.render("error", { message: "Invalid Code.", error: "Invalid Code.", backgroundcolor: process.env.BACKGROUNDCOLOR, inputcolor: process.env.INPUTCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE });
     global.httpRequestDurationMilliseconds
       .labels(req.route.path, res.statusCode, req.method)
       .observe(new Date() - start);
@@ -43,7 +43,7 @@ router.get(["/random/withkey", "/random/withcode"], async function (req, res, ne
   let r = await getXML(0);
 
   if (r == undefined || r.xml == undefined) {
-    res.render("error", { route: req.path, message: "No item found.", error: "No item found.", backgroundcolor: process.env.BACKGROUNDCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE });
+    res.render("error", { route: req.path, message: "No item found.", error: "No item found.", backgroundcolor: process.env.BACKGROUNDCOLOR, inputcolor: process.env.INPUTCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE });
   }
   else {
     res.setHeader("image", "svg+xml");
@@ -170,7 +170,7 @@ router.get(['/app/sql'], async function (req, res, next) {
 
 router.get("/", function (req, res, next) {
   let start = new Date();
-  res.render("index", { logo: process.env.LOGO, code: process.env.CODE, backgroundcolor: process.env.BACKGROUNDCOLOR, color: process.env.COLOR, backgroundimage: process.env.BACKGROUNDIMAGE, title: process.env.TITLE, welcome: process.env.WELCOME });
+  res.render("index", { logo: process.env.LOGO, code: process.env.CODE, backgroundcolor: process.env.BACKGROUNDCOLOR, inputcolor: process.env.INPUTCOLOR, color: process.env.COLOR, backgroundimage: process.env.BACKGROUNDIMAGE, title: process.env.TITLE, welcome: process.env.WELCOME });
   global.httpRequestDurationMilliseconds
     .labels(req.route.path, res.statusCode, req.method)
     .observe(new Date() - start);
@@ -179,7 +179,7 @@ router.get("/", function (req, res, next) {
 function renderHome(req, res, next, home, action, id) {
   res.render(home, {
     user: req.session.passport.user.name.value, farourl: process.env.FAROURL, farokey: process.env.FAROKEY,
-    stars: process.env.STARS, code: process.env.CODE, id: id, action: action, backgroundcolor: process.env.BACKGROUNDCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE
+    stars: process.env.STARS, code: process.env.CODE, id: id, action: action, backgroundcolor: process.env.BACKGROUNDCOLOR, inputcolor: process.env.INPUTCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE
   });
 };
 

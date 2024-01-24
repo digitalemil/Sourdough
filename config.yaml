@@ -35,11 +35,11 @@ metrics:
             - targets: ['127.0.0.1:${PORT}']
             - labels:
                 app: appserver
-      remote_write:
-        - url: ${METRICSURL}
-          basic_auth:
-            username: ${METRICSUSER}
-            password: ${METRICSPASSWORD}
+#      remote_write:
+#        - url: ${METRICSURL}
+#          basic_auth:
+#            username: ${METRICSUSER}
+#            password: ${METRICSPASSWORD}
 traces:
   configs:
     - name: default
