@@ -23,6 +23,7 @@ COPY tracing.js /opt/app
 COPY config.yaml /opt/app
 
 COPY allinone/startall.sh /opt/app
+COPY allinone/startapp.sh /opt/app
 COPY allinone/ddl.sql /opt/app
 
 
