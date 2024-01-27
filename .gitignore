@@ -2,5 +2,6 @@ secrets
 secrets*
 node_modules
 keep/variables.env
+keep/env.file
 keep/certs
 keep/certs/*
