@@ -32,12 +32,12 @@
 		id UUID NOT NULL DEFAULT gen_random_uuid(),
 		createdon TIMESTAMP,
 		createdby UUID NOT NULL REFERENCES UserDetails (id) ON DELETE CASCADE,
-		xml STRING NOT NULL UNIQUE,
+		xml STRING NOT NULL,
 		json JSONB NOT NULL,
 		name string as (json->>'name') virtual,
 		origin STRING NOT NULL,
 		CONSTRAINT "primary" PRIMARY KEY (id),
-		family f1 (id, createdon, origin, json),
+		family f1 (id, createdon, createdby, origin, json),
 		family f2 (xml)
 	);
 	
@@ -72,7 +72,9 @@
 	ALTER TABLE ${MAINTABLE} ALTER COLUMN crdb_region SET NOT NULL;
 	ALTER TABLE ${MAINTABLE} SET LOCALITY REGIONAL BY ROW;
 	SET override_multi_region_zone_config = true;
-	ALTER TABLE ${MAINTABLE} CONFIGURE ZONE USING num_replicas = 3; 
+--	ALTER TABLE ${MAINTABLE} CONFIGURE ZONE USING num_replicas = 3; 
+	ALTER DATABASE ${DATABASE} CONFIGURE ZONE USING num_replicas = 3;
+
 
 	create view Local${MAINTABLE} as 
 		select f.* from ${MAINTABLE} f Join UserDetails db On (f.origin=db.location) where db.name= current_user; 

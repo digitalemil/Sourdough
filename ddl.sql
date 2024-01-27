@@ -32,12 +32,12 @@
 		id UUID NOT NULL DEFAULT gen_random_uuid(),
 		createdon TIMESTAMP,
 		createdby UUID NOT NULL REFERENCES UserDetails (id) ON DELETE CASCADE,
-		xml STRING NOT NULL UNIQUE,
+		xml STRING NOT NULL,
 		json JSONB NOT NULL,
 		name string as (json->>'name') virtual,
 		origin STRING NOT NULL,
 		CONSTRAINT "primary" PRIMARY KEY (id),
-		family f1 (id, createdon, origin, json),
+		family f1 (id, createdon, createdby, origin, json),
 		family f2 (xml)
 	);
 	
@@ -72,7 +72,8 @@
 	ALTER TABLE Tickets ALTER COLUMN crdb_region SET NOT NULL;
 	ALTER TABLE Tickets SET LOCALITY REGIONAL BY ROW;
 	SET override_multi_region_zone_config = true;
-	ALTER TABLE Tickets CONFIGURE ZONE USING num_replicas = 3; 
+--		ALTER TABLE Tickets CONFIGURE ZONE USING num_replicas = 3; 
+	ALTER DATABASE TicketsDB CONFIGURE ZONE USING num_replicas = 3;
 
 	create view LocalTickets as 
 		select f.* from Tickets f Join UserDetails db On (f.origin=db.location) where db.name= current_user; 
@@ -95,7 +96,7 @@
 	create view PrioritiesForTicketsGrafana as select Ticketsid, count(id) as n, AVG(Priority) as a from Priorities group by Ticketsid; 
 	create view TicketsWithPrioritiesGrafana as select * from TicketsGrafana f right join PrioritiesForTickets r on r.Ticketsid=f.id;
 
-	CREATE USER  if not exists grafana LOGIN PASSWORD '';
+	CREATE USER  if not exists grafana LOGIN PASSWORD 'cr1401';
 	GRANT SELECT on TicketsGrafana to Grafana; 
 	GRANT SELECT on PrioritiesGrafana to Grafana;
 	GRANT SELECT on PrioritiesForTicketsGrafana to Grafana;
