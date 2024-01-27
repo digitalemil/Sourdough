@@ -20,8 +20,8 @@ COPY ../app.js /opt/app
 COPY ../package.json /opt/app
 COPY ../o11y.js /opt/app
 COPY ../tracing.js /opt/app
-COPY ../startall.sh /opt/app
-COPY ../ddl.sql /opt/app
+COPY startall.sh /opt/app
+COPY ddl.sql /opt/app
 
 COPY ../config.yaml /opt/app
 
