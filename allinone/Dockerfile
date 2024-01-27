@@ -2,6 +2,8 @@ FROM node:hydrogen
 
 WORKDIR /opt/app
 
+RUN apt-get update -y
+RUN apt-get install --yes gettext-base
 
 RUN curl -LJO https://github.com/grafana/agent/releases/download/v0.39.0-rc.0/grafana-agent-linux-amd64.zip
 RUN unzip grafana-agent-linux-amd64.zip 
@@ -24,7 +26,6 @@ COPY config.yaml /opt/app
 
 COPY allinone/startall.sh /opt/app
 COPY allinone/startapp.sh /opt/app
-COPY allinone/ddl.sql /opt/app
 
 
 RUN chmod +x /opt/app/startall.sh
