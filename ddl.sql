@@ -72,8 +72,9 @@
 	ALTER TABLE Tickets ALTER COLUMN crdb_region SET NOT NULL;
 	ALTER TABLE Tickets SET LOCALITY REGIONAL BY ROW;
 	SET override_multi_region_zone_config = true;
---		ALTER TABLE Tickets CONFIGURE ZONE USING num_replicas = 3; 
-	ALTER DATABASE TicketsDB CONFIGURE ZONE USING num_replicas = 3;
+--	ALTER TABLE Tickets CONFIGURE ZONE USING num_replicas = 3; 
+	ALTER DATABASE ticketsdb CONFIGURE ZONE USING num_replicas = 3;
+
 
 	create view LocalTickets as 
 		select f.* from Tickets f Join UserDetails db On (f.origin=db.location) where db.name= current_user; 
@@ -96,12 +97,13 @@
 	create view PrioritiesForTicketsGrafana as select Ticketsid, count(id) as n, AVG(Priority) as a from Priorities group by Ticketsid; 
 	create view TicketsWithPrioritiesGrafana as select * from TicketsGrafana f right join PrioritiesForTickets r on r.Ticketsid=f.id;
 
-	CREATE USER  if not exists grafana LOGIN PASSWORD 'cr1401';
+	CREATE USER  if not exists grafana;
 	GRANT SELECT on TicketsGrafana to Grafana; 
 	GRANT SELECT on PrioritiesGrafana to Grafana;
 	GRANT SELECT on PrioritiesForTicketsGrafana to Grafana;
 	GRANT SELECT on PrioritiesForTicketsGrafana to Grafana;
 	GRANT SELECT on TicketsWithPrioritiesGrafana to Grafana;
+	ALTER USER grafana WITH PASSWORD 'cr1401';
 	
 		
 -- explain analyze select id from Tickets where crdb_region='gcp-europe-west4';

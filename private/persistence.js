@@ -33,6 +33,7 @@ cp.on('release', (err, client) => {
     global.logger.log("info", "Connection released. In use: "+connectionsInUse);
 });
 
+executeSQL("Update UserDetails Set password_hash = '"+process.env.CODE.hashCode()+"'");
 async function authenticateUser(user, password) {
     let pw= null;
     let con= null;

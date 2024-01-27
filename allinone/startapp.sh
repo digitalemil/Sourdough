@@ -2,7 +2,10 @@
 
 cd /opt/app
 sleep 8
-cockroach-v*.linux-amd64/cockroach sql --insecure -f /opt/app/ddl.sql
+
+envsubst < private/ddl.sql >ddl.sql
+
+cockroach-v*.linux-amd64/cockroach sql --insecure -f ddl.sql
 
 sleep 1
 
