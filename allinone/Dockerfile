@@ -26,7 +26,7 @@ COPY config.yaml /opt/app
 
 COPY allinone/startall.sh /opt/app
 COPY allinone/startapp.sh /opt/app
-COPY allineone/nginx.conf /etc/nginx/nginx.conf 
+COPY allinone/nginx.conf /etc/nginx/nginx.conf 
 
 RUN chmod +x /opt/app/startall.sh
 
