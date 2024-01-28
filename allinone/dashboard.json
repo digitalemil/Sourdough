@@ -39,7 +39,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 3,
+    "id": 1,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -1870,8 +1870,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 },
                 {
                   "color": "red",
@@ -1969,8 +1968,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 },
                 {
                   "color": "red",
@@ -2067,8 +2065,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 },
                 {
                   "color": "red",
@@ -2164,7 +2161,7 @@
               "uid": "loki"
             },
             "editorMode": "code",
-            "expr": "{namespace=~\".+\"} |~ `(?i)error`",
+            "expr": "{app=~\".+\"} |~ `(?i)error`",
             "queryType": "range",
             "refId": "A"
           }
@@ -2201,7 +2198,7 @@
               "uid": "loki"
             },
             "editorMode": "code",
-            "expr": "{namespace=~\".+\"} ",
+            "expr": "{app=~\".+\"} ",
             "queryType": "range",
             "refId": "A"
           }
@@ -2228,8 +2225,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 },
                 {
                   "color": "red",
@@ -2267,8 +2263,20 @@
               "type": "tempo",
               "uid": "tempo"
             },
+            "filters": [
+              {
+                "id": "ed1a11b6",
+                "operator": "=",
+                "scope": "span",
+                "tag": "db.user",
+                "value": [
+                  "root"
+                ],
+                "valueType": "string"
+              }
+            ],
             "limit": 20,
-            "queryType": "traceql",
+            "queryType": "traceqlSearch",
             "refId": "A",
             "tableType": "traces"
           }
@@ -2286,13 +2294,13 @@
       "list": []
     },
     "time": {
-      "from": "now-30m",
+      "from": "now-5m",
       "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "Tickets Selfhosted CockroachDB2",
     "uid": "c9eb65e3-823d-46f3-bcf4-f8178b119689",
-    "version": 4,
+    "version": 3,
     "weekStart": ""
   }
