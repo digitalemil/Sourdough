@@ -49,6 +49,7 @@ COPY allinone/prometheus.conf /opt/app
 COPY allinone/loki-local-config.yaml /opt/app
 COPY allinone/tempo-local-config.yaml /opt/app
 COPY allinone/datasources.yaml /opt/app
+COPY allinone/dashboards.yaml /opt/app
 COPY allinone/dashboard.json /opt/app
 
 RUN chmod +x /opt/app/startall.sh
