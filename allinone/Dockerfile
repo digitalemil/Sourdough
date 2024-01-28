@@ -9,6 +9,9 @@ RUN curl -LJO https://github.com/grafana/agent/releases/download/v0.39.0-rc.0/gr
 RUN unzip grafana-agent-linux-amd64.zip 
 RUN chmod +x grafana-agent-linux-amd64
 
+RUN curl -LJO https://github.com/prometheus/prometheus/releases/download/v2.49.1/prometheus-2.49.1.linux-amd64.tar.gz
+RUN tar xzf prometheus-2.49.1.linux-amd64.tar.gz 
+
 RUN curl -LJO  https://binaries.cockroachdb.com/cockroach-v23.1.14.linux-amd64.tgz
 RUN tar xzf cockroach-v23.1.14.linux-amd64.tgz
 WORKDIR /opt/app
@@ -27,6 +30,7 @@ COPY config.yaml /opt/app
 COPY allinone/startall.sh /opt/app
 COPY allinone/startapp.sh /opt/app
 COPY allinone/nginx.conf /etc/nginx/nginx.conf 
+COPY allinone/prometheus.conf /opt/app
 
 RUN chmod +x /opt/app/startall.sh
 
