@@ -19,11 +19,13 @@ sleep 1
 cp /opt/app/datasources.yaml /usr/share/grafana/conf/provisioning/datasources/
 cp /opt/app/dashboards.yaml /usr/share/grafana/conf/provisioning/dashboards/
 
-cp /opt/app/dashboard.json /var/lib/grafana/dashboards
-
 cd /usr/share/grafana;
 ./bin/grafana server &
 cd /opt/app
+
+cp /opt/app/dashboard.json /var/lib/grafana/dashboards
+
+/opt/app/grafana-agent-linux-amd64  -config.expand-env -enable-features integrations-next --config.file /opt/app/config.yaml &
 
 node --require './tracing.js' ./bin/www 
 

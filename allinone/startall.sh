@@ -1,6 +1,5 @@
 cd /opt/app
 
-/opt/app/grafana-agent-linux-amd64  -config.expand-env -enable-features integrations-next --config.file /opt/app/config.yaml &
 
 export COCKROACH_SKIP_ENABLING_DIAGNOSTIC_REPORTING=true
 mkdir /tmp/cockroachdb-logs
