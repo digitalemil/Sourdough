@@ -3,7 +3,7 @@ FROM node:hydrogen
 WORKDIR /opt/app
 
 RUN apt-get update -y
-RUN apt-get install --yes gettext-base nginx
+RUN apt-get install --yes gettext-base nginx vim
 
 RUN curl -LJO https://github.com/grafana/agent/releases/download/v0.39.0-rc.0/grafana-agent-linux-amd64.zip
 RUN unzip grafana-agent-linux-amd64.zip 
@@ -26,7 +26,7 @@ COPY config.yaml /opt/app
 
 COPY allinone/startall.sh /opt/app
 COPY allinone/startapp.sh /opt/app
-
+COPY allineone/nginx.conf /etc/nginx/nginx.conf 
 
 RUN chmod +x /opt/app/startall.sh
 
