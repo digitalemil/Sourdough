@@ -14,6 +14,14 @@ RUN tar xzf prometheus-2.49.1.linux-amd64.tar.gz
 
 RUN curl -LJO  https://binaries.cockroachdb.com/cockroach-v23.1.14.linux-amd64.tgz
 RUN tar xzf cockroach-v23.1.14.linux-amd64.tgz
+
+RUN apt-get install -y apt-transport-https software-properties-common wget
+RUN mkdir -p /etc/apt/keyrings/
+RUN wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
+RUN echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+RUN apt-get update -y
+RUN apt-get install --yes grafana 
+
 WORKDIR /opt/app
 
 COPY bin /opt/app/bin
