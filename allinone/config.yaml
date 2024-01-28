@@ -1,6 +1,9 @@
 logs:
   configs:
     - clients:
+        - basic_auth:
+            password: ${LOGSPASSWORD}
+            username: ${LOGSUSER}
           url: http://localhost:3100
       name: default
       positions:
@@ -16,10 +19,9 @@ logs:
         - job_name: cockroachdb
           static_configs:
           - labels: 
-              __path__: ${LOGFOLDER}/*.log
+              __path__:  /tmp/cockroachdb-logs/*.log
               app: appserver
             targets:
               - localhost
-
       target_config:
         sync_period: 10s
