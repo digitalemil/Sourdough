@@ -40,8 +40,8 @@ COPY app.js /opt/app
 COPY package.json /opt/app
 COPY o11y.js /opt/app
 COPY tracing.js /opt/app
-COPY config.yaml /opt/app
 
+COPY allinone/config.yaml /opt/app
 COPY allinone/startall.sh /opt/app
 COPY allinone/startapp.sh /opt/app
 COPY allinone/nginx.conf /etc/nginx/nginx.conf 
