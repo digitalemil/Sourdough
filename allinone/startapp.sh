@@ -23,7 +23,9 @@ cd /usr/share/grafana;
 ./bin/grafana server &
 cd /opt/app
 
-cp /opt/app/dashboard.json /var/lib/grafana/dashboards
+mkdir -p /var/lib/grafana/dashboards
+
+cp /opt/app/dashboard.json /var/lib/grafana/dashboards/
 
 /opt/app/grafana-agent-linux-amd64  -config.expand-env -enable-features integrations-next --config.file /opt/app/config.yaml &
 
