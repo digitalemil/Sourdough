@@ -3,7 +3,7 @@ FROM node:hydrogen
 WORKDIR /opt/app
 
 RUN apt-get update -y
-RUN apt-get install --yes gettext-base
+RUN apt-get install --yes gettext-base nginx
 
 RUN curl -LJO https://github.com/grafana/agent/releases/download/v0.39.0-rc.0/grafana-agent-linux-amd64.zip
 RUN unzip grafana-agent-linux-amd64.zip 

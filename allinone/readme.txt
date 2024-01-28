@@ -1,1 +1,1 @@
-docker run -it -p 3030:3030 -p 8080:8080  --env-file ../../../env.file digitalemil/sourdough:sourdough-allinone-vlatest
+docker run -it -p 3030:3030 -p 8080:8080 -p 8081:8081 -p 8082:8082 -p 8083:8083 -p 8084:8084 -p 8085:8085 -p 8086:8086 -p 8087:8087 -p 8088:8088 -p 26257:26257 -p 26258:26258 -p 26259:26259 -p 26260:26260 -p 26261:26261 -p 26262:26262 -p 26263:26263 -p 26264:26264 -p 26265:26265 --env-file ../../../env.file digitalemil/sourdough:sourdough-allinone-vlatest
