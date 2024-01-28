@@ -14,7 +14,10 @@ sleep 1
 
 /usr/bin/loki -config.file=loki-local-config.yaml &
 
-/usr/bin/tempo -config.file /opt/app/tempo-local-config.yaml 
+/usr/bin/tempo -config.file /opt/app/tempo-local-config.yaml &
+
+cp /opt/app/datasources.yaml /usr/share/grafana/conf/provisioning/datasources/
+cp /opt/app/dashboard.json /var/lib/grafana/dashboards
 
 cd /usr/share/grafana;
 ./bin/grafana server &
