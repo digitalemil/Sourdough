@@ -22,6 +22,8 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com 
 RUN apt-get update -y
 RUN apt-get install --yes grafana 
 
+RUN apt-get install loki
+
 WORKDIR /opt/app
 
 COPY bin /opt/app/bin
@@ -39,6 +41,8 @@ COPY allinone/startall.sh /opt/app
 COPY allinone/startapp.sh /opt/app
 COPY allinone/nginx.conf /etc/nginx/nginx.conf 
 COPY allinone/prometheus.conf /opt/app
+COPY allinone/loki-local-config.yaml /opt/app
+COPY allinone/tempo-local-config.yaml /opt/app
 
 RUN chmod +x /opt/app/startall.sh
 
