@@ -22,7 +22,12 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com 
 RUN apt-get update -y
 RUN apt-get install --yes grafana 
 
-RUN apt-get install loki
+RUN curl -Lo tempo_2.2.0_linux_amd64.deb https://github.com/grafana/tempo/releases/download/v2.2.0/tempo_2.2.0_linux_amd64.deb
+RUN echo e81cb4ae47e1d8069efaad400df15547e809b849cbb18932e23ac3082995535b \
+  tempo_2.2.0_linux_amd64.deb | sha256sum -c
+RUN dpkg -i tempo_2.2.0_linux_amd64.deb
+
+RUN apt-get install --yes loki
 
 WORKDIR /opt/app
 
