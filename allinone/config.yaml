@@ -1,7 +1,7 @@
 logs:
   configs:
     - clients:
-          url: http://localhost:3100/loki/api/v1/push
+        - url: http://localhost:3100/loki/api/v1/push
       name: default
       positions:
         filename: /tmp/positions.yaml
@@ -17,7 +17,7 @@ logs:
           static_configs:
           - labels: 
               __path__:  /tmp/cockroachdb-logs/*.log
-              app: appserver
+              app: cockroachdb
             targets:
               - localhost
       target_config:
