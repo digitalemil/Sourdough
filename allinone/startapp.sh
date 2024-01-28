@@ -12,7 +12,7 @@ sleep 1
 
 /opt/app/prometheus-2.49.1.linux-amd64/prometheus --web.listen-address="0.0.0.0:9090" --config.file=/opt/app/prometheus.conf &
 
-/opt/app/loki-linux-amd64 -config.file=loki-local-config.yaml &
+/usr/bin/loki -config.file=loki-local-config.yaml &
 
 /usr/bin/tempo -config.file /opt/app/tempo-local-config.yaml 
 
