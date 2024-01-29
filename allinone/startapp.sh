@@ -25,7 +25,7 @@ cd /opt/app
 
 mkdir -p /var/lib/grafana/dashboards
 
-envsubst < /opt/app/dashboard.json /var/lib/grafana/dashboards/dashboard.json
+envsubst < /opt/app/dashboard.json >/var/lib/grafana/dashboards/dashboard.json
 
 /opt/app/grafana-agent-linux-amd64  -config.expand-env -enable-features integrations-next --config.file /opt/app/config.yaml &
 
