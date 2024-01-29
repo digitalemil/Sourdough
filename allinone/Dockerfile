@@ -14,7 +14,7 @@ ENV STARS=Priority
 ENV GRAFANAUSER_DB_PASSWORD=cr1401
 
 ENV TITLE=Tickets
-ENV WELCOME=Welcome to Tickets @ Exceptional Service Inc.
+ENV WELCOME="Welcome to Tickets @ Exceptional Service Inc."
 ENV CODE=rose
 
 ENV COLOR=#282828
