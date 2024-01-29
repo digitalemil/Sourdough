@@ -93,7 +93,7 @@
 	create view MaintableGrafana as
 		select id, name, origin from ${MAINTABLE};
 	create view SecondTableGrafana as
-		select id, itemid, stars from ${SECONDTABLE};
+		select id, itemid, ${STARS} as stars from ${SECONDTABLE};
 	create view SecondtableForMaintableGrafana as select itemid, count(id) as n, AVG(${STARS}) as a from ${SECONDTABLE} group by itemid; 
 	create view MaintableWithSecondTableGrafana as select * from MaintableGrafana f right join ${SECONDTABLE}For${MAINTABLE} r on r.itemid=f.id;
 
