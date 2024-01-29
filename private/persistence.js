@@ -122,14 +122,14 @@ async function rate(id, rating, username) {
 
         global.logger.log("info", "Persisting "+process.env.SECONDTABLE+" for UserID: "+userid);
 
-        let ratingq = "INSERT INTO "+process.env.SECONDTABLE+" (createdby, createdon, "+process.env.STARS+", "+process.env.MAINTABLE+"id) Values (";
+        let ratingq = "INSERT INTO "+process.env.SECONDTABLE+" (createdby, createdon, "+process.env.STARS+", itemid) Values (";
         ratingq += "'" + userid + "', "
         ratingq += "'" + new Date().toISOString() + "', ";
         ratingq += rating + ", '"
         ratingq += id + "');"
 
         await executeQuery(con, ratingq);
-        let nr = await executeQuery(con, "Select a from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" where "+process.env.MAINTABLE+"id='" + id + "';");
+        let nr = await executeQuery(con, "Select a from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" where itemid='" + id + "';");
         newrating = nr.rows[0].a;
         global.logger.log("info", "New average for " + id + " :" + newrating);
     }
@@ -184,11 +184,11 @@ async function getXML(qn, id, name, itemname) {
         let origin= userlocation.rows[0].location;
 
 
-        queries = ["select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='"+origin+"' order by RANDOM() limit 1;",
-        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='"+origin+"' order by f.createdon desc limit 1; ",
-        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='"+origin+"' order by f.createdon asc limit 1; ",
-        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='"+origin+"' AND f.id='" + id + "';",
-        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r."+process.env.MAINTABLE+"id=f.id where f.origin='"+origin+"' AND f.name='\"" + itemname + "\"' limit 1;"];
+        queries = ["select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r.itemid=f.id where f.origin='"+origin+"' order by RANDOM() limit 1;",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r.itemid=f.id where f.origin='"+origin+"' order by f.createdon desc limit 1; ",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r.itemid=f.id where f.origin='"+origin+"' order by f.createdon asc limit 1; ",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r.itemid=f.id where f.origin='"+origin+"' AND f.id='" + id + "';",
+        "select f.xml as xml, r.a as rating, f.id as id from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" r right join "+process.env.MAINTABLE+" f on r.itemid=f.id where f.origin='"+origin+"' AND f.name='\"" + itemname + "\"' limit 1;"];
 
         let q = queries[qn];
         let result = await executeQuery(con, q);
@@ -340,7 +340,7 @@ async function persist(jobj, xml, username) {
         global.logger.log("info", "Item created. ID: " + itemid);
 
         if (data.stars >= 1 && data.stars <= 5) {
-            let rating = "INSERT INTO "+process.env.SECONDTABLE+" (createdby, createdon, "+process.env.STARS+", "+process.env.MAINTABLE+"id) Values (";
+            let rating = "INSERT INTO "+process.env.SECONDTABLE+" (createdby, createdon, "+process.env.STARS+", itemid) Values (";
             rating += "'" + userid + "', "
             rating += "'" + new Date().toISOString() + "', ";
             rating += data.stars + ", '"
