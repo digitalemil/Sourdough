@@ -5,3 +5,5 @@ keep/variables.env
 keep/env.file
 keep/certs
 keep/certs/*
+keep/*
+keep/bread.env-file

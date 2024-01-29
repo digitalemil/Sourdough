@@ -6,7 +6,7 @@
 <pre>
 DATABASE=ticketsdb
 
-DATABASE_CONNECTIONSTRING="postgresql://root@127.0.0.1:26257/ticketsdb?sslmode=disable"
+DATABASE_CONNECTIONSTRING=postgresql://root@127.0.0.1:26257/ticketsdb?sslmode=disable
 DBTYPE=selfhosted
 
 MAINTABLE=Tickets
@@ -48,5 +48,33 @@ Read &amp; Write:
     podman exec sourdough k6 run --vus 4 --duration 10m /opt/app/readwrite.js
 </pre>
 
-    </body>
+<h3>Another example (one which is close to my heart ;-) set of env variables:</h3>
+<pre>
+DATABASE=breadsdb
+    
+DATABASE_CONNECTIONSTRING=postgresql://root@127.0.0.1:26257/breadsdb?sslmode=disable
+DBTYPE=selfhosted
+    
+MAINTABLE=Breads
+SECONDTABLE=Ratings
+STARS=Stars
+    
+GRAFANAUSER_DB_PASSWORD=cr1401
+    
+TITLE=Breads, breads, breads!
+WELCOME=Welcome to Emil's Bakes Sourdough Bread Bakery
+CODE=bread
+    
+COLOR=#C4A484
+BACKGROUNDCOLOR=rgba(239, 222, 205, 0.2)
+INPUTCOLOR=#5C4033
+LOGO=http://storage.googleapis.com/thegym-public/sourdough-logo-small.png
+BACKGROUNDIMAGE=http://storage.googleapis.com/thegym-public/leni.png
+
+CREATORFILE=http://storage.googleapis.com/thegym-public/bread.js
+ 
+PORT=3030
+</pre>
+    
+</body>
 </html>
