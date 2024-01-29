@@ -78,7 +78,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "<img src=\"https://storage.googleapis.com/publicstuff/a336ee58-f70d-4474-99ad-3ba40bde959f.jpeg\" height=\"100%\">",
+        "content": "<img src=\"${LOGO}\" height=\"100%\">",
         "mode": "html"
       },
       "pluginVersion": "10.3.1",
@@ -172,7 +172,7 @@
           }
         }
       ],
-      "title": "Global with Priority ",
+      "title": "Global ",
       "type": "stat"
     },
     {
@@ -721,7 +721,7 @@
           }
         }
       ],
-      "title": "Avg. Priority",
+      "title": "Average",
       "type": "stat"
     },
     {
