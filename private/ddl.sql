@@ -44,15 +44,15 @@
 	create table if not exists ${SECONDTABLE} (
 		id UUID NOT NULL DEFAULT gen_random_uuid(),
 		createdby UUID NOT NULL REFERENCES UserDetails (id),
-		${MAINTABLE}id UUID NOT NULL REFERENCES ${MAINTABLE} (id) ON DELETE no ACTION,
+		itemid UUID NOT NULL REFERENCES ${MAINTABLE} (id) ON DELETE no ACTION,
 		createdon TIMESTAMP,
 		${STARS} int NOT NULL,
 		 CONSTRAINT "primary" PRIMARY KEY (id)
 	);
 	
 	
-	create view ${SECONDTABLE}For${MAINTABLE} as select ${MAINTABLE}id, count(id) as n, AVG(${STARS}) as a from ${SECONDTABLE} group by ${MAINTABLE}id; 
-	create view ${MAINTABLE}With${SECONDTABLE} as select * from ${MAINTABLE} f right join ${SECONDTABLE}For${MAINTABLE} r on r.${MAINTABLE}id=f.id;
+	create view ${SECONDTABLE}For${MAINTABLE} as select itemid, count(id) as n, AVG(${STARS}) as a from ${SECONDTABLE} group by itemid; 
+	create view ${MAINTABLE}With${SECONDTABLE} as select * from ${MAINTABLE} f right join ${SECONDTABLE}For${MAINTABLE} r on r.itemid=f.id;
 	
 	-- cockroach demo --log-dir ~/tmp/lesfleurs/cockroachdb-logs  --nodes 9 --no-example-database --insecure --demo-locality=region=gcp-europe-west4,az=gcp-europe-west4a:region=gcp-europe-west4,az=gcp-europe-west4b:region=gcp-europe-west4,az=gcp-europe-west4c:region=azure-singapore,az=azure-singapore1:region=azure-singapore,az=azure-singapore2:region=azure-singapore,az=azure-singapore3:region=onprem-us,az=onprem-us-rack1:region=onprem-us,az=onprem-us-rack2:region=onprem-us,az=onprem-us-rack3
 
@@ -85,24 +85,23 @@
 	GRANT SELECT on Local${MAINTABLE} to Fleur;
 		 
 	
-	drop view if exists ${MAINTABLE}With${SECONDTABLE}Grafana;
-	drop view if exists ${SECONDTABLE}For${MAINTABLE}Grafana;
-	drop view if exists ${MAINTABLE}Grafana;
-	drop view if exists ${SECONDTABLE}Grafana;
+	drop view if exists MaintableWithSecondTableGrafana;
+	drop view if exists SecondTableForMaintableGrafana;
+	drop view if exists MaintableGrafana;
+	drop view if exists SecondTableGrafana;
 	
-	create view ${MAINTABLE}Grafana as
+	create view MaintableGrafana as
 		select id, name, origin from ${MAINTABLE};
-	create view ${SECONDTABLE}Grafana as
-		select id, ${MAINTABLE}id, ${STARS} from ${SECONDTABLE};
-	create view ${SECONDTABLE}For${MAINTABLE}Grafana as select ${MAINTABLE}id, count(id) as n, AVG(${STARS}) as a from ${SECONDTABLE} group by ${MAINTABLE}id; 
-	create view ${MAINTABLE}With${SECONDTABLE}Grafana as select * from ${MAINTABLE}Grafana f right join ${SECONDTABLE}For${MAINTABLE} r on r.${MAINTABLE}id=f.id;
+	create view SecondTableGrafana as
+		select id, itemid, ${STARS} from ${SECONDTABLE};
+	create view SecondtableForMaintableGrafana as select itemid, count(id) as n, AVG(${STARS}) as a from ${SECONDTABLE} group by itemid; 
+	create view MaintableWithSecondTableGrafana as select * from MaintableGrafana f right join ${SECONDTABLE}For${MAINTABLE} r on r.itemid=f.id;
 
 	CREATE USER  if not exists grafana;
-	GRANT SELECT on ${MAINTABLE}Grafana to Grafana; 
-	GRANT SELECT on ${SECONDTABLE}Grafana to Grafana;
-	GRANT SELECT on ${SECONDTABLE}For${MAINTABLE}Grafana to Grafana;
-	GRANT SELECT on ${SECONDTABLE}For${MAINTABLE}Grafana to Grafana;
-	GRANT SELECT on ${MAINTABLE}With${SECONDTABLE}Grafana to Grafana;
+	GRANT SELECT on MaintableGrafana to Grafana; 
+	GRANT SELECT on SecondTableGrafana to Grafana;
+	GRANT SELECT on SecondtableForMaintableGrafana to Grafana;
+	GRANT SELECT on MaintableWithSecondTableGrafana to Grafana;
 	ALTER USER grafana WITH PASSWORD '${GRAFANAUSER_DB_PASSWORD}';
 	
 		

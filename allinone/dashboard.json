@@ -151,7 +151,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "select count(id) from Ticketsgrafana where id in (select ticketsid from TicketsWithPrioritiesgrafana);",
+          "rawSql": "select count(id) from Maintablegrafana where id in (select itemid from MaintableWithPrioritiesgrafana);",
           "refId": "A",
           "sql": {
             "columns": [
@@ -506,7 +506,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "Select count(id) from Tickets;",
+          "rawSql": "Select count(id) from MaintableGrafana;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -603,7 +603,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "select count(id) from Ticketsgrafana where id not in (select ticketsid from TicketsWithPrioritiesgrafana);   ",
+          "rawSql": "select count(id) from MaintableGrafana where id not in (select itemid from MaintableWithSecondtableGrafana);   ",
           "refId": "A",
           "sql": {
             "columns": [
@@ -785,7 +785,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "Select count(id) from Tickets where origin='APAC'",
+          "rawSql": "Select count(id) from MaintableGrafana where origin='APAC'",
           "refId": "A",
           "sql": {
             "columns": [
@@ -870,7 +870,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "Select count(id) from Tickets where origin='AMERICAS'",
+          "rawSql": "Select count(id) from MaintableGrafana where origin='AMERICAS'",
           "refId": "A",
           "sql": {
             "columns": [
@@ -955,7 +955,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "Select count(id) from Tickets where origin='EMEA'",
+          "rawSql": "Select count(id) from MaintableGrafana where origin='EMEA'",
           "refId": "A",
           "sql": {
             "columns": [
@@ -2227,8 +2227,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2304,6 +2303,6 @@
   "timezone": "",
   "title": "Selfhosted CockroachDB",
   "uid": "c9eb65e3-823d-46f3-bcf4-f8178b119689",
-  "version": 3,
+  "version": 2,
   "weekStart": ""
 }
