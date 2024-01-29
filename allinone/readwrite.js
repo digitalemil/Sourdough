@@ -23,7 +23,7 @@ export const options = {
 
 export default function main() {
    //curl -XPOST -L -H "Content-type: application/text" -H "x-api-key: rose" -d 'fleur/rose' http://localhost:3000/create
-  let url=  "http://localhost:${__ENV.PORT}/create"
+  let url=  `http://localhost:${__ENV.PORT}/create`
  
   let user= "fleur";
   if(Math.random()< 0.66) {
@@ -35,7 +35,7 @@ export default function main() {
     }
   }
   let res = http.post(url, user+'/rose', {
-    headers: { 'Content-Type': 'application/text', 'x-api-key':'${__ENV.CODE}' }, 
+    headers: { 'Content-Type': 'application/text', 'x-api-key':`${__ENV.CODE}` }, 
     timeout: '8s'
   });
   
