@@ -16,7 +16,7 @@ sleep 1
 
 /usr/bin/tempo -config.file=/opt/app/tempo-local-config.yaml &
 
-envsubst < /opt/app/datasources.yaml >/usr/share/grafana/conf/provisioning/datasources/
+envsubst < /opt/app/datasources.yaml >/usr/share/grafana/conf/provisioning/datasources/datasources.yaml
 cp /opt/app/dashboards.yaml /usr/share/grafana/conf/provisioning/dashboards/
 
 cd /usr/share/grafana;
