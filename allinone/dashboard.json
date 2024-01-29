@@ -151,7 +151,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "select count(id) from Maintablegrafana where id in (select itemid from MaintableWithPrioritiesgrafana);",
+          "rawSql": "select count(id) from Maintablegrafana where id in (select itemid from MaintableWithSecondTableGrafana);",
           "refId": "A",
           "sql": {
             "columns": [
@@ -290,10 +290,10 @@
                   "fixed": 0.5
                 },
                 "bulbColor": {
-                  "field": "round(sum(process_start_time_seconds{app=\"lesfleurs\", component=\"appserver\"} or vector(0))/  sum(process_start_time_seconds{app=\"lesfleurs\", component=\"appserver\"} or vector(1)))"
+                  "field": "round(sum(process_start_time_seconds{component=\"appserver\"} or vector(0))/  sum(process_start_time_seconds{component=\"appserver\"} or vector(1)))"
                 },
                 "statusColor": {
-                  "field": "round(sum(process_start_time_seconds{app=\"Tickets\", component=\"appserver\"} or vector(0))/  sum(process_start_time_seconds{app=\"Tickets\", component=\"appserver\"} or vector(1)))"
+                  "field": "round(sum(process_start_time_seconds{component=\"appserver\"} or vector(0))/  sum(process_start_time_seconds{component=\"appserver\"} or vector(1)))"
                 },
                 "type": "Single"
               },
@@ -424,7 +424,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sql_isup{app=\"Tickets\", dbtype=\"selfhosted\"}",
+          "expr": "sql_isup{dbtype=\"selfhosted\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -435,7 +435,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "round(sum(process_start_time_seconds{app=\"Tickets\", component=\"appserver\"} or vector(0))/  sum(process_start_time_seconds{app=\"Tickets\", component=\"appserver\"} or vector(1)))",
+          "expr": "round(sum(process_start_time_seconds{component=\"appserver\"} or vector(0))/  sum(process_start_time_seconds{component=\"appserver\"} or vector(1)))",
           "hide": false,
           "legendFormat": "__auto",
           "range": true,
@@ -700,7 +700,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "Select AVG(priority) from prioritiesgrafana ;",
+          "rawSql": "Select AVG(stars) from secondtablegrafana ;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1491,7 +1491,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum((rate(sql_selects_count{app=\"Tickets\", dbtype=\"selfhosted\"} [1m]))*15)",
+          "expr": "sum((rate(sql_selects_count{ dbtype=\"selfhosted\"} [1m]))*15)",
           "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
@@ -1510,7 +1510,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum((rate(sql_inserts_count{app=\"Tickets\", dbtype=\"selfhosted\"} [1m]))*15)",
+          "expr": "sum((rate(sql_inserts_count{dbtype=\"selfhosted\"} [1m]))*15)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1526,7 +1526,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum((rate(sql_updates_count{app=\"Tickets\", dbtype=\"selfhosted\"} [1m]))*15)",
+          "expr": "sum((rate(sql_updates_count{dbtype=\"selfhosted\"} [1m]))*15)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1542,7 +1542,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum((rate(sql_deletes_count{app=\"Tickets\", dbtype=\"selfhosted\"} [1m]))*15)",
+          "expr": "sum((rate(sql_deletes_count{dbtype=\"selfhosted\"} [1m]))*15)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1647,7 +1647,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(rate(sql_transactions_count{app=\"Tickets\", dbtype=\"selfhosted\"} [1m])*15)",
+          "expr": "sum(rate(sql_transactions_count{dbtype=\"selfhosted\"} [1m])*15)",
           "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
@@ -1667,7 +1667,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(rate(sql_commits_count{app=\"Tickets\", dbtype=\"selfhosted\"} [1m])*15)",
+          "expr": "sum(rate(sql_commits_count{dbtype=\"selfhosted\"} [1m])*15)",
           "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
@@ -1686,7 +1686,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(rate(sql_rollbacks_count{app=\"Tickets\", dbtype=\"selfhosted\"} [1m])*15)",
+          "expr": "sum(rate(sql_rollbacks_count{dbtype=\"selfhosted\"} [1m])*15)",
           "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
@@ -1810,7 +1810,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sql_connections{app=\"Tickets\"}",
+          "expr": "sql_connections{dbtype=\"selfhosted\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "Active Connections",
@@ -1910,7 +1910,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by(route) (rate(http_request_duration_ms_count{app=\"Tickets\", component=\"appserver\"} [1m])*60)",
+          "expr": "sum by(route) (rate(http_request_duration_ms_count{component=\"appserver\"} [1m])*60)",
           "instant": true,
           "key": "Q-60b7d390-14ac-4361-9b53-074491d0ab58-0",
           "legendFormat": "{{route}}, {{status}}",
@@ -2008,7 +2008,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by(route) (irate(http_request_duration_ms_sum{app=\"Tickets\", component=\"appserver\"}[1m]) / irate(http_request_duration_ms_count{app=\"Tickets\", component=\"appserver\"} [1m]))",
+          "expr": "sum by(route) (irate(http_request_duration_ms_sum{component=\"appserver\"}[1m]) / irate(http_request_duration_ms_count{component=\"appserver\"} [1m]))",
           "instant": true,
           "key": "Q-60b7d390-14ac-4361-9b53-074491d0ab58-0",
           "legendFormat": "{{route}}, {{status}}",
@@ -2121,8 +2121,8 @@
             "uid": "prometheus"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "rate(http_request_duration_ms_count{app=\"Tickets\", component=\"appserver\", status=~\"[45].*\"}[1m])",
+          "editorMode": "code",
+          "expr": "rate(http_request_duration_ms_count{component=\"appserver\", status=~\"[45].*\"}[1m])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "{{route}}, {{status}}",
@@ -2227,7 +2227,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
