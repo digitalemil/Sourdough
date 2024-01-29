@@ -18,7 +18,7 @@ ENV WELCOME="Welcome to Tickets @ Exceptional Service Inc."
 ENV CODE=rose
 
 ENV COLOR=#282828
-ENV BACKGROUNDCOLOR=rgba(0, 88, 144, 0.2)
+ENV BACKGROUNDCOLOR="rgba(0, 88, 144, 0.2)"
 ENV INPUTCOLOR=#FFFFF0
 ENV LOGO=https://storage.googleapis.com/publicstuff/a336ee58-f70d-4474-99ad-3ba40bde959f.jpeg
 ENV BACKGROUNDIMAGE=
