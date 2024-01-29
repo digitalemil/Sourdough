@@ -2,6 +2,31 @@ FROM node:hydrogen
 
 WORKDIR /opt/app
 
+ENV DATABASE=ticketsdb
+
+ENV DATABASE_CONNECTIONSTRING=postgresql://root@127.0.0.1:26257/ticketsdb?sslmode=disable
+ENV DBTYPE=selfhosted
+
+ENV MAINTABLE=Tickets
+ENV SECONDTABLE=Priorities
+ENV STARS=Priority
+
+ENV GRAFANAUSER_DB_PASSWORD=cr1401
+
+ENV TITLE=Tickets
+ENV WELCOME=Welcome to Tickets @ Exceptional Service Inc.
+ENV CODE=rose
+
+ENV COLOR=#282828
+ENV BACKGROUNDCOLOR=rgba(0, 88, 144, 0.2)
+ENV INPUTCOLOR=#FFFFF0
+ENV LOGO=https://storage.googleapis.com/publicstuff/a336ee58-f70d-4474-99ad-3ba40bde959f.jpeg
+ENV BACKGROUNDIMAGE=
+ENV CREATORFILE=./private/creator.js
+
+ENV PORT=3030
+
+
 RUN apt-get update -y
 RUN apt-get install --yes gettext-base nginx vim
 

@@ -6,7 +6,7 @@
 <pre>
 DATABASE=ticketsdb
 
-DATABASE_CONNECTIONSTRING="postgresql://root@127.0.0.1:26257/${DATABASE}?sslmode=disable"
+DATABASE_CONNECTIONSTRING="postgresql://root@127.0.0.1:26257/ticketsdb?sslmode=disable"
 DBTYPE=selfhosted
 
 MAINTABLE=Tickets
@@ -31,9 +31,10 @@ PORT=3030
 </pre>
 
 <br>
-<a href="http://localhost:3030">Application 3030</a> (Users: joe, dude, fleur. Password value of env variable CODE)<br>
-<a href="http://localhost:3032">Grafana 3032</a> (User admin. Password admin)<br>
-<a href="http://localhost:8080">DBConsole</a> Ports 8080-8088<br>
+<a href="http://localhost:3030" target="_blank">Application 3030</a> (Users: joe, dude, fleur. Password value of env variable CODE)<br>
+(Please wait for: &quot;info: Starting Tickets on port: 3030&quot; in the log output before hitting the link above)<br>
+<a href="http://localhost:3032" target="_blank">Grafana 3032</a> (User admin. Password admin)<br>
+<a href="http://localhost:8080" target="_blank">DBConsole</a> Ports 8080-8088<br>
 SQL connections on localhost ports 26257-26265<br>
     </body>
 </html>
