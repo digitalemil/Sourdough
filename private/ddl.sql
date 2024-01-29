@@ -103,7 +103,7 @@
 	GRANT SELECT on ${SECONDTABLE}For${MAINTABLE}Grafana to Grafana;
 	GRANT SELECT on ${SECONDTABLE}For${MAINTABLE}Grafana to Grafana;
 	GRANT SELECT on ${MAINTABLE}With${SECONDTABLE}Grafana to Grafana;
-	ALTER USER grafana WITH PASSWORD '${GRAFANAPASSWORD}';
+	ALTER USER grafana WITH PASSWORD '${GRAFANAUSER_DB_PASSWORD}';
 	
 		
 -- explain analyze select id from ${MAINTABLE} where crdb_region='gcp-europe-west4';

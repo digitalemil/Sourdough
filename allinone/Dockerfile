@@ -51,6 +51,7 @@ COPY allinone/tempo-local-config.yaml /opt/app
 COPY allinone/datasources.yaml /opt/app
 COPY allinone/dashboards.yaml /opt/app
 COPY allinone/dashboard.json /opt/app
+COPY allinone/html /opt/app/html
 
 RUN chmod +x /opt/app/startall.sh
 
