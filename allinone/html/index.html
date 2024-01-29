@@ -73,6 +73,17 @@ CREATORFILE=http://storage.googleapis.com/thegym-public/bread.js
  
 PORT=3030
 </pre>
-    
+A creator file needs to create a SVG with item to visualize. It needs export a createSVG() function:
+<pre>
+exports.createSVG= createSVG;
+</pre>
+The description of the svg needs to contain a name:
+<pre>
+    &#060;svg&#062;
+    &#060;desc&#062;name="foo"&#060;/desc&#062;
+    ...
+    &#060;/svg&#062;
+</pre>
+Best to just check out the provided creator.js in the private folder
 </body>
 </html>
