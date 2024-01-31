@@ -8,6 +8,13 @@ Date.prototype.timeNow = function () {
   return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes() +":"+ ((this.getSeconds() < 10)?"0":"") + this.getSeconds();
 }
 
+let tr=   [
+  new winston.transports.File({ filename: process.env.LOGFOLDER + '/error.log', level: 'error' }),
+  new winston.transports.File({ filename: process.env.LOGFOLDER + '/combined.log' }),
+];
+if(process.env.LOGTOCONSOLE=="true")
+  tr.push(new winston.transports.Console({format: winston.format.simple()}));
+
 const wlogger = winston.createLogger({
   levels: {
     'info': 1,
@@ -16,11 +23,7 @@ const wlogger = winston.createLogger({
   },
   format: winston.format.simple(),
   defaultMeta: {},
-  transports: [
-    new winston.transports.File({ filename: process.env.LOGFOLDER + '/error.log', level: 'error' }),
-    new winston.transports.File({ filename: process.env.LOGFOLDER + '/combined.log' }),
-    new winston.transports.Console({format: winston.format.simple()})
-  ],
+  transports: tr
 });
 const loggermw = expressWinston.logger({
   winstonInstance: wlogger,

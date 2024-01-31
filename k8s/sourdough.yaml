@@ -50,6 +50,8 @@ spec:
           value: /tmp/config/config.yanl
         - name: PORT
           value: "${PORT}"
+        - name: LOGTOCONSOLE
+          value: "true"
         ports:
         - containerPort: 12345
         volumeMounts:
