@@ -18,8 +18,7 @@
 		location STRING NOT NULL,
 		CONSTRAINT "primary" PRIMARY KEY (id)
 	);
-	ALTER TABLE UserDetails SET LOCALITY GLOBAL;
-
+	
 	Upsert Into UserDetails (name, location, email, password_hash) Values ('joe', 'AMERICAS', 'joe@digitalemil.de', '3506511');
 	Upsert Into UserDetails (name, location, email, password_hash) Values ('dude', 'APAC', 'dude@digitalemil.de', '3506511');
 	Upsert Into UserDetails (name, location, email, password_hash) Values ('fleur', 'EMEA', 'fleur@digitalemil.de', '3506511');
@@ -51,8 +50,7 @@
 		${STARS} int NOT NULL,
 		 CONSTRAINT "primary" PRIMARY KEY (id)
 	);
-	ALTER TABLE ${SECONDTABLE} SET LOCALITY GLOBAL;
-
+	
 	
 	create view ${SECONDTABLE}For${MAINTABLE} as select itemid, count(id) as n, AVG(${STARS}) as a from ${SECONDTABLE} group by itemid; 
 	create view ${MAINTABLE}With${SECONDTABLE} as select * from ${MAINTABLE} f right join ${SECONDTABLE}For${MAINTABLE} r on r.itemid=f.id;
@@ -78,6 +76,8 @@
 --	ALTER TABLE ${MAINTABLE} CONFIGURE ZONE USING num_replicas = 3; 
 	ALTER DATABASE ${DATABASE} CONFIGURE ZONE USING num_replicas = 3;
 
+	ALTER TABLE UserDetails SET LOCALITY GLOBAL;
+	ALTER TABLE ${SECONDTABLE} SET LOCALITY GLOBAL;
 
 	create view Local${MAINTABLE} as 
 		select f.* from ${MAINTABLE} f Join UserDetails db On (f.origin=db.location) where db.name= current_user; 
