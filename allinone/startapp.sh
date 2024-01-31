@@ -9,7 +9,9 @@ cockroach-v*.linux-amd64/cockroach sql --insecure -f ddl.sql
 
 sleep 1
 
-/opt/app/prometheus-2.49.1.linux-amd64/prometheus --web.listen-address="0.0.0.0:9090" --config.file=/opt/app/prometheus.conf >/tmp/$LOGFOLDER/prometheus.log 2>&1  &
+mkdir -p $LOGFOLDER
+
+/opt/app/prometheus-2.49.1.linux-amd64/prometheus --web.listen-address="0.0.0.0:9090" --config.file=/opt/app/prometheus.conf >$LOGFOLDER/../prometheus.log 2>&1  &
 
 /usr/bin/loki -config.file=/opt/app/loki-local-config.yaml >$LOGFOLDER/../loki.log 2>&1  &
 
