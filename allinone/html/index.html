@@ -40,13 +40,22 @@ PORT=3030
 
 <p><br>
 <b>Load generation built-in!</b> Start the test by running the following commands on your host.<br>
-Readonly: 
+Readonly (random over all regions): 
 <pre>
-    podman exec sourdough k6 run --vus 4 --duration 10m /opt/app/read.js
+    docker exec sourdough k6 run --vus 4 --duration 10m /opt/app/read.js
 </pre>
-Read &amp; Write:
+Read &amp; Write (per region depending on USER env variable):
+<br>In EMEA:
 <pre>
-    podman exec sourdough k6 run --vus 4 --duration 10m /opt/app/readwrite.js
+    docker exec sourdough k6 run -e USER=fleur --vus 4 --duration 10m /opt/app/readwrite.js
+</pre>
+<br>In AMERICAS:
+<pre>
+    docker exec sourdough k6 run -e USER=joe --vus 4 --duration 10m /opt/app/readwrite.js
+</pre>
+<br>In APAC:
+<pre>
+    docker exec sourdough k6 run -e USER=dude --vus 4 --duration 10m /opt/app/readwrite.js
 </pre>
 
 <h3>Another example (one which is close to my heart ;-) set of env variables:</h3>

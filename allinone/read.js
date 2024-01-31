@@ -25,15 +25,6 @@ export default function main() {
    //curl -XPOST -L -H "Content-type: application/text" -H "x-api-key: rose" -d 'fleur/rose' http://localhost:3000/create
   let url=  "http://localhost:${__ENV.PORT}/random/withcode?code=${__ENV.CODE}"
   
-  let user= "fleur";
-  if(Math.random()< 0.66) {
-    if(Math.random()< 0.5) {
-      user= "dude";
-    }
-    else {
-      user= "joe";
-    }
-  }
   const params = {
       timeout: '8s'
   };

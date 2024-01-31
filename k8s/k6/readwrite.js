@@ -28,10 +28,10 @@ export default function main() {
   let user= "fleur";
   if(Math.random()< 0.66) {
     if(Math.random()< 0.5) {
-      user= "dude";
+      user= "joe";
     }
     else {
-      user= "joe";
+      user= "fleur";
     }
   }
   let res = http.post(url, user+'/rose', {

@@ -25,15 +25,7 @@ export default function main() {
    //curl -XPOST -L -H "Content-type: application/text" -H "x-api-key: rose" -d 'fleur/rose' http://localhost:3000/create
   let url=  `http://localhost:${__ENV.PORT}/create`
  
-  let user= "fleur";
-  if(Math.random()< 0.66) {
-    if(Math.random()< 0.5) {
-      user= "dude";
-    }
-    else {
-      user= "joe";
-    }
-  }
+  let user= `${__ENV.USER}`
   let res = http.post(url, user+'/rose', {
     headers: { 'Content-Type': 'application/text', 'x-api-key':`${__ENV.CODE}` }, 
     timeout: '8s'
