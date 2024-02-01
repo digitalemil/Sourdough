@@ -35,12 +35,15 @@ cp.on('release', (err, client) => {
 
 executeSQL("Update UserDetails Set password_hash = '"+process.env.CODE.hashCode()+"'");
 async function authenticateUser(user, password) {
-    let pw= null;
+    let pw= new Object();
+    pw.password= false;
     let con= null;
     try {
         con = await cp.connect();
-        let result= await executeQuery(con, "Select password_hash from UserDetails where name='"+user+"';");
-        pw= result.rows[0].password_hash;
+        let result= await executeQuery(con, "Select password_hash, location from UserDetails where name='"+user+"';");
+        pw.password= result.rows[0].password_hash;
+        pw.region= result.rows[0].location;
+        console.log("Region: "+pw.region);
     }
     catch (err) {
         if((! (err!= undefined)) || JSON.stringify(err)=== "{}") {
@@ -58,13 +61,18 @@ async function authenticateUser(user, password) {
         return false;
     }
     con.release();
-    let ret= pw && (pw == password.hashCode());
+    let ret= new Object();
+    ret.region= pw.region;
+    ret.authenticated= false;
+    if(pw.password && (pw.password == password.hashCode()))
+        ret.authenticated= true;
     if(ret) {
         global.logger.log("info", "User: " + user + " authenticated.");
     }
     else {
         global.logger.log("error", "User: " + user + " NOT authenticated.");
     }
+    console.log("RET : "+ret.region)
     return ret;
 }
 

@@ -31,6 +31,12 @@ envsubst < /opt/app/dashboard.json >/var/lib/grafana/dashboards/dashboard.json
 
 /opt/app/grafana-agent-linux-amd64  -config.expand-env -enable-features integrations-next --config.file /opt/app/config.yaml >$LOGFOLDER/../grafana-agent.log 2>&1  &
 
-node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr.log 2>&1 
-
+export REGION=EMEA
+node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
+export PORT=$(($PORT + 1))
+export REGION=AMERICAS
+node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
+export PORT=$(($PORT + 1))
+export REGION=APAC
+node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1
 

@@ -68,7 +68,8 @@ router.post("/create", async function (req, res, next) {
   if (req.header('x-api-key') == process.env.CODE) {
     let user = req.body.split("/")[0].trim();
     let password = req.body.split("/")[1].trim();
-    if (await authenticateUser(user, password)) {
+    let a= await authenticateUser(user, password)
+    if (a.authenticated) {
       let svg = createSVG();
       svg = svg.replaceAll("</desc>", " stars=0</desc>");
       const options = {
@@ -109,9 +110,11 @@ router.all("/signinwithkey", async function (req, res, next) {
   if (req.header('x-api-key') == process.env.CODE) {
     let user = req.body.split("/")[0].trim();
     let password = req.body.split("/")[1].trim();
-    if (await authenticateUser(user, password)) {
+    let a= await authenticateUser(user, password)
+    if (a.authenticated) {
       req.session.authorizedByKey = true;
-      req.session.passport = { "user": { "name": { "value": user } } };
+      console.log("User region: "+a.region);
+      req.session.passport = { "user": { "name": { "value": user }, "region": a.region } };
       res.redirect('/app/home');
       global.httpRequestDurationMilliseconds
         .labels(req.route.path, res.statusCode, req.method)
@@ -178,7 +181,7 @@ router.get("/", function (req, res, next) {
 
 function renderHome(req, res, next, home, action, id) {
   res.render(home, {
-    user: req.session.passport.user.name.value, farourl: process.env.FAROURL, farokey: process.env.FAROKEY,
+    appregion:process.env.REGION, user: req.session.passport.user.name.value, userregion: req.session.passport.user.region, farourl: process.env.FAROURL, farokey: process.env.FAROKEY,
     stars: process.env.STARS, code: process.env.CODE, id: id, action: action, backgroundcolor: process.env.BACKGROUNDCOLOR, inputcolor: process.env.INPUTCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE
   });
 };

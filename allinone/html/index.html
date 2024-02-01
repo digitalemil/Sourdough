@@ -32,11 +32,15 @@ PORT=3030
 </pre>
 
 <br>
-<a href="http://localhost:3030" target="_blank">Application 3030</a> (Users: joe, dude, fleur. Password value of env variable CODE)<br>
-(Please wait for: &quot;info: Starting Tickets on port: 3030&quot; in the log output before hitting the link above)<br>
-<br><a href="http://localhost:3032" target="_blank">Grafana 3032</a> (User admin. Password admin)<br>
+<a href="http://localhost:3088" target="_blank">Application 3088</a> (Users: joe, dude, fleur. Password value of env variable CODE)<br>
+(It will take a couple of seconds after container start until app is up.)<br>
+Loadbalanced over all three app instances (EMEA, AMERICAS, APAC)<br>
+<br><a href="http://localhost:3080" target="_blank">Grafana 3080</a> (User admin. Password admin)<br>
 <br><a href="http://localhost:8080" target="_blank">DBConsole</a> Ports 8080-8088<br>
-<br>SQL connections on localhost ports 26257-26265<br>
+<br>SQL connections on localhost port 26257 (load balanced over all 9 nodes)<br>
+<br>SQL connections on localhost port 26258 (load balanced over all 3 EMEA nodes)<br>
+<br>SQL connections on localhost port 26259 (load balanced over all 3 APAC nodes)<br>
+<br>SQL connections on localhost port 26260 (load balanced over all 3 AMERICAS nodes)<br>
 
 <p><br>
 <b>Load generation built-in!</b> Start the test by running the following commands on your host.<br>
