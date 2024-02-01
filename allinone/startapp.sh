@@ -44,15 +44,15 @@ else
 fi
 
 
-export REGION=EMEA
+export REGION=$EMEA
 export DATABASE_CONNECTIONSTRING=$REGION
 node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
 export PORT=$(($PORT + 1))
-export REGION=AMERICAS
+export REGION=$AMERICAS
 export DATABASE_CONNECTIONSTRING=$REGION
 node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
 export PORT=$(($PORT + 1))
-export REGION=APAC
+export REGION=$APAC
 export DATABASE_CONNECTIONSTRING=$REGION
 node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1
 
