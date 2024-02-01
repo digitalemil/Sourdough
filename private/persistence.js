@@ -16,6 +16,7 @@ String.prototype.hashCode = function() {
 
 let connectionsInUse= 0;
 const connectionString = process.env.DATABASE_CONNECTIONSTRING;
+console.log("DB Connection for: "+process.env.REGION+" "+connectionString);
 const cp = new pg.Pool({
     connectionString,
     max: 8,

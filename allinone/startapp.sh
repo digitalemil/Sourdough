@@ -31,12 +31,28 @@ envsubst < /opt/app/dashboard.json >/var/lib/grafana/dashboards/dashboard.json
 
 /opt/app/grafana-agent-linux-amd64  -config.expand-env -enable-features integrations-next --config.file /opt/app/config.yaml >$LOGFOLDER/../grafana-agent.log 2>&1  &
 
+
+if [[ -z "${DATABASE_CONNECTIONSTRING}" ]]; then
+  EMEA=postgresql://root@127.0.0.1:27258/ticketsdb?sslmode=disable
+  APAC=postgresql://root@127.0.0.1:27259/ticketsdb?sslmode=disable
+  AMERICAS=postgresql://root@127.0.0.1:27260/ticketsdb?sslmode=disable
+else
+  echo Using provided Datasource: $DATABASE_CONNECTIONSTRING
+  EMEA=$DATABASE_CONNECTIONSTRING
+  APAC=$DATABASE_CONNECTIONSTRING
+  AMERICAS=$DATABASE_CONNECTIONSTRING
+fi
+
+
 export REGION=EMEA
+export DATABASE_CONNECTIONSTRING=$REGION
 node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
 export PORT=$(($PORT + 1))
 export REGION=AMERICAS
+export DATABASE_CONNECTIONSTRING=$REGION
 node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
 export PORT=$(($PORT + 1))
 export REGION=APAC
+export DATABASE_CONNECTIONSTRING=$REGION
 node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1
 

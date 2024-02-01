@@ -4,7 +4,6 @@ WORKDIR /opt/app
 
 ENV DATABASE=ticketsdb
 
-ENV DATABASE_CONNECTIONSTRING=postgresql://root@127.0.0.1:26257/ticketsdb?sslmode=disable
 ENV DBTYPE=selfhosted
 
 ENV MAINTABLE=Tickets

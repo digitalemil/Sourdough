@@ -22,6 +22,9 @@ function requireHTTPS(req, res, next) {
   next();
 }
 
+if(typeof process.env.REGION=== "undefined" ) {
+  process.env.REGION= "Region";
+}
 let config= { "OAUTH2_CLIENT_ID": "none", "OAUTH2_CLIENT_SECRET": "xxx", "OAUTH2_CALLBACK": "http://localhost:3000/auth/google/callback" }
 
 let store = new session.MemoryStore();
