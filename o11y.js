@@ -10,7 +10,7 @@ Date.prototype.timeNow = function () {
 
 let tr=   [
   new winston.transports.File({ filename: process.env.LOGFOLDER + '/error-'+process.env.PORT+'.log', level: 'error' }),
-  new winston.transports.File({ filename: process.env.LOGFOLDER + '/combined-'+process.env+PORT+'.log' }),
+  new winston.transports.File({ filename: process.env.LOGFOLDER + '/combined-'+process.env.PORT+'.log' }),
 ];
 if(process.env.LOGTOCONSOLE=="true")
   tr.push(new winston.transports.Console({format: winston.format.simple()}));
