@@ -4,6 +4,8 @@
         CockroachDB running in demo mode. Please see the Demo-specific (e.g. node de/re commission) here:
         <a href="https://www.cockroachlabs.com/docs/stable/cockroach-demo">CockroachDB demo docs</a>
         <p></p>
+        See network architecture: <a href="setup.drawio.html">Architecure Diagram</a>    
+<p></p>
         <br>Environment variables you can provide to the container (with defaults shown):
 <pre>
 DATABASE=ticketsdb
@@ -43,7 +45,8 @@ Loadbalanced over all three app instances (EMEA, AMERICAS, APAC)<br>
 <br>SQL connections on localhost port 26259 (load balanced over all 3 APAC nodes)<br>
 <br>SQL connections on localhost port 26260 (load balanced over all 3 AMERICAS nodes)<br>
 
-<p><br>
+<p>
+<br>
 <b>Load generation built-in!</b> Start the test by running the following commands on your host.<br>
 Readonly (random over all regions): 
 <pre>
