@@ -12,7 +12,7 @@ datasources:
     access: proxy
     orgId: 1
     uid: cockroachdb
-    url: localhost:26257
+    url: localhost:27257
     user: root
     isDefault: false
     jsonData: {"connMaxLifetime":14400,"database":"${DATABASE}","maxIdleConns":100,"maxIdleConnsAuto":true,"maxOpenConns":100,"sslmode":"disable"}

@@ -173,7 +173,7 @@ router.get(['/app/sql'], async function (req, res, next) {
 
 router.get("/", function (req, res, next) {
   let start = new Date();
-  res.render("index", { logo: process.env.LOGO, code: process.env.CODE, backgroundcolor: process.env.BACKGROUNDCOLOR, inputcolor: process.env.INPUTCOLOR, color: process.env.COLOR, backgroundimage: process.env.BACKGROUNDIMAGE, title: process.env.TITLE, welcome: process.env.WELCOME });
+  res.render("index", { appregion: process.env.REGION, logo: process.env.LOGO, code: process.env.CODE, backgroundcolor: process.env.BACKGROUNDCOLOR, inputcolor: process.env.INPUTCOLOR, color: process.env.COLOR, backgroundimage: process.env.BACKGROUNDIMAGE, title: process.env.TITLE, welcome: process.env.WELCOME });
   global.httpRequestDurationMilliseconds
     .labels(req.route.path, res.statusCode, req.method)
     .observe(new Date() - start);

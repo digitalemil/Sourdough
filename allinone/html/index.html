@@ -51,16 +51,23 @@ Readonly (random over all regions):
 Read &amp; Write (per region depending on USER env variable):
 <br>In EMEA:
 <pre>
-    docker exec sourdough k6 run -e USER=fleur --vus 4 --duration 10m /opt/app/readwrite.js
+    docker exec sourdough k6 run -e PORT=3030 -e USER=fleur --vus 4 --duration 10m /opt/app/readwrite.js
 </pre>
 <br>In AMERICAS:
 <pre>
-    docker exec sourdough k6 run -e USER=joe --vus 4 --duration 10m /opt/app/readwrite.js
+    docker exec sourdough k6 run -e PORT=3031 -e USER=joe --vus 4 --duration 10m /opt/app/readwrite.js
 </pre>
 <br>In APAC:
 <pre>
-    docker exec sourdough k6 run -e USER=dude --vus 4 --duration 10m /opt/app/readwrite.js
+    docker exec sourdough k6 run -e PORT=3032 -e USER=dude --vus 4 --duration 10m /opt/app/readwrite.js
 </pre>
+<br>Or loadbalanced globally:
+<pre>
+    docker exec sourdough k6 run -e PORT=3087 -e USER=fleur --vus 4 --duration 10m /opt/app/readwrite.js
+    docker exec sourdough k6 run -e PORT=3087 -e USER=joe --vus 4 --duration 10m /opt/app/readwrite.js
+    docker exec sourdough k6 run -e PORT=3087 -e USER=dude --vus 4 --duration 10m /opt/app/readwrite.js
+</pre>
+
 
 <h3>Another example (one which is close to my heart ;-) set of env variables:</h3>
 <pre>
