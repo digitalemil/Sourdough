@@ -24,7 +24,7 @@ ENV BACKGROUNDIMAGE=
 ENV CREATORFILE=./private/creator.js
 
 ENV PORT=3030
-
+ENV REPLICATION_FACTOR=3
 
 RUN apt-get update -y
 RUN apt-get install --yes gettext-base nginx vim

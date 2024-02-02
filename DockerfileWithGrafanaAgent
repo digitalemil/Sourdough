@@ -28,4 +28,7 @@ RUN chmod +x /opt/app/start.sh
 
 RUN cd /opt/app; npm install
 
+ENV REPLICATION_FACTOR=3
+
+
 ENTRYPOINT /opt/app/start.sh

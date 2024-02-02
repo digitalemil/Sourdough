@@ -73,7 +73,6 @@
 	ALTER TABLE Tickets ALTER COLUMN crdb_region SET NOT NULL;
 	ALTER TABLE Tickets SET LOCALITY REGIONAL BY ROW;
 	SET override_multi_region_zone_config = true;
---	ALTER TABLE Tickets CONFIGURE ZONE USING num_replicas = 3; 
 	ALTER DATABASE ticketsdb CONFIGURE ZONE USING num_replicas = 3;
 
 	ALTER TABLE UserDetails SET LOCALITY GLOBAL;

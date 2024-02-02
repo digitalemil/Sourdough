@@ -52,6 +52,8 @@ spec:
           value: "${PORT}"
         - name: LOGTOCONSOLE
           value: "true"
+        - name: REPLICATION_FACTOR
+          value: "${REPLICATION_FACTOR}"
         ports:
         - containerPort: 12345
         volumeMounts:
