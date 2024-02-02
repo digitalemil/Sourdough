@@ -12,11 +12,19 @@
 <p></p>
         In the console where you started the docker container you are connected to the CockroachDB demo console.<br>(You might need to hit the enter key for the prompt though.) 
         <br>You can add, shutdown or de/re commission nodes and watch the application continue to run.
+       <br>
+        <br>Please ignore the following error messages during startup:
+        <pre>
+        ERROR: setting or updating a password is not supported in insecure mode
+        SQLSTATE: 28P01
+        </pre>
+        <p></p>
+        ERROR: setting or updating a password is not supported in insecure mode
+        SQLSTATE: 28P01
 
         <p></p>
-
-        Environment variables you can provide to the container (with defaults shown):
-<pre>
+        You can theme the demo by setting the following environment variables: 
+        <pre>
 DATABASE=ticketsdb
 
 MAINTABLE=Tickets
