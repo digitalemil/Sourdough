@@ -33,9 +33,9 @@ envsubst < /opt/app/dashboard.json >/var/lib/grafana/dashboards/dashboard.json
 
 
 if [[ -z "${DATABASE_CONNECTIONSTRING}" ]]; then
-  EMEA=postgresql://root@127.0.0.1:27258/ticketsdb?sslmode=disable
-  APAC=postgresql://root@127.0.0.1:27259/ticketsdb?sslmode=disable
-  AMERICAS=postgresql://root@127.0.0.1:27260/ticketsdb?sslmode=disable
+  EMEA=postgresql://root@127.0.0.1:27258/$DATABASE?sslmode=disable
+  APAC=postgresql://root@127.0.0.1:27259/$DATABASE?sslmode=disable
+  AMERICAS=postgresql://root@127.0.0.1:27260/$DATABASE?sslmode=disable
 else
   echo Using provided Datasource: $DATABASE_CONNECTIONSTRING
   EMEA=$DATABASE_CONNECTIONSTRING
