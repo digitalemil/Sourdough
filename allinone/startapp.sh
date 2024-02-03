@@ -28,6 +28,7 @@ mkdir -p /var/lib/grafana/dashboards
 
 export __rate_interval='$__rate_interval'
 envsubst < /opt/app/dashboard.json >/var/lib/grafana/dashboards/dashboard.json
+envsubst < /opt/app/dashboard2.json >/var/lib/grafana/dashboards/dashboard2.json
 
 /opt/app/grafana-agent-linux-amd64  -config.expand-env -enable-features integrations-next --config.file /opt/app/config.yaml >$LOGFOLDER/../grafana-agent.log 2>&1  &
 

@@ -56,21 +56,6 @@
       },
       "id": 32,
       "links": [
-        {
-          "targetBlank": true,
-          "title": "Synthetics",
-          "url": "https://tickets2.grafana.net/a/grafana-synthetic-monitoring-app/scene/http?var-region=&var-check_type=&var-probe=&var-job=TIckets&var-instance=https:%2F%2Ftickets-enev6eyq5q-ew.a.run.app%2F"
-        },
-        {
-          "targetBlank": true,
-          "title": "Loadtest",
-          "url": "https://tickets2.grafana.net/a/k6-app/tests/857633"
-        },
-        {
-          "targetBlank": true,
-          "title": "Frontend",
-          "url": "https://tickets2.grafana.net/a/grafana-kowalski-app/apps/295"
-        }
       ],
       "options": {
         "code": {
@@ -78,7 +63,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "<img src=\"http://storage.googleapis.com/thegym-public/lafleur-transparent.png\" height=\"100%\">",
+        "content": "<img src=\"${LOGO}\" height=\"100%\">",
         "mode": "html"
       },
       "pluginVersion": "10.3.1",
