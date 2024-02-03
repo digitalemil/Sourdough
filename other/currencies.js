@@ -24,13 +24,17 @@ function createSVG() {
     s= Math.floor(Math.random()* (markets.length));
     let m= markets[s];
      
-    let content=  "ID        VOLUME      CODE        NUM     D      MARKET      MIC<br>";
-        content+= "----------------------------------------------------------------<br>";
-        content+= name+"\t"+volume+"\t"+c.code+"\t"+c.num+"\t"+c.D+"\t"+m.marketname+"\t"+m.marketname+"<br>";
-
-   
+    let content= new Array();
+    content[0]= "ID        VOLUME      CODE        NUM     D      MIC";
+    content[1]=  "----------------------------------------------------------------";
+    content[2]=  name+"\t"+volume+"\t"+c.code+"\t"+c.num+"\t"+c.D+"\t"+m.mic
+    content[3]=  "----------------------------------------------------------------";
+    content[4]=  "MARKET: "+m.marketname;
+    content[5]=  "----------------------------------------------------------------";   
+    content[6]=  "DATE: "+new Date().toUTCString();
+    content[7]=  "----------------------------------------------------------------";
     let desc= "name=\""+name+"\"";
-    let ret = `<svg style="background-color: #FFFFF0" width="1024" height="1024"  xmlns="http://www.w3.org/2000/svg">
+    let ret = `<svg style="background-color: #FFFFFF" width="1024" height="1024"  xmlns="http://www.w3.org/2000/svg">
     <desc>`+ desc + `</desc>`+"\n"
 
     ret+=`
@@ -47,12 +51,13 @@ function createSVG() {
     /* Note that the color of the text is set with the    *
      * fill property, the color property is for HTML only */
     .big {
-      font: italic 40px serif;
+      font: italic 24px serif;
       fill: black;
     }
-    </style>
-    <text x="16" y="64" class="big">`+content+`</text>
-    `
+    </style>`;
+    for(let i= 0; i< content.length; i++) {
+        ret+= '<text x="16" y="'+(128+32*i)+'" class="big">'+content[i]+'</text>';
+    }
   
     ret+= "</svg>";
     return ret;

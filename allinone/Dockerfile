@@ -22,7 +22,7 @@ ENV INPUTCOLOR=#FFFFF0
 ENV LOGO=https://storage.googleapis.com/publicstuff/a336ee58-f70d-4474-99ad-3ba40bde959f.jpeg
 ENV BACKGROUNDIMAGE=
 ENV CREATORFILE=./private/creator.js
-
+ENV GRAFANALOGO=https://storage.googleapis.com/publicstuff/a336ee58-f70d-4474-99ad-3ba40bde959f.jpeg
 ENV PORT=3030
 ENV REPLICATION_FACTOR=3
 
