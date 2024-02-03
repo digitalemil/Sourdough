@@ -82,7 +82,7 @@
           "links": [
             {
               "title": "Tickets with Priorities",
-              "url": "https://tickets2.grafana.net/d/bcb5c3c2-a202-4302-8e54-0364c0443bb6/tickets-with-priorities?orgId=1"
+              "url": "http://localhost:3080/d/bcb5c3c2-a202-4302-8e54-0364c0443bb6/tickets-with-priorities?orgId=1&refresh=5s"
             }
           ],
           "mappings": [],
