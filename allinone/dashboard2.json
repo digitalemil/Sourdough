@@ -42,8 +42,8 @@
             "links": [
               {
                 "targetBlank": true,
-                "title": "Ticket Details",
-                "url": "https://tickets-enev6eyq5q-ew.a.run.app/app/search?name=${__data.fields.ticketname}"
+                "title": "Details",
+                "url": "http://localhost:3088/app/search?name=${__data.fields.itemname}"
               }
             ],
             "mappings": [],
@@ -235,21 +235,6 @@
         },
         "id": 3,
         "links": [
-          {
-            "targetBlank": true,
-            "title": "Synthetics",
-            "url": "https://tickets2.grafana.net/a/grafana-synthetic-monitoring-app/scene/http?var-region=$__all&var-check_type=$__all&var-probe=$__all&var-job=TIckets&var-instance=https:%2F%2Ftickets-enev6eyq5q-ew.a.run.app%2F"
-          },
-          {
-            "targetBlank": true,
-            "title": "Loadtest",
-            "url": "https://tickets2.grafana.net/a/k6-app/tests/857633"
-          },
-          {
-            "targetBlank": true,
-            "title": "Frontend",
-            "url": "https://tickets2.grafana.net/a/grafana-kowalski-app/apps/295"
-          }
         ],
         "options": {
           "code": {
