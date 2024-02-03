@@ -7,3 +7,5 @@ keep/certs
 keep/certs/*
 keep/*
 keep/bread.env-file
+shared
+shared/*

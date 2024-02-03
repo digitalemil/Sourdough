@@ -44,6 +44,7 @@ else
   AMERICAS=$DATABASE_CONNECTIONSTRING
 fi
 
+cp /mnt/shared/* /opt/app/public/
 
 export REGION=EMEA
 export DATABASE_CONNECTIONSTRING=$EMEA
