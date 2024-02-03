@@ -59,7 +59,7 @@
         {
           "targetBlank": true,
           "title": "Synthetics",
-          "url": "https://tickets2.grafana.net/a/grafana-synthetic-monitoring-app/scene/http?var-region=$__all&var-check_type=$__all&var-probe=$__all&var-job=TIckets&var-instance=https:%2F%2Ftickets-enev6eyq5q-ew.a.run.app%2F"
+          "url": "https://tickets2.grafana.net/a/grafana-synthetic-monitoring-app/scene/http?var-region=&var-check_type=&var-probe=&var-job=TIckets&var-instance=https:%2F%2Ftickets-enev6eyq5q-ew.a.run.app%2F"
         },
         {
           "targetBlank": true,
@@ -78,7 +78,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "<img src=\"${LOGO}\" height=\"100%\">",
+        "content": "<img src=\"http://storage.googleapis.com/thegym-public/lafleur-transparent.png\" height=\"100%\">",
         "mode": "html"
       },
       "pluginVersion": "10.3.1",
@@ -172,7 +172,7 @@
           }
         }
       ],
-      "title": "Global ",
+      "title": "# of ${MAINTABLE} with ${SECONDTABLE}",
       "type": "stat"
     },
     {
@@ -527,7 +527,7 @@
           }
         }
       ],
-      "title": "# of Global Entries",
+      "title": "# of ${MAINTABLE} ",
       "type": "stat"
     },
     {
@@ -624,7 +624,7 @@
           }
         }
       ],
-      "title": "Without",
+      "title": "# without ${SECONDTABLE}",
       "type": "stat"
     },
     {
@@ -721,7 +721,7 @@
           }
         }
       ],
-      "title": "Average",
+      "title": "Avg. ${SECONDTABLE}",
       "type": "stat"
     },
     {
@@ -806,7 +806,7 @@
           }
         }
       ],
-      "title": "In APAC",
+      "title": "# in APAC",
       "type": "stat"
     },
     {
@@ -891,7 +891,7 @@
           }
         }
       ],
-      "title": "In AMERICAS",
+      "title": "# In AMERICAS",
       "type": "stat"
     },
     {
@@ -976,7 +976,7 @@
           }
         }
       ],
-      "title": "In EMEA",
+      "title": "# In EMEA",
       "type": "stat"
     },
     {
@@ -2304,6 +2304,6 @@
   "timezone": "",
   "title": "Selfhosted CockroachDB",
   "uid": "c9eb65e3-823d-46f3-bcf4-f8178b119689",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
