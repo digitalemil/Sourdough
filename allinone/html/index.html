@@ -23,6 +23,14 @@
         SQLSTATE: 28P01
 
         <p></p>
+        Per default the setup is for data domiciling with RF=3 and data stays in region.<br>
+        If you want to survive a region failure start the container with environment variable REPLICATION_FACTOR=5<br>
+        and execute:
+        <pre>
+            ALTER DATABASE your-database-name SURVIVE REGION FAILURE;
+        </pre>
+        in the console.
+        <p></p>
         You can theme the demo by setting the following environment variables: 
         <pre>
 DATABASE=ticketsdb

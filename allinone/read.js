@@ -30,5 +30,5 @@ export default function main() {
   };
   
   let res = http.get(url, params);
-  
+  sleep(1+ Math.random() * 2);
 }

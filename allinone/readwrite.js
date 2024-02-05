@@ -29,5 +29,5 @@ export default function main() {
     headers: { 'Content-Type': 'application/text', 'x-api-key':`${__ENV.CODE}` }, 
     timeout: '8s'
   });
-  
+  sleep(1+ Math.random() * 2);
 }
