@@ -8,6 +8,7 @@ const fs = require('fs');
 let url = require('url');
 let http = require('http');
  
+console.log("BG: "+process.env.BACKGROUNDCOLOR);
 function download(url, dest, cb) {
   var file = fs.createWriteStream(dest);
   http.get(url, function(response) {

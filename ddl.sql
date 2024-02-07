@@ -1,13 +1,13 @@
 	
-	create database if not exists ticketsdb;
+	create database if not exists heartratesdb;
 	
-	use ticketsdb;
+	use heartratesdb;
 
-	drop view if exists TicketsWithPriorities;
-	drop view if exists PrioritiesForTickets;
-	drop view if exists LocalTickets;
+	drop view if exists HeartratesWithZones;
+	drop view if exists ZonesForHeartrates;
+	drop view if exists LocalHeartrates;
 
-	drop table if exists Priorities;
+	drop table if exists Zones;
 	
 	drop table if exists UserDetails Cascade;
 	Create Table if not exists UserDetails  (
@@ -29,7 +29,7 @@
 	
 	GRANT SELECT on UserDetails to Public;
 
-	Create Table if not exists Tickets ( 
+	Create Table if not exists Heartrates ( 
 		id UUID NOT NULL DEFAULT gen_random_uuid(),
 		createdon TIMESTAMP,
 		createdby UUID NOT NULL REFERENCES UserDetails (id) ON DELETE CASCADE,
@@ -42,26 +42,26 @@
 		family f2 (xml)
 	);
 	
-	create table if not exists Priorities (
+	create table if not exists Zones (
 		id UUID NOT NULL DEFAULT gen_random_uuid(),
 		createdby UUID NOT NULL REFERENCES UserDetails (id),
-		itemid UUID NOT NULL REFERENCES Tickets (id) ON DELETE no ACTION,
+		itemid UUID NOT NULL REFERENCES Heartrates (id) ON DELETE no ACTION,
 		createdon TIMESTAMP,
-		Priority int NOT NULL,
+		Zone int NOT NULL,
 		 CONSTRAINT "primary" PRIMARY KEY (id)
 	);
 	
 	
-	create view PrioritiesForTickets as select itemid, count(id) as n, AVG(Priority) as a from Priorities group by itemid; 
-	create view TicketsWithPriorities as select * from Tickets f right join PrioritiesForTickets r on r.itemid=f.id;
+	create view ZonesForHeartrates as select itemid, count(id) as n, AVG(Zone) as a from Zones group by itemid; 
+	create view HeartratesWithZones as select * from Heartrates f right join ZonesForHeartrates r on r.itemid=f.id;
 	
 	-- cockroach demo --log-dir ~/tmp/lesfleurs/cockroachdb-logs  --nodes 9 --no-example-database --insecure --demo-locality=region=gcp-europe-west4,az=gcp-europe-west4a:region=gcp-europe-west4,az=gcp-europe-west4b:region=gcp-europe-west4,az=gcp-europe-west4c:region=azure-singapore,az=azure-singapore1:region=azure-singapore,az=azure-singapore2:region=azure-singapore,az=azure-singapore3:region=onprem-us,az=onprem-us-rack1:region=onprem-us,az=onprem-us-rack2:region=onprem-us,az=onprem-us-rack3
 
-	ALTER DATABASE Ticketsdb SET PRIMARY REGION='emea'; 
-	ALTER DATABASE Ticketsdb ADD REGION 'americas'; 
-	ALTER DATABASE Ticketsdb ADD REGION 'apac';
+	ALTER DATABASE Heartratesdb SET PRIMARY REGION='emea'; 
+	ALTER DATABASE Heartratesdb ADD REGION 'americas'; 
+	ALTER DATABASE Heartratesdb ADD REGION 'apac';
 
-	ALTER TABLE Tickets ADD Column crdb_region crdb_internal_region AS  (
+	ALTER TABLE Heartrates ADD Column crdb_region crdb_internal_region AS  (
 		CASE 
 			WHEN origin='EMEA' THEN 'emea'
 			WHEN origin='AMERICAS' THEN 'americas'
@@ -70,21 +70,21 @@
 		end
 	) STORED;
 
-	ALTER TABLE Tickets ALTER COLUMN crdb_region SET NOT NULL;
-	ALTER TABLE Tickets SET LOCALITY REGIONAL BY ROW;
+	ALTER TABLE Heartrates ALTER COLUMN crdb_region SET NOT NULL;
+	ALTER TABLE Heartrates SET LOCALITY REGIONAL BY ROW;
 	SET override_multi_region_zone_config = true;
-	ALTER DATABASE ticketsdb CONFIGURE ZONE USING num_replicas = 3;
+	ALTER DATABASE heartratesdb CONFIGURE ZONE USING num_replicas = 3;
 
 	ALTER TABLE UserDetails SET LOCALITY GLOBAL;
-	ALTER TABLE Priorities SET LOCALITY GLOBAL;
+	ALTER TABLE Zones SET LOCALITY GLOBAL;
 
-	create view LocalTickets as 
-		select f.* from Tickets f Join UserDetails db On (f.origin=db.location) where db.name= current_user; 
+	create view LocalHeartrates as 
+		select f.* from Heartrates f Join UserDetails ud On (f.origin=ud.location) where ud.name= current_user; 
 	
 		
-	GRANT SELECT on LocalTickets to Joe;
-	GRANT SELECT on LocalTickets to Dude;
-	GRANT SELECT on LocalTickets to Fleur;
+	GRANT SELECT on LocalHeartrates to Joe;
+	GRANT SELECT on LocalHeartrates to Dude;
+	GRANT SELECT on LocalHeartrates to Fleur;
 		 
 	
 	drop view if exists MaintableWithSecondTableGrafana;
@@ -93,21 +93,21 @@
 	drop view if exists SecondTableGrafana;
 	
 	create view MaintableGrafana as
-		select id, name, origin from Tickets;
+		select id, name, origin from Heartrates;
 	create view SecondTableGrafana as
-		select id, itemid, Priority as stars from Priorities;
-	create view SecondtableForMaintableGrafana as select itemid, count(id) as n, AVG(Priority) as a from Priorities group by itemid; 
-	create view MaintableWithSecondTableGrafana as select * from MaintableGrafana f right join PrioritiesForTickets r on r.itemid=f.id;
+		select id, itemid, Zone as stars from Zones;
+	create view SecondtableForMaintableGrafana as select itemid, count(id) as n, AVG(Zone) as a from Zones group by itemid; 
+	create view MaintableWithSecondTableGrafana as select * from MaintableGrafana f right join ZonesForHeartrates r on r.itemid=f.id;
 
 	CREATE USER  if not exists grafana;
 	GRANT SELECT on MaintableGrafana to Grafana; 
 	GRANT SELECT on SecondTableGrafana to Grafana;
 	GRANT SELECT on SecondtableForMaintableGrafana to Grafana;
 	GRANT SELECT on MaintableWithSecondTableGrafana to Grafana;
-	ALTER USER grafana WITH PASSWORD 'cr1401';
+	ALTER USER grafana WITH PASSWORD '';
 	
 		
--- explain analyze select id from Tickets where crdb_region='gcp-europe-west4';
--- select id,origin from Tickets;
--- explain analyze select origin from Tickets where id='';
+-- explain analyze select id from Heartrates where crdb_region='gcp-europe-west4';
+-- select id,origin from Heartrates;
+-- explain analyze select origin from Heartrates where id='';
 

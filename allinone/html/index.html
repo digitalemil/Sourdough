@@ -27,6 +27,7 @@
         If you want to survive a region failure start the container with environment variable REPLICATION_FACTOR=5<br>
         and execute:
         <pre>
+            SET override_multi_region_zone_config = true;
             ALTER DATABASE your-database-name SURVIVE REGION FAILURE;
         </pre>
         in the console.

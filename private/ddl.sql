@@ -79,7 +79,7 @@
 	ALTER TABLE ${SECONDTABLE} SET LOCALITY GLOBAL;
 
 	create view Local${MAINTABLE} as 
-		select f.* from ${MAINTABLE} f Join UserDetails db On (f.origin=db.location) where db.name= current_user; 
+		select f.* from ${MAINTABLE} f Join UserDetails ud On (f.origin=ud.location) where ud.name= current_user; 
 	
 		
 	GRANT SELECT on Local${MAINTABLE} to Joe;

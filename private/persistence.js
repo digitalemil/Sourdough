@@ -335,8 +335,8 @@ async function persist(jobj, xml, username) {
             name: (desc[0].split("=")[1]).replaceAll("'", ""),
             origin: origin,
             stars: parseInt(desc[1].split("=")[1]),
+            doc: jobj
         }
-
         let item = "INSERT INTO "+process.env.MAINTABLE+" (createdby, createdon, xml, json, origin) Values (";
         item += "'" + userid + "', "
         item += "'" + new Date().toISOString() + "', ";

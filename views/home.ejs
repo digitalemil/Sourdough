@@ -9,8 +9,12 @@
 <body id="body" style="background-color: <%= backgroundcolor %>; background-image:url(<%= backgroundimage %>)">
 
 <script>
-	(function () {
 		let user = "<%= user %>";
+		let userregion = "<%= userregion %>";
+
+		/*
+	(function () {
+	;
 
 	  var webSdkScript = document.createElement("script");
 	
@@ -51,7 +55,7 @@
 	  // Append the Web-SDK script script tag to the HTML page
 	  document.head.appendChild(webSdkScript);
 	})();
-
+*/
 	</script>
 	
 
@@ -70,6 +74,7 @@
 
 	<div id="menu" class="sidenav" style="color:<%= color %>; background-color: <%= backgroundcolor %>;">
 		<div style="position: absolute; top: 16px; color: <%= color %>;">
+			<div id="ratings">
 			<div onclick="withcolor= true; createFleur()">New</div>
 			<p></p>
 			<a style="color: <%= color %>;" id="random" href="/app/first">First</a>
@@ -94,6 +99,7 @@
 				<p></p>
 			</div>
 			<div onclick="download()">Download SVG</div>
+			</div>
 			<a style="color: <%= color %>;" id="SQL" href="/app/sql.html">SQL</a>
 			<a style="color: <%= color %>;" id="docs" href="/app/docsvg" target="_blank">Documentation</a>
 			<p></p>
@@ -178,7 +184,8 @@
 		displaylesfleurs(n);
 		if (n < 0)
 			return;
-		svg = svg.replace("</desc>", ' stars=' + n + "</desc>");
+		if(!svg.includes("stars="))
+			svg = svg.replace("</desc>", ' stars=' + n + "</desc>");
 		thisrating = n;
 		if(id== 0)
 			setTimeout(persist, 200)
