@@ -4,6 +4,10 @@ const { XMLParser, XMLBuilder, XMLValidator } = require("fast-xml-parser");
 const { rate, persist, executeSQL, authenticateUser, getXML } = require("../private/persistence.js");
 
 let creatorfile= process.env.CREATORFILE;
+
+if(creatorfile==="./private/creator.js") {
+  creatorfile= "."+creatorfile;
+}
 let user= "", userregion= "";
 
 const { createSVG } = require(creatorfile);
