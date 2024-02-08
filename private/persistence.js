@@ -73,7 +73,6 @@ async function authenticateUser(user, password) {
     else {
         global.logger.log("error", "User: " + user + " NOT authenticated.");
     }
-    console.log("RET : "+ret.region)
     return ret;
 }
 

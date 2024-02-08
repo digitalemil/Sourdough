@@ -2,13 +2,15 @@ let express = require("express");
 let router = express.Router();
 const { XMLParser, XMLBuilder, XMLValidator } = require("fast-xml-parser");
 const { rate, persist, executeSQL, authenticateUser, getXML } = require("../private/persistence.js");
-const { createSVG } = require("../private/creator.js");
 
+let creatorfile= process.env.CREATORFILE;
+let user= "", userregion= "";
+
+const { createSVG } = require(creatorfile);
 const fs = require('fs');
 let url = require('url');
 let http = require('http');
  
-console.log("BG: "+process.env.BACKGROUNDCOLOR);
 function download(url, dest, cb) {
   var file = fs.createWriteStream(dest);
   http.get(url, function(response) {
@@ -67,10 +69,13 @@ router.post("/create", async function (req, res, next) {
   }
 
   if (req.header('x-api-key') == process.env.CODE) {
-    let user = req.body.split("/")[0].trim();
+    user = req.body.split("/")[0].trim();
     let password = req.body.split("/")[1].trim();
     let a= await authenticateUser(user, password)
     if (a.authenticated) {
+      globalThis.userregion= a.region;   
+      globalThis.user= user; 
+      console.log("R: "+ globalThis.userregion);
       let svg = createSVG();
       svg = svg.replaceAll("</desc>", " stars=0</desc>");
       const options = {
@@ -114,7 +119,6 @@ router.all("/signinwithkey", async function (req, res, next) {
     let a= await authenticateUser(user, password)
     if (a.authenticated) {
       req.session.authorizedByKey = true;
-      console.log("User region: "+a.region);
       req.session.passport = { "user": { "name": { "value": user }, "region": a.region } };
       res.redirect('/app/home');
       global.httpRequestDurationMilliseconds
