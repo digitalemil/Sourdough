@@ -77,10 +77,7 @@ router.post("/create", async function (req, res, next) {
     let password = req.body.split("/")[1].trim();
     let a= await authenticateUser(user, password)
     if (a.authenticated) {
-      globalThis.userregion= a.region;   
-      globalThis.user= user; 
-      console.log("R: "+ globalThis.userregion);
-      let svg = createSVG();
+      let svg = createSVG(user, a.region);
       svg = svg.replaceAll("</desc>", " stars=0</desc>");
       const options = {
         ignoreAttributes: false,
