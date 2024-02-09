@@ -57,9 +57,9 @@
 	
 	-- cockroach demo --log-dir ~/tmp/lesfleurs/cockroachdb-logs  --nodes 9 --no-example-database --insecure --demo-locality=region=gcp-europe-west4,az=gcp-europe-west4a:region=gcp-europe-west4,az=gcp-europe-west4b:region=gcp-europe-west4,az=gcp-europe-west4c:region=azure-singapore,az=azure-singapore1:region=azure-singapore,az=azure-singapore2:region=azure-singapore,az=azure-singapore3:region=onprem-us,az=onprem-us-rack1:region=onprem-us,az=onprem-us-rack2:region=onprem-us,az=onprem-us-rack3
 
-	ALTER DATABASE ${MAINTABLE}db SET PRIMARY REGION='emea'; 
-	ALTER DATABASE ${MAINTABLE}db ADD REGION 'americas'; 
-	ALTER DATABASE ${MAINTABLE}db ADD REGION 'apac';
+	ALTER DATABASE ${DATABASE} SET PRIMARY REGION='emea'; 
+	ALTER DATABASE ${DATABASE} ADD REGION 'americas'; 
+	ALTER DATABASE ${DATABASE} ADD REGION 'apac';
 
 	ALTER TABLE ${MAINTABLE} ADD Column crdb_region crdb_internal_region AS  (
 		CASE 
