@@ -44,7 +44,6 @@ async function authenticateUser(user, password) {
         let result= await executeQuery(con, "Select password_hash, location from UserDetails where name='"+user+"';");
         pw.password= result.rows[0].password_hash;
         pw.region= result.rows[0].location;
-        console.log("User: "+user+" Region: "+pw.region);
     }
     catch (err) {
         if((! (err!= undefined)) || JSON.stringify(err)=== "{}") {
@@ -74,7 +73,6 @@ async function authenticateUser(user, password) {
     else {
         global.logger.log("error", "User: " + user + " NOT authenticated.");
     }
-    console.log("Authenticated: "+JSON.stringify(ret));
     return ret;
 }
 

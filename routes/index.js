@@ -73,12 +73,9 @@ router.post("/create", async function (req, res, next) {
   }
 
   if (req.header('x-api-key') == process.env.CODE) {
-    let user = req.body.split("/")[0].trim();
-    let password = req.body.split("/")[1].trim();
-    let a= await authenticateUser(user, password);
+    let a= await authenticateUser(req.body.split("/")[0].trim(), req.body.split("/")[1].trim());
     if (a.authenticated) {
-      console.log("a: "+JSON.stringify(a));
-      let svg = createSVG(user, a.region);
+      let svg = createSVG(a.user, a.region);
       svg = svg.replaceAll("</desc>", " stars=0</desc>");
       const options = {
         ignoreAttributes: false,
@@ -88,7 +85,7 @@ router.post("/create", async function (req, res, next) {
       let jobj = parser.parse(svg);
       let ret = "503"
       try {
-        ret = await persist(jobj, svg, user);
+        ret = await persist(jobj, svg, a.user);
       }
       catch (err) {
       }
@@ -101,7 +98,6 @@ router.post("/create", async function (req, res, next) {
   global.httpRequestDurationMilliseconds
     .labels(req.route.path, res.statusCode, req.method)
     .observe(new Date() - start);
-
 });
 
 router.all("/signinwithkey", async function (req, res, next) {
