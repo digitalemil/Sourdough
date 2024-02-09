@@ -65,6 +65,7 @@ async function authenticateUser(user, password) {
     let ret= new Object();
     ret.region= pw.region;
     ret.authenticated= false;
+    ret.user= user;
     if(pw.password && (pw.password == password.hashCode()))
         ret.authenticated= true;
     if(ret) {

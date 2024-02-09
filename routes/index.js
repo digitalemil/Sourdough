@@ -73,7 +73,7 @@ router.post("/create", async function (req, res, next) {
   }
 
   if (req.header('x-api-key') == process.env.CODE) {
-    user = req.body.split("/")[0].trim();
+    let user = req.body.split("/")[0].trim();
     let password = req.body.split("/")[1].trim();
     let a= await authenticateUser(user, password);
     if (a.authenticated) {
