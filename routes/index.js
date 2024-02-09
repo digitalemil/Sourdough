@@ -75,8 +75,9 @@ router.post("/create", async function (req, res, next) {
   if (req.header('x-api-key') == process.env.CODE) {
     user = req.body.split("/")[0].trim();
     let password = req.body.split("/")[1].trim();
-    let a= await authenticateUser(user, password)
+    let a= await authenticateUser(user, password);
     if (a.authenticated) {
+      console.log("a: "+JSON.stringify(a));
       let svg = createSVG(user, a.region);
       svg = svg.replaceAll("</desc>", " stars=0</desc>");
       const options = {
