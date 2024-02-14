@@ -336,6 +336,9 @@ async function persist(jobj, xml, username) {
             stars: parseInt(desc[1].split("=")[1]),
             doc: jobj
         }
+        if(JSON.stringify(jobj).length>= 1000*1000) {
+            data.doc= { warning: "json too long"}
+        }
         let item = "INSERT INTO "+process.env.MAINTABLE+" (createdby, createdon, xml, json, origin) Values (";
         item += "'" + userid + "', "
         item += "'" + new Date().toISOString() + "', ";
