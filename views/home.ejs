@@ -2,13 +2,15 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title><%= title %></title>
+	<title>
+		<%= title %>
+	</title>
 	<link rel='stylesheet' href='../stylesheets/style.css' />
 </head>
 
 <body id="body" style="background-color: <%= backgroundcolor %>; background-image:url(<%= backgroundimage %>)">
 
-<script>
+	<script>
 		let user = "<%= user %>";
 		let userregion = "<%= userregion %>";
 
@@ -57,14 +59,18 @@
 	})();
 */
 	</script>
-	
 
-	<div id="container" style="color:<%= color %>; background-color: <%= backgroundcolor %>; scale: 0.85; position: absolute; top:0px; left: 200px;"
+
+	<div id="container"
+		style="color:<%= color %>; background-color: <%= backgroundcolor %>; scale: 0.85; position: absolute; top:0px; left: 200px;"
 		onmousedown="createFleur(); showLesFleurs(-1)">
 		<div id="lafleur" frameBorder="0" style="width: 1024px; height: 1024px;"></div>
 	</div>
-	<div id="lesfleurs" style='color: <%= color %>;font-family: "Italiana", regular; font-size: 64px;text-align: left; height:640px; position: absolute; top: 0px; left: 280px;'>
-		<div id="stars" style="display: inline-block;"><%= stars %> none.</div>
+	<div id="lesfleurs"
+		style='color: <%= color %>;font-family: "Italiana", regular; font-size: 64px;text-align: left; height:640px; position: absolute; top: 0px; left: 280px;'>
+		<div id="stars" style="display: inline-block;">
+			<%= stars %> none.
+		</div>
 		<img id="r0" hidden width="64px" src="../images/star.svg"></img>
 		<img id="r1" hidden width="64px" src="../images/star.svg"></img>
 		<img id="r2" hidden width="64px" src="../images/star.svg"></img>
@@ -74,38 +80,56 @@
 
 	<div id="menu" class="sidenav" style="color:<%= color %>; background-color: <%= backgroundcolor %>;">
 		<div style="position: absolute; top: 16px; color: <%= color %>;">
-			<div id="ratings">
-			<div onclick="withcolor= true; createFleur()">New</div>
-			<p></p>
-			<a style="color: <%= color %>;" id="random" href="/app/first">First</a>
-			<a style="color: <%= color %>;" id="random" href="/app/last">Last</a>
-			<a style="color: <%= color %>;" id="random" href="/app/random">Random</a>
-			<input style='border: 0; width: 80%; background-color: <%= color %>;font-family: "Italiana", regular; font-size: 24px;text-align: center; color: <%=  inputcolor  %>;' id="search" value=""></input>
-			<p></p>
-			<button class="button" style="width: 80%; height: 30px; text-align: center; background-color: <%= color %>; color: <%=  inputcolor  %>;" onclick="search()">Search</button>
-		
-			<p></p>
-			<div style="color: <%= color %>;">
+			<div id="ratings" style="text-align: left;">
+				<div onclick="withcolor= true; createFleur()">New</div>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: <%= color %>; color: <%=  inputcolor  %>;" onclick="showLesFleurs(1)">1</button>
+				<a style="color: <%= color %>;" id="random" href="/app/first">First</a>
+				<a style="color: <%= color %>;" id="random" href="/app/last">Last</a>
+				<a style="color: <%= color %>;" id="random" href="/app/random">Random</a>
+				<input
+					style='border: 0; width: 80%; background-color: <%= color %>;font-family: "Italiana", regular; font-size: 24px;text-align: center; color: <%=  inputcolor  %>;'
+					id="search" value="">
+				</input>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: <%= color %>; color: <%=  inputcolor  %>;" onclick="showLesFleurs(2)">2</button>
+				<button class="button"
+					style="width: 80%; height: 30px; text-align: center; background-color: <%= color %>; color: <%=  inputcolor  %>;"
+					onclick="search()">Search
+				</button>
 				<p></p>
-				<button class="button" style="width: 128px; background-color: <%= color %>; color: <%=  inputcolor  %>;" onclick="showLesFleurs(3)">3</button>
-				<p></p>
-				<button class="button" style="width: 128px; background-color: <%= color %>; color: <%=  inputcolor  %>;" onclick="showLesFleurs(4)">4</button>
-				<p></p>
-				<button class="button" style="width: 128px; background-color: <%= color %>; color: <%=  inputcolor  %>;" onclick="showLesFleurs(5)">5</button>
+				<div style="color: <%= color %>;">
+					<p></p>
+					<button class="button"
+						style="width: 128px; background-color: <%= color %>; color: <%=  inputcolor  %>;"
+						onclick="showLesFleurs(1)">1</button>
+					<p></p>
+					<button class="button"
+						style="width: 128px; background-color: <%= color %>; color: <%=  inputcolor  %>;"
+						onclick="showLesFleurs(2)">2</button>
+					<p></p>
+					<button class="button"
+						style="width: 128px; background-color: <%= color %>; color: <%=  inputcolor  %>;"
+						onclick="showLesFleurs(3)">3</button>
+					<p></p>
+					<button class="button"
+						style="width: 128px; background-color: <%= color %>; color: <%=  inputcolor  %>;"
+						onclick="showLesFleurs(4)">4</button>
+					<p></p>
+					<button class="button"
+						style="width: 128px; background-color: <%= color %>; color: <%=  inputcolor  %>;"
+						onclick="showLesFleurs(5)">5</button>
+				</div>
 				<p></p>
 			</div>
-			<div onclick="download()">Download SVG</div>
-			</div>
+			<div id="download" onclick="download()">Download SVG</div>	
 			<a style="color: <%= color %>;" id="SQL" href="/app/sql.html">SQL</a>
 			<a style="color: <%= color %>;" id="docs" href="/app/docsvg" target="_blank">Documentation</a>
 			<p></p>
-			<div style="color: <%= color %>;">User: <%= user %></div>
-			<div style="color: <%= color %>;">User region: <%= userregion %></div>
-			<div style="color: <%= color %>;">App region: <%= appregion %></div>
+			<div style="color: <%= color %>;">User: <%= user %>
+			</div>
+			<div style="color: <%= color %>;">User region: <%= userregion %>
+			</div>
+			<div style="color: <%= color %>;">App region: <%= appregion %>
+			</div>
 
 			<a style="color: <%= color %>;" id="logout" href="../logout">Logout</a>
 		</div>
@@ -114,54 +138,55 @@
 
 </body>
 <script>
-	let exports= new Object();
+	let exports = new Object();
+
 </script>
 <script src="creator.js"></script>
 <script>
 	let svg = "";
-		withcolor= false;
-	let hiddenmenu= false;
+	withcolor = false;
+	let hiddenmenu = false;
 
 	document.getElementById("body").addEventListener("keydown", review);
 
 	function search() {
-		let name= document.getElementById("search").value;
-		document.location="/app/search?name="+encodeURIComponent(name);
+		let name = document.getElementById("search").value;
+		document.location = "/app/search?name=" + encodeURIComponent(name);
 	}
 
 	function download() {
 		const blob = new Blob([svg.toString()]);
-  		const element = document.createElement("a");
-  		element.download = "items.svg";
-  		element.href = window.URL.createObjectURL(blob);
-  		element.click();
-  		element.remove();
+		const element = document.createElement("a");
+		element.download = "items.svg";
+		element.href = window.URL.createObjectURL(blob);
+		element.click();
+		element.remove();
 	}
 
 	function review(event) {
 		let key = event.keyCode;
-		
+
 		/*if (key >= 48 && key < 54)
 			showLesFleurs(key - 48)*/
-		if(key== 77) {
-			let m= document.getElementById("menu");
-			if(hiddenmenu) {
-				m.style.display="block";
+		if (key == 77) {
+			let m = document.getElementById("menu");
+			if (hiddenmenu) {
+				m.style.display = "block";
 			}
 			else {
-				m.style.display="none";
+				m.style.display = "none";
 			}
-			hiddenmenu= !hiddenmenu;
+			hiddenmenu = !hiddenmenu;
 		}
 
 	};
 
 	function displaylesfleurs(r) {
-		if(r>0) {
-			document.getElementById("stars").innerHTML="<%= stars %>";
+		if (r > 0) {
+			document.getElementById("stars").innerHTML = "<%= stars %>";
 		}
 		else {
-			document.getElementById("stars").innerHTML="<%= stars %> none";
+			document.getElementById("stars").innerHTML = "<%= stars %> none";
 		}
 		if (r > 4.9)
 			r = 5;
@@ -184,12 +209,12 @@
 		displaylesfleurs(n);
 		if (n < 0)
 			return;
-		if(!svg.includes("stars="))
+		if (!svg.includes("stars="))
 			svg = svg.replace("</desc>", ' stars=' + n + "</desc>");
 		thisrating = n;
-		if(id== 0)
+		if (id == 0)
 			setTimeout(persist, 200)
-		else 
+		else
 			setTimeout(rate, 200);
 	};
 
@@ -226,9 +251,9 @@
 	}
 	function createFleur() {
 		showLesFleurs(-1);
-		id= 0;
-		svg= createSVG();
-		reting= 0;
+		id = 0;
+		svg = createSVG();
+		reting = 0;
 		showLesFleurs(0);
 		document.getElementById("lafleur").innerHTML = svg;
 	};
@@ -240,7 +265,7 @@
 		rating = r;
 		displaylesfleurs(rating)
 	};
-	
+
 	let id = 0;
 	let rating = 0;
 	let thisrating = null;

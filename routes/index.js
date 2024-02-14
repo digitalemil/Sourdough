@@ -304,13 +304,23 @@ router.get("/app/creator.js", function (req, res, next) {
 router.get("/app/docsvg", function (req, res, next) {
   let start = new Date();
 
-  fs.readFile("private/sourdough-er.png", function (err, data) {
+  let img= "private/sourdough-er.png";
+  if(process.env.DOCS!= undefined) {
+    img= process.env.DOCS;
+  }
+ 
+  fs.readFile(img, function (err, data) {
     if (err) {
-      global.logger.log("error", "Can't find docs file.");
+      global.logger.log("error", "Can't find docs file: "+img);
     }
-    res.setHeader('content-type', 'image/png');
-
+    if(img.endsWith("png") || img.endsWith("PNG") || img.endsWith("jpg") || img.endsWith("JPG")) {
+      res.setHeader('content-type', 'image/png');
+    } 
+    else {
+      res.setHeader('content-type', 'text/html');
+    }
     res.send(data);
+    
     global.httpRequestDurationMilliseconds
       .labels(req.route.path, res.statusCode, req.method)
       .observe(new Date() - start);
