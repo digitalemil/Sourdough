@@ -3,23 +3,23 @@ let router = express.Router();
 const { XMLParser, XMLBuilder, XMLValidator } = require("fast-xml-parser");
 const { rate, persist, executeSQL, authenticateUser, getXML } = require("../private/persistence.js");
 
-let creatorfile= process.env.CREATORFILE;
+let creatorfile = process.env.CREATORFILE;
 
-if(creatorfile==="./private/creator.js") {
-  creatorfile= "."+creatorfile;
+if (creatorfile === "./private/creator.js") {
+  creatorfile = "." + creatorfile;
 }
-let user= "", userregion= "";
+let user = "", userregion = "";
 
 const { createSVG } = require(creatorfile);
 const fs = require('fs');
 let url = require('url');
 let http = require('http');
- 
+
 function download(url, dest, cb) {
   var file = fs.createWriteStream(dest);
-  http.get(url, function(response) {
+  http.get(url, function (response) {
     response.pipe(file);
-    file.on('finish', function() {
+    file.on('finish', function () {
       file.close(cb);
     });
   });
@@ -27,9 +27,9 @@ function download(url, dest, cb) {
 
 downloadCreator();
 
-async function downloadCreator() { 
-  if(process.env.CREATORFILE.startsWith("http")) {
-    download(process.env.CREATORFILE, process.env.LOGFOLDER+"/creator.js")
+async function downloadCreator() {
+  if (process.env.CREATORFILE.startsWith("http")) {
+    download(process.env.CREATORFILE, process.env.LOGFOLDER + "/creator.js")
   }
 }
 
@@ -73,7 +73,7 @@ router.post("/create", async function (req, res, next) {
   }
 
   if (req.header('x-api-key') == process.env.CODE) {
-    let a= await authenticateUser(req.body.split("/")[0].trim(), req.body.split("/")[1].trim());
+    let a = await authenticateUser(req.body.split("/")[0].trim(), req.body.split("/")[1].trim());
     if (a.authenticated) {
       let svg = createSVG(a.user, a.region);
       svg = svg.replaceAll("</desc>", " stars=0</desc>");
@@ -114,7 +114,7 @@ router.all("/signinwithkey", async function (req, res, next) {
   if (req.header('x-api-key') == process.env.CODE) {
     let user = req.body.split("/")[0].trim();
     let password = req.body.split("/")[1].trim();
-    let a= await authenticateUser(user, password)
+    let a = await authenticateUser(user, password)
     if (a.authenticated) {
       req.session.authorizedByKey = true;
       req.session.passport = { "user": { "name": { "value": user }, "region": a.region } };
@@ -133,16 +133,56 @@ router.all("/signinwithkey", async function (req, res, next) {
 
 });
 
+router.get('/upgrade', function (req, res, next) {
+  if (process.env.CODE == "" || !(process.env.CODE != undefined)) {
+    res.status(401).send("unauthorized");
+    return;
+  }
+  if (req.header('x-api-key') == process.env.CODE) {
+  if (process.env.VERSION === "1.0") {
+    process.env.VERSION = "2.0";
+  }
+  else {
+    if (process.env.VERSION === "2.0") {
+      process.env.VERSION = "3.0";
+    }
+  }
+  res.send(process.env.VERSION);
+    return;
+  }
+  res.status(401).send("unauthorized");
+});
+
+router.get('/downgrade', function (req, res, next) {
+  if (process.env.CODE == "" || !(process.env.CODE != undefined)) {
+    res.status(401).send("unauthorized");
+    return;
+  }
+  if (req.header('x-api-key') == process.env.CODE) {
+    if (process.env.VERSION === "3.0") {
+      process.env.VERSION = "2.0";
+    }
+    else {
+      if (process.env.VERSION === "2.0") {
+        process.env.VERSION = "1.0";
+      }
+    }
+    res.send(process.env.VERSION);
+    return;
+  }
+  res.status(401).send("unauthorized");
+});
+
 router.get(['/app/sql.html'], async function (req, res, next) {
   let start = new Date();
   res.render('sql', { table: process.env.MAINTABLE, farourl: process.env.FAROURL, farokey: process.env.FAROKEY, backgroundcolor: process.env.BACKGROUNDCOLOR, inputcolor: process.env.INPUTCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE });
-  
+
   try {
-  global.httpRequestDurationMilliseconds
-  .labels(req.route.path, res.statusCode, req.method)
-    .observe(new Date() - start);
+    global.httpRequestDurationMilliseconds
+      .labels(req.route.path, res.statusCode, req.method)
+      .observe(new Date() - start);
   }
-  catch(err) {}
+  catch (err) { }
 });
 
 router.get(['/app/sql'], async function (req, res, next) {
@@ -165,12 +205,12 @@ router.get(['/app/sql'], async function (req, res, next) {
   }
   res.end();
   try {
- 
-  global.httpRequestDurationMilliseconds
-    .labels(req.route.path, res.statusCode, req.method) 
-    .observe(new Date() - start);
+
+    global.httpRequestDurationMilliseconds
+      .labels(req.route.path, res.statusCode, req.method)
+      .observe(new Date() - start);
   }
-  catch(err) {}
+  catch (err) { }
   return;
 });
 
@@ -184,7 +224,7 @@ router.get("/", function (req, res, next) {
 
 function renderHome(req, res, next, home, action, id) {
   res.render(home, {
-    appregion:process.env.REGION, user: req.session.passport.user.name.value, userregion: req.session.passport.user.region, farourl: process.env.FAROURL, farokey: process.env.FAROKEY,
+    version: process.env.VERSION, appregion: process.env.REGION, user: req.session.passport.user.name.value, userregion: req.session.passport.user.region, farourl: process.env.FAROURL, farokey: process.env.FAROKEY,
     stars: process.env.STARS, code: process.env.CODE, id: id, action: action, backgroundcolor: process.env.BACKGROUNDCOLOR, inputcolor: process.env.INPUTCOLOR, backgroundimage: process.env.BACKGROUNDIMAGE, color: process.env.COLOR, title: process.env.TITLE
   });
 };
@@ -285,11 +325,11 @@ router.post("/app/rating", async function (req, res, next) {
 
 router.get("/app/creator.js", function (req, res, next) {
   let start = new Date();
-  let creatorfile= process.env.CREATORFILE;
-  if(creatorfile.startsWith("http"))
-    creatorfile= process.env.LOGFOLDER+"/creator.js";
-  
-  global.logger.log("info", "Creator file: "+creatorfile+"  "+process.env.CREATORFILE);
+  let creatorfile = process.env.CREATORFILE;
+  if (creatorfile.startsWith("http"))
+    creatorfile = process.env.LOGFOLDER + "/creator.js";
+
+  global.logger.log("info", "Creator file: " + creatorfile + "  " + process.env.CREATORFILE);
   fs.readFile(creatorfile, "utf8", function (err, js) {
     if (err) {
       global.logger.log("error", "Can't find creator file.");
@@ -304,23 +344,28 @@ router.get("/app/creator.js", function (req, res, next) {
 router.get("/app/docsvg", function (req, res, next) {
   let start = new Date();
 
-  let img= "private/sourdough-er.png";
-  if(process.env.DOCS!= undefined) {
-    img= process.env.DOCS;
+  let img = "private/sourdough-er.png";
+  if (process.env.DOCS != undefined) {
+    img = process.env.DOCS;
   }
- 
+
   fs.readFile(img, function (err, data) {
     if (err) {
-      global.logger.log("error", "Can't find docs file: "+img);
+      global.logger.log("error", "Can't find docs file: " + img);
     }
-    if(img.endsWith("png") || img.endsWith("PNG") || img.endsWith("jpg") || img.endsWith("JPG")) {
+    if (img.endsWith("png") || img.endsWith("PNG") || img.endsWith("jpg") || img.endsWith("JPG")) {
       res.setHeader('content-type', 'image/png');
-    } 
+    }
     else {
-      res.setHeader('content-type', 'text/html');
+      if (img.endsWith("svg")) {
+        res.setHeader('content-type', 'image/svg+xml');
+      }
+      else {
+        res.setHeader('content-type', 'text/html');
+      }
     }
     res.send(data);
-    
+
     global.httpRequestDurationMilliseconds
       .labels(req.route.path, res.statusCode, req.method)
       .observe(new Date() - start);

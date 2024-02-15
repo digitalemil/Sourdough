@@ -130,6 +130,10 @@
 			</div>
 			<div style="color: <%= color %>;">App region: <%= appregion %>
 			</div>
+			<div id="version" style="color: <%= color %>;">App version: <%= version %>
+			</div>
+			<div onclick="upgrade()" style="color: <%= color %>;">Upgrade</div>
+			<div onclick="downgrade()" style="color: <%= color %>;">Downgrade</div>
 
 			<a style="color: <%= color %>;" id="logout" href="../logout">Logout</a>
 		</div>
@@ -162,6 +166,7 @@
 		element.click();
 		element.remove();
 	}
+
 
 	function review(event) {
 		let key = event.keyCode;
@@ -225,6 +230,27 @@
 	function rate() {
 		post(true);
 	};
+
+	function upgrade() {
+		updown("upgrade");
+	}
+	
+	function downgrade() {
+		updown("downgrade");
+	}
+	
+	function updown(ud) {
+		var xhttp = new XMLHttpRequest();
+			xhttp.open("GET", "/"+ud, true);
+			xhttp.setRequestHeader('Content-type', 'application/xml');
+			xhttp.setRequestHeader('x-api-key', '<%= code %>');
+			
+			xhttp.onreadystatechange = function () {
+				let e= document.getElementById("version")
+				e.innerHTML= "App version: "+xhttp.responseText;
+			}
+			xhttp.send();
+	}
 
 	function post(rating) {
 		var xhttp = new XMLHttpRequest();

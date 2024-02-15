@@ -13,7 +13,11 @@ String.prototype.hashCode = function() {
     }
     return hash;
 }
+if(typeof process.env.VERSION=== "undefined" || process.env.VERSION==="") {
+    process.env.VERSION= "1.0";
+}
 
+console.log("Version: "+process.env.VERSION)
 let connectionsInUse= 0;
 const connectionString = process.env.DATABASE_CONNECTIONSTRING;
 console.log("DB Connection for: "+process.env.REGION+" "+connectionString);
@@ -322,10 +326,10 @@ async function persist(jobj, xml, username) {
         global.logger.log("info", "Beginning Transaction at: " + start + "/" + new Date());
         await executeQuery(con, "BEGIN TRANSACTION;");
       
-        let userrows = await executeQuery(con, "Select id, location from UserDetails where name='"+username+"';");
+        let userrows = await executeQuery(con, "Select id, location, email from UserDetails where name='"+username+"';");
         let userid= userrows.rows[0].id;
         let origin= userrows.rows[0].location;
-
+        let email= userrows.rows[0].email;
         global.logger.log("info", "Persisting item for UserID: "+userid);
 
         let desc = jobj.svg.desc.split(" star")
@@ -339,12 +343,23 @@ async function persist(jobj, xml, username) {
         if(JSON.stringify(jobj).length>= 1000*1000) {
             data.doc= { warning: "json too long"}
         }
-        let item = "INSERT INTO "+process.env.MAINTABLE+" (createdby, createdon, xml, json, origin) Values (";
+        let v= 0;
+        if(process.env.VERSION==="2.0") {
+            v= 1;
+        }
+        else {
+            if(process.env.VERSION==="3.0") {
+                v= 2;
+            }
+        }
+        let vs= [ ["",""], [", xml_length", (","+xml.length)], [", xml_length, email", (","+xml.length+", '"+email+"'")] ];
+        let item = "INSERT INTO "+process.env.MAINTABLE+" (createdby, createdon, xml, json, origin" +vs[v][0]+") Values (";
         item += "'" + userid + "', "
         item += "'" + new Date().toISOString() + "', ";
         item += "'" + xml + "', ";
         item += "'" + JSON.stringify(data) + "', ";
         item += "'" + data.origin + "'";
+        item += vs[v][1];
         item += ") RETURNING ID;";
         let itemrows = await executeQuery(con, item);
         let itemid = itemrows.rows[0].id;

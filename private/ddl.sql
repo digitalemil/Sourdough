@@ -111,3 +111,8 @@
 -- select id,origin from ${MAINTABLE};
 -- explain analyze select origin from ${MAINTABLE} where id='';
 
+-- alter table flowers add column xml_length BIGINT;
+-- alter table flowers add column email STRING REFERENCES UserDetails (email) ON DELETE CASCADE;
+
+-- alter table ${MAINTABLE} add column xml_length BIGINT;
+-- alter table ${MAINTABLE} add column email STRING REFERENCES UserDetails (email) ON DELETE CASCADE;
