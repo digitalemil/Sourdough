@@ -242,11 +242,11 @@
             "showLineNumbers": false,
             "showMiniMap": false
           },
-          "content": "<img src=\"${GRAFANALOGO]\" height=\"100%\">",
+          "content": "<img src=\"${GRAFANALOGO}\" height=\"100%\">",
           "mode": "html"
         },
         "pluginVersion": "10.3.1",
-        "title": "Tickets",
+        "title": "${MAINTABLE}",
         "type": "text"
       }
     ],
