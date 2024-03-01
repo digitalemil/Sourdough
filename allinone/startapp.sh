@@ -32,13 +32,13 @@ envsubst < /opt/app/dashboard2.json >/var/lib/grafana/dashboards/dashboard2.json
 
 /opt/app/grafana-agent-linux-amd64  -config.expand-env -enable-features integrations-next --config.file /opt/app/config.yaml >$LOGFOLDER/../grafana-agent.log 2>&1  &
 
-/opt/minio/minio server /mnt/data &
-sleep 2
+
+/opt/minio/minio server /mnt/data --console-address :38991 >$LOGFOLDER/minio.log 2>&1  &
+sleep 8
 /opt/minio/mc --insecure alias set admin http://localhost:9000/ minioadmin minioadmin
 /opt/minio/mc --insecure admin user add admin cockroachdb cockroachdb
 /opt/minio/mc --insecure admin policy attach admin readwrite --user cockroachdb 
 /opt/minio/mc --insecure mb cockroachdb/cockroachdb
-
 
 if [[ -z "${DATABASE_CONNECTIONSTRING}" ]]; then
   EMEA=postgresql://root@127.0.0.1:27258/$DATABASE?sslmode=disable
