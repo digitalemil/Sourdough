@@ -38,7 +38,7 @@ sleep 8
 /opt/minio/mc --insecure alias set admin http://localhost:9000/ minioadmin minioadmin
 /opt/minio/mc --insecure admin user add admin cockroachdb cockroachdb
 /opt/minio/mc --insecure admin policy attach admin readwrite --user cockroachdb 
-/opt/minio/mc --insecure mb cockroachdb/cockroachdb
+/opt/minio/mc --insecure mb admin/cockroachdb
 
 if [[ -z "${DATABASE_CONNECTIONSTRING}" ]]; then
   EMEA=postgresql://root@127.0.0.1:27258/$DATABASE?sslmode=disable
