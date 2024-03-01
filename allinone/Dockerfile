@@ -29,6 +29,18 @@ ENV REPLICATION_FACTOR=3
 RUN apt-get update -y
 RUN apt-get install --yes gettext-base nginx vim
 
+RUN curl https://dl.min.io/client/mc/release/linux-amd64/mc --create-dirs -o /opt/minio/mc
+RUN chmod +x /opt/minio/mc
+RUN wget https://dl.min.io/server/minio/release/linux-amd64/minio
+RUN chmod +x minio
+RUN mv minio /opt/minio/
+RUN mkdir /mnt/data
+
+chmod +x $HOME/minio-binaries/mc
+export PATH=$PATH:$HOME/minio-binaries/
+
+mc --help
+
 RUN curl -LJO https://github.com/grafana/agent/releases/download/v0.39.0-rc.0/grafana-agent-linux-amd64.zip
 RUN unzip grafana-agent-linux-amd64.zip 
 RUN chmod +x grafana-agent-linux-amd64
