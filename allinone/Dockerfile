@@ -99,6 +99,7 @@ COPY allinone/dashboard2.json /opt/app
 COPY allinone/html /opt/app/html
 COPY allinone/read.js /opt/app
 COPY allinone/readwrite.js /opt/app
+COPY allinone/minio.sh /opt/app
 
 RUN chmod +x /opt/app/startall.sh
 
