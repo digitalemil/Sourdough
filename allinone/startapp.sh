@@ -34,7 +34,7 @@ envsubst < /opt/app/dashboard2.json >/var/lib/grafana/dashboards/dashboard2.json
 
 
 /opt/minio/minio server /mnt/data --console-address :38991 >$LOGFOLDER/minio.log 2>&1  &
-sleep 8
+sleep 12
 /opt/minio/mc --insecure alias set admin http://localhost:9000/ minioadmin minioadmin
 /opt/minio/mc --insecure admin user add admin cockroachdb cockroachdb
 /opt/minio/mc --insecure admin policy attach admin readwrite --user cockroachdb 

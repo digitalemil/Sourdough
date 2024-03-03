@@ -24,3 +24,6 @@ cockroach-v*.linux-amd64/cockroach demo --log-dir /tmp/cockroachdb-logs  --nodes
 
 #CREATE CHANGEFEED INTO  "s3://cockroachdb?AWS_ACCESS_KEY_ID=cockroachdb&AWS_SECRET_ACCESS_KEY=cockroachdb&AWS_ENDPOINT=http://127.0.0.1:9000" WITH updated, split_column_families AS SELECT * FROM Heartrates;
 
+
+# CREATE CHANGEFEED FOR TABLE model_performance INTO 's3://cockroachdb?AWS_ACCESS_KEY_ID=cockroachdb&AWS_SECRET_ACCESS_KEY=cockroachdb&AWS_ENDPOINT=http://127.0.0.1:9000&AWS_REGION=eu-west-1' with updated, resolved='10s';
+

@@ -106,7 +106,10 @@
 	GRANT SELECT on MaintableWithSecondTableGrafana to Grafana;
 	ALTER USER grafana WITH PASSWORD '${GRAFANAUSER_DB_PASSWORD}';
 	
-		
+CREATE CHANGEFEED FOR TABLE ${MAINTABLE} INTO 's3://cockroachdb?AWS_ACCESS_KEY_ID=cockroachdb&AWS_SECRET_ACCESS_KEY=cockroachdb&AWS_ENDPOINT=http://127.0.0.1:9000&AWS_REGION=eu-west-1' with updated, split_column_families, resolved='10s';
+CREATE CHANGEFEED FOR TABLE ${SECONDTABLE} INTO 's3://cockroachdb?AWS_ACCESS_KEY_ID=cockroachdb&AWS_SECRET_ACCESS_KEY=cockroachdb&AWS_ENDPOINT=http://127.0.0.1:9000&AWS_REGION=eu-west-1' with updated, split_column_families, resolved='10s';
+
+
 -- explain analyze select id from ${MAINTABLE} where crdb_region='gcp-europe-west4';
 -- select id,origin from ${MAINTABLE};
 -- explain analyze select origin from ${MAINTABLE} where id='';
