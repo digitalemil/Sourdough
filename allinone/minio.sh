@@ -3,7 +3,7 @@ export MINIOLOGFOLDER=$LOGFOLDER/../minio
 mkdir -p $MINIOLOGFOLDER
 
 /opt/minio/minio server /mnt/data --console-address :38991 >$MINIOLOGFOLDER/minio.log 2>&1  &
-sleep 8
+sleep 12
 
 /opt/minio/mc --insecure alias set admin http://localhost:9000/ minioadmin minioadmin  >$MINIOMINIOLOGFOLDER/mc1.out 2>&1  &
 /opt/minio/mc --insecure admin user add admin cockroachdb cockroachdb >$MINIOLOGFOLDER/mc2.out 2>&1  &
