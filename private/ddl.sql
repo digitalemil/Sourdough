@@ -99,9 +99,6 @@
 	create view SecondtableForMaintableGrafana as select itemid, count(id) as n, AVG(${STARS}) as a from ${SECONDTABLE} group by itemid; 
 	create view MaintableWithSecondTableGrafana as select * from MaintableGrafana f right join ${SECONDTABLE}For${MAINTABLE} r on r.itemid=f.id;
 
-CREATE CHANGEFEED FOR TABLE ${MAINTABLE} INTO 's3://cockroachdb?AWS_ACCESS_KEY_ID=cockroachdb&AWS_SECRET_ACCESS_KEY=cockroachdb&AWS_ENDPOINT=http://127.0.0.1:9000&AWS_REGION=eu-west-1' with updated, split_column_families, resolved='10s';
-CREATE CHANGEFEED FOR TABLE ${SECONDTABLE} INTO 's3://cockroachdb?AWS_ACCESS_KEY_ID=cockroachdb&AWS_SECRET_ACCESS_KEY=cockroachdb&AWS_ENDPOINT=http://127.0.0.1:9000&AWS_REGION=eu-west-1' with updated, split_column_families, resolved='10s';
-
 	CREATE USER  if not exists grafana;
 	GRANT SELECT on MaintableGrafana to Grafana; 
 	GRANT SELECT on SecondTableGrafana to Grafana;

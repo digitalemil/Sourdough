@@ -45,6 +45,7 @@ RUN tar xzf prometheus-2.49.1.linux-amd64.tar.gz
 
 RUN curl -LJO  https://binaries.cockroachdb.com/cockroach-v23.2.0.linux-amd64.tgz
 RUN tar xzf cockroach-v23.2.0.linux-amd64.tgz
+RUN ln -s /opt/app/cockroach-v23.2.0.linux-amd64 /opt/app/cockroach
 
 RUN apt-get install -y apt-transport-https software-properties-common wget
 RUN mkdir -p /etc/apt/keyrings/
