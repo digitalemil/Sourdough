@@ -13,6 +13,7 @@ sleep 8
 
 
 if [ "$WITH_CDC" = "true" ]; then
+    sleep 30
     /opt/app/cockroach/cockroach sql --insecure -e "USE $DATABASE; CREATE CHANGEFEED FOR TABLE $MAINTABLE INTO 's3://cockroachdb?AWS_ACCESS_KEY_ID=cockroachdb&AWS_SECRET_ACCESS_KEY=cockroachdb&AWS_ENDPOINT=http://127.0.0.1:9000&AWS_REGION=eu-west-1' with updated, split_column_families, resolved='10s'; CREATE CHANGEFEED FOR TABLE $SECONDTABLE INTO 's3://cockroachdb?AWS_ACCESS_KEY_ID=cockroachdb&AWS_SECRET_ACCESS_KEY=cockroachdb&AWS_ENDPOINT=http://127.0.0.1:9000&AWS_REGION=eu-west-1' with updated, split_column_families, resolved='10s';" >$MINIOLOGFOLDER/sql.out 2>&1  
 fi
 
