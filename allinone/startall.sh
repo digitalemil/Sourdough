@@ -15,7 +15,7 @@ export OTEL_EXPORTER_OTLP_INSECURE=true
 
 /usr/sbin/nginx &
 
-if [ $WITH_CDC = "true" ] || [ $WITH_BACKUP = "true" ]; then
+if [[ $WITH_CDC = "true" ] || [ $WITH_BACKUP = "true" ]]; then
   /opt/app/minio.sh &
 fi
 
