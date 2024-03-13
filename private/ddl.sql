@@ -87,6 +87,10 @@
 	GRANT SELECT on Local${MAINTABLE} to Fleur;
 		 
 	
+	insert into system.locations Values ('region', 'emea',  50.448160000000000 , 3.818860000000000);
+	insert into system.locations Values ('region', 'americas', 33.836082000000000,-81.163727000000000);  
+	insert into system.locations Values ('region', 'apac', -33.86785, 151.20732);     
+	
 	drop view if exists MaintableWithSecondTableGrafana;
 	drop view if exists SecondTableForMaintableGrafana;
 	drop view if exists MaintableGrafana;
