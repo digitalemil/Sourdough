@@ -47,13 +47,13 @@ cp /mnt/shared/* /opt/app/public/
 
 export REGION=EMEA
 export DATABASE_CONNECTIONSTRING=$EMEA
-node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
+nodemon --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
 export PORT=$(($PORT + 1))
 export REGION=AMERICAS
 export DATABASE_CONNECTIONSTRING=$AMERICAS
-node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
+nodemon --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
 export PORT=$(($PORT + 1))
 export REGION=APAC
 export DATABASE_CONNECTIONSTRING=$APAC
-node --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1
+nodemon --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1
 

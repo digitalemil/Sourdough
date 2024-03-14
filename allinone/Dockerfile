@@ -74,6 +74,8 @@ RUN echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.
 RUN apt-get update
 RUN apt-get install k6
 
+RUN npm install nodemon
+
 WORKDIR /opt/app
 
 COPY bin /opt/app/bin
