@@ -43,9 +43,9 @@ RUN chmod +x grafana-agent-linux-amd64
 RUN curl -LJO https://github.com/prometheus/prometheus/releases/download/v2.49.1/prometheus-2.49.1.linux-amd64.tar.gz
 RUN tar xzf prometheus-2.49.1.linux-amd64.tar.gz 
 
-RUN curl -LJO  https://binaries.cockroachdb.com/cockroach-v23.2.0.linux-amd64.tgz
-RUN tar xzf cockroach-v23.2.0.linux-amd64.tgz
-RUN ln -s /opt/app/cockroach-v23.2.0.linux-amd64 /opt/app/cockroach
+RUN curl -LJO  https://binaries.cockroachdb.com/cockroach-v24.2.0.linux-amd64.tgz
+RUN tar xzf cockroach-v24.2.0.linux-amd64.tgz
+RUN ln -s /opt/app/cockroach-v24.2.0.linux-amd64 /opt/app/cockroach
 
 RUN apt-get install -y apt-transport-https software-properties-common wget
 RUN mkdir -p /etc/apt/keyrings/
@@ -68,11 +68,18 @@ RUN echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://n
 RUN apt update -y
 RUN apt -o Apt::Get::Assume-Yes=true install nginx
 
-RUN gpg -k
-RUN gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
-RUN echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | tee /etc/apt/sources.list.d/k6.list
-RUN apt-get update
-RUN apt-get install k6
+RUN curl -LJO https://github.com/grafana/k6/releases/download/v0.53.0/k6-v0.53.0-linux-amd64.tar.gz
+RUN tar xzvf k6-v0.53.0-linux-amd64.tar.gz
+RUN mv k6-v0.53.0-linux-amd64/k6 /usr/bin/
+#RUN apt-get install debian-archive-keyring
+#RUN gpg -k
+#RUN gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+#RUN echo prepare k6 install
+#RUN echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | tee /etc/apt/sources.list.d/k6.list
+#RUN echo update
+#RUN apt-get update
+#RUN echo install
+#RUN apt-get install k6
 
 RUN npm install -g nodemon
 
