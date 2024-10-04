@@ -5,4 +5,5 @@ export DOCKERHUB_REPO=sourdough
 
 cd ..
 docker build -f allinone/Dockerfile --platform=${PLATFORM} -t $DOCKERHUB_USER/$DOCKERHUB_REPO:sourdough-allinone-vlatest . 
+docker push $DOCKERHUB_USER/$DOCKERHUB_REPO:sourdough-allinone-vlatest
 cd allinone

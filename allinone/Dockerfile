@@ -27,7 +27,7 @@ ENV PORT=3030
 ENV REPLICATION_FACTOR=3
 
 RUN apt-get update -y
-RUN apt-get install --yes gettext-base nginx vim
+RUN apt-get install --yes gettext-base nginx vim less
 
 RUN curl https://dl.min.io/client/mc/release/linux-amd64/mc --create-dirs -o /opt/minio/mc
 RUN chmod +x /opt/minio/mc
@@ -43,9 +43,9 @@ RUN chmod +x grafana-agent-linux-amd64
 RUN curl -LJO https://github.com/prometheus/prometheus/releases/download/v2.49.1/prometheus-2.49.1.linux-amd64.tar.gz
 RUN tar xzf prometheus-2.49.1.linux-amd64.tar.gz 
 
-RUN curl -LJO  https://binaries.cockroachdb.com/cockroach-v24.2.0.linux-amd64.tgz
-RUN tar xzf cockroach-v24.2.0.linux-amd64.tgz
-RUN ln -s /opt/app/cockroach-v24.2.0.linux-amd64 /opt/app/cockroach
+RUN curl -LJO  https://binaries.cockroachdb.com/cockroach-v24.2.3.linux-amd64.tgz
+RUN tar xzf cockroach-v24.2.3.linux-amd64.tgz
+RUN ln -s /opt/app/cockroach-v24.2.3.linux-amd64 /opt/app/cockroach
 
 RUN apt-get install -y apt-transport-https software-properties-common wget
 RUN mkdir -p /etc/apt/keyrings/

@@ -45,7 +45,7 @@ async function authenticateUser(user, password) {
     let con= null;
     try {
         con = await cp.connect();
-        let result= await executeQuery(con, "Select password_hash, location from UserDetails where name='"+user+"';");
+        let result= await executeQuery(con, "Select password_hash, location from UserDetails where name=$1;", [user]);
         pw.password= result.rows[0].password_hash;
         pw.region= result.rows[0].location;
     }
@@ -129,19 +129,15 @@ async function rate(id, rating, username) {
         global.logger.log("info", "Beginning Transaction at: " + start + "/" + new Date());
         await executeQuery(con, "BEGIN TRANSACTION;");
 
-        let userrows = await executeQuery(con, "Select id from UserDetails where name='"+username+"';");
+        let userrows = await executeQuery(con, "Select id from UserDetails where name=$1;", [username]);
         let userid= userrows.rows[0].id;
 
         global.logger.log("info", "Persisting "+process.env.SECONDTABLE+" for UserID: "+userid);
 
-        let ratingq = "INSERT INTO "+process.env.SECONDTABLE+" (createdby, createdon, "+process.env.STARS+", itemid) Values (";
-        ratingq += "'" + userid + "', "
-        ratingq += "'" + new Date().toISOString() + "', ";
-        ratingq += rating + ", '"
-        ratingq += id + "');"
+        let ratingq = "INSERT INTO "+process.env.SECONDTABLE+" (createdby, createdon, "+process.env.STARS+", itemid) Values ($1, $2, $3, $4) RETURNING id;";
 
-        await executeQuery(con, ratingq);
-        let nr = await executeQuery(con, "Select a from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" where itemid='" + id + "';");
+        await executeQuery(con, ratingq, [userid, new Date().toISOString(), rating, id]);
+        let nr = await executeQuery(con, "Select a from "+process.env.SECONDTABLE+"For"+process.env.MAINTABLE+" where itemid=$1;", [id]);
         newrating = nr.rows[0].a;
         global.logger.log("info", "New average for " + id + " :" + newrating);
     }
@@ -191,7 +187,7 @@ async function getXML(qn, id, name, itemname) {
             userlocation= await executeQuery(con, "SELECT location from UserDetails order by RANDOM() limit 1;");      
         }
         else {
-            userlocation= await executeQuery(con, "SELECT location from UserDetails where name='"+name+"'");
+            userlocation= await executeQuery(con, "SELECT location from UserDetails where name=$1;", [name]);
         }
         let origin= userlocation.rows[0].location;
 
@@ -229,12 +225,12 @@ async function getXML(qn, id, name, itemname) {
 };
 
 
-async function executeSQL(sql) {
+async function executeSQL(sql, values) {
     let ret = new Object();
     let con = null;
     try {
         con = await cp.connect();
-        ret = await executeQuery(con, sql);
+        ret = await executeQuery(con, sql, values);
     }
     catch (err) {
         global.logger.log("error", "Can not execute SQL: " + err.toString());
@@ -254,7 +250,7 @@ async function executeSQL(sql) {
     return ret;
 };
 
-async function executeQuery(con, query) {
+async function executeQuery(con, query, values) {
     let start = Date.now();
    
     let lq= query.toLowerCase().trim();
@@ -285,7 +281,7 @@ async function executeQuery(con, query) {
     }
     let res;
     try {
-        res= await con.query(query);
+        res= await con.query(query, values);
     }
     catch(err) {
         global.logger.log("error", "Can't execute query: "+query.substring(0, Math.max(128, query.length)));
@@ -326,7 +322,7 @@ async function persist(jobj, xml, username) {
         global.logger.log("info", "Beginning Transaction at: " + start + "/" + new Date());
         await executeQuery(con, "BEGIN TRANSACTION;");
       
-        let userrows = await executeQuery(con, "Select id, location, email from UserDetails where name='"+username+"';");
+        let userrows = await executeQuery(con, "Select id, location, email from UserDetails where name=$1;", [username]);
         let userid= userrows.rows[0].id;
         let origin= userrows.rows[0].location;
         let email= userrows.rows[0].email;
@@ -353,26 +349,16 @@ async function persist(jobj, xml, username) {
             }
         }
         let vs= [ ["",""], [", xml_length", (","+xml.length)], [", xml_length, email", (","+xml.length+", '"+email+"'")] ];
-        let item = "INSERT INTO "+process.env.MAINTABLE+" (createdby, createdon, xml, json, origin" +vs[v][0]+") Values (";
-        item += "'" + userid + "', "
-        item += "'" + new Date().toISOString() + "', ";
-        item += "'" + xml + "', ";
-        item += "'" + JSON.stringify(data) + "', ";
-        item += "'" + data.origin + "'";
-        item += vs[v][1];
-        item += ") RETURNING ID;";
-        let itemrows = await executeQuery(con, item);
+        let item = "INSERT INTO "+process.env.MAINTABLE+" (createdby, createdon, xml, json, origin" +vs[v][0]+") Values ($1, $2, $3, $4, $5) RETURNING ID;";
+        let values= [userid,new Date().toISOString(), xml, JSON.stringify(data), data.origin+vs[v][1]];
+        let itemrows = await executeQuery(con, item, values);
         let itemid = itemrows.rows[0].id;
         global.logger.log("info", "Item created. ID: " + itemid);
 
         if (data.stars >= 1 && data.stars <= 5) {
-            let rating = "INSERT INTO "+process.env.SECONDTABLE+" (createdby, createdon, "+process.env.STARS+", itemid) Values (";
-            rating += "'" + userid + "', "
-            rating += "'" + new Date().toISOString() + "', ";
-            rating += data.stars + ", '"
-            rating += itemid + "');"
-
-            await executeQuery(con, rating);
+            let rating = "INSERT INTO "+process.env.SECONDTABLE+" (createdby, createdon, "+process.env.STARS+", itemid) Values ($1, $2, $3, $4);";
+            values= [userid, new Date().toISOString(), data.stars, itemid];
+            await executeQuery(con, rating, values);
         }
         ret = itemid;
     }
