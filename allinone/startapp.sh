@@ -49,11 +49,11 @@ export REGION=EMEA
 export DATABASE_CONNECTIONSTRING=$EMEA
 nodemon --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
 export PORT=$(($PORT + 1))
-export REGION=AMERICAS
-export DATABASE_CONNECTIONSTRING=$AMERICAS
-nodemon --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  &
-export PORT=$(($PORT + 1))
 export REGION=APAC
 export DATABASE_CONNECTIONSTRING=$APAC
-nodemon --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1
+nodemon --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1 &
+export PORT=$(($PORT + 1))
+export REGION=AMERICAS
+export DATABASE_CONNECTIONSTRING=$AMERICAS
+nodemon --require './tracing.js' ./bin/www >$LOGFOLDER/stdinanderr-$PORT.log 2>&1  
 
